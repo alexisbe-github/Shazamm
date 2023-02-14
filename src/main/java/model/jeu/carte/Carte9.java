@@ -5,8 +5,8 @@ import main.java.model.jeu.carte.effets.IMurStrategy;
 
 public class Carte9 extends Carte implements IMurStrategy{
 
-	protected Carte9(String path, String name, Partie p) {
-		super(path, name, p);
+	protected Carte9(String path, String name, String color, Partie p, int index) {
+		super(path, name, p, color, index);
 		// TODO Auto-generated constructor stub
 	}
 
