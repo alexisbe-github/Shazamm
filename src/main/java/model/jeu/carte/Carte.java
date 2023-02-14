@@ -1,10 +1,12 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 
 public abstract class Carte {
 
 	protected Partie partieActuelle;
+	protected Joueur joueur;
 	protected final String PATH;
 	protected final String NAME;
 	
