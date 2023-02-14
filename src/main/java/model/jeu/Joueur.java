@@ -6,12 +6,11 @@ public class Joueur {
 
 	private final String COULEUR;
 	private final int MANA_MAXIMUM = 50;
-	private int nbCasesDuMur, manaActuel;
+	private int manaActuel;
 	// ajouter attributs paquet, main, cartes jouees, defausse
 
 	public Joueur(String couleur) {
 		this.COULEUR = couleur;
-		nbCasesDuMur = 3;
 		manaActuel = 0;
 	}
 
