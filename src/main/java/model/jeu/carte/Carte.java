@@ -1,5 +1,5 @@
 package main.java.model.jeu.carte;
 
-public class Carte {
+public abstract class Carte {
 
 }

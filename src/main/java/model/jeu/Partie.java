@@ -13,8 +13,12 @@ public class Partie {
 		joueur2 = j2;
 		tour = 0;
 		pont = new int[TAILLE_PONT];
-		indexPositionMur = (int) Math.ceil(19 / 2);
+		indexPositionMur = (int) Math.ceil(TAILLE_PONT / 2);
 		pont[indexPositionMur] = 3; // on place le mur au milieu du pont
+	}
+
+	public int[] getPont() {
+		return pont;
 	}
 
 	/**
