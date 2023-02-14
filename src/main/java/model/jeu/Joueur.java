@@ -8,7 +8,7 @@ public class Joueur {
 	private final int MANA_MAXIMUM = 50;
 	private int manaActuel;
 	// ajouter attributs paquet, main, cartes jouees, defausse
-
+	
 	public Joueur(String couleur) {
 		this.COULEUR = couleur;
 		manaActuel = 0;
