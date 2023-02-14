@@ -2,7 +2,7 @@ package main.java.model.jeu;
 
 public class Partie {
 
-	private int tour, indexPositionMur;
+	private int tour;
 	private Joueur joueur1, joueur2;
 	private final int TAILLE_PONT = 19;
 	private int[] pont; // -1:dalle de pont effondree / 0:dalle de pont non effondree / 1:j1 / 2:j2 /
@@ -13,8 +13,19 @@ public class Partie {
 		joueur2 = j2;
 		tour = 0;
 		pont = new int[TAILLE_PONT];
-		indexPositionMur = (int) Math.ceil(TAILLE_PONT / 2);
+		int indexPositionMur = (int) Math.ceil(TAILLE_PONT / 2);
 		pont[indexPositionMur] = 3; // on place le mur au milieu du pont
+	}
+	
+	/**
+	 * Calcule l'index de la position du mur de feu sur le pont
+	 * @return int
+	 */
+	public int getIndexPositionMur() {
+		for(int i=0;i<pont.length;i++) {
+			if(pont[i] == 3) return i;
+		}
+		return -1;
 	}
 
 	public int[] getPont() {
@@ -27,8 +38,12 @@ public class Partie {
 	 * @param dp int étant le déplacement
 	 */
 	public void deplacerMur(int dp) {
-		if (verifierDeplacement(indexPositionMur, dp))
-			indexPositionMur += dp;
+		int indiceMur = getIndexPositionMur();
+		if (verifierDeplacement(indiceMur, dp)) {
+			pont[indiceMur] = 0;
+			pont[indiceMur + dp] = 3;
+		}
+			
 	}
 
 	/**
