@@ -17,6 +17,10 @@ public class Partie {
 		pont[indexPositionMur] = 3; // on place le mur au milieu du pont
 	}
 
+	public int[] getPont() {
+		return pont;
+	}
+
 	/**
 	 * Déplace le mur de feu de dp sur le pont (dp pouvant être négatif)
 	 * 
