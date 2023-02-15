@@ -1,7 +1,8 @@
 package main.java.model.dao.beans;
 
-import java.awt.Image;
 import java.io.Serializable;
+
+import javax.swing.ImageIcon;
 
 /**
  * <code>{@link <a href=
@@ -9,20 +10,39 @@ import java.io.Serializable;
  * à un joueur, permettant de faire le lien à travers la couche <code>DAO</code>
  * entre la base de données et le modèle.
  */
-public class JoueurDAO implements Serializable {
+public class JoueurSQL implements Serializable {
 
 	private static final long serialVersionUID = 3448987482155819219L;
 
+	private long id;
 	private String nom, prenom;
-	private Image avatar;
+	private ImageIcon avatar;
 	private int nbPartiesGagnees;
 
 	/**
 	 * Constructeur vide
 	 */
-	public JoueurDAO() {
+	public JoueurSQL() {
 
 	}
+
+	/**
+	 * 
+	 * @return L'identifiant
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * Instancie l'identifiant
+	 * 
+	 * @param id L'identifiant
+	 */
+	public final void setId(long id) {
+		this.id = id;
+	}
+
 
 	/**
 	 * 
@@ -62,17 +82,17 @@ public class JoueurDAO implements Serializable {
 	 * 
 	 * @return L'avatar
 	 */
-	public Image getAvatar() {
+	public ImageIcon getAvatar() {
 		return avatar;
 	}
 
 	/**
 	 * Met à jour l'avatar.
 	 * 
-	 * @param avatar L'avatar
+	 * @param image L'avatar
 	 */
-	public void setAvatar(Image avatar) {
-		this.avatar = avatar;
+	public void setAvatar(ImageIcon image) {
+		this.avatar = image;
 	}
 
 	/**

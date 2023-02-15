@@ -25,7 +25,7 @@ public class Connexion {
 	private Connexion() {
 
 		try {
-
+			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			this.con = DriverManager.getConnection(EnvironmentVariablesUtils.getBDDURL(),
@@ -58,6 +58,14 @@ public class Connexion {
 		} catch (SQLException e) {
 
 		}
+	}
+	
+	/**
+	 * 
+	 * @return La connexion sous forme d'objet sur lequel on peut exécuter des requêtes
+	 */
+	public Connection getConnexion() {
+		return this.con;
 	}
 
 }
