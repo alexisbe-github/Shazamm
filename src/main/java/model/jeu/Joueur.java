@@ -5,10 +5,6 @@ import java.util.List;
 import main.java.model.jeu.carte.Carte;
 
 public class Joueur {
-
-	public enum ECouleurJoueur{
-		VERT,ROUGE
-	}
 	
 	private final ECouleurJoueur COULEUR;
 	private final String NOM, PRENOM, AVATAR;
