@@ -1,16 +1,24 @@
 package main.java.model.jeu;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import main.java.model.jeu.manche.Manche;
+
 public class Partie {
 
-	private int tour;
+	private int manche;
 	private Joueur joueurVert, joueurRouge;
 	private Pont pont;
+	private List<Manche> listeManche;
 
 	public Partie(Joueur j1, Joueur j2) {
 		joueurRouge = j1;
 		joueurVert = j2;
-		tour = 0;
+		manche = 0;
 		pont = new Pont();
+		listeManche = new ArrayList<>();
+		lancerPartie();
 	}
 
 	/**
@@ -38,6 +46,11 @@ public class Partie {
 	 */
 	public void reculerJoueurRouge(int dp) {
 		pont.reculerJoueur(dp, ECouleurJoueur.ROUGE);
+	}
+	
+	public void lancerPartie() {
+		joueurRouge.piocherCartes(5);
+		joueurVert.piocherCartes(5);
 	}
 
 }
