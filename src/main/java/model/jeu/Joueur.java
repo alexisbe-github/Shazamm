@@ -48,4 +48,12 @@ public class Joueur {
 	}
 	
 
+	/**
+	 * Pioche nbCartes dans la main du joueur
+	 * @param nbCartes, int
+	 */
+	public void piocherCartes(int nbCartes) {
+		
+	}
+
 }
