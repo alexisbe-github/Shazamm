@@ -1,12 +1,13 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 import main.java.model.jeu.carte.effets.IMurStrategy;
 
 public class Carte11 extends Carte implements IMurStrategy{
 
-	protected Carte11(String path, String name, Partie p, String color, int index) {
-		super(path, name, p, color, index);
+	protected Carte11(String path, String n, Partie p, Joueur j, int i) {
+		super(path, n, p, j, i);
 		// TODO Auto-generated constructor stub
 	}
 
