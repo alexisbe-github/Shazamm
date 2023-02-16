@@ -1,7 +1,5 @@
 package main.java.model.jeu;
 
-import main.java.model.jeu.Joueur.ECouleurJoueur;
-
 public class Pont {
 
 	private int positionMurFeu;
