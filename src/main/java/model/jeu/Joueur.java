@@ -5,22 +5,19 @@ import java.util.List;
 import main.java.model.jeu.carte.Carte;
 
 public class Joueur {
-
-	private final String COULEUR, NOM, PRENOM, AVATAR;
+	
+	private final ECouleurJoueur COULEUR;
+	private final String NOM, PRENOM, AVATAR;
 	private final int MANA_MAXIMUM = 50;
 	private int manaActuel;
 	private List<Carte> paquet,mainDuJoueur,cartesJouees,defausse;
 
-	public Joueur(String couleur, String nom, String prenom, String avatar) {
+	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		this.COULEUR = couleur;
 		this.NOM = nom;
 		this.PRENOM = prenom;
 		this.AVATAR = avatar;
 		manaActuel = 0;
-	}
-	
-	private void init() {
-		
 	}
 
 	/**
