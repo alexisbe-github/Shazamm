@@ -6,8 +6,8 @@ import main.java.model.jeu.carte.effets.IAttaqueStrategy;
 
 public class Carte8 extends Carte implements IAttaqueStrategy{
 
-	protected Carte8(String path, String n, Partie p, Joueur j, int i) {
-		super(path, n, p, j, i);
+	protected Carte8(String n, Partie p, Joueur j, int i) {
+		super(n, p, j, i);
 		// TODO Auto-generated constructor stub
 	}
 

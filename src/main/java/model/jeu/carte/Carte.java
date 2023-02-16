@@ -11,12 +11,12 @@ public abstract class Carte {
 	protected final Joueur j;
 	protected final int index;
 	
-	protected Carte(String path, String n, Partie p, Joueur j, int i) {
+	protected Carte(String n, Partie p, Joueur j, int i) {
 		this.index=i;
 		this.partieActuelle = p;
 		this.j=j;
 		this.NAME = n;
-		PATH = path;
+		this.PATH = "";
 	}
 	
 	protected abstract void jouer();

@@ -5,8 +5,8 @@ import main.java.model.jeu.Partie;
 
 public class Carte2 extends Carte{
 
-	protected Carte2(String path, String n, Partie p, Joueur j, int i) {
-		super(path, n, p, j, i);
+	protected Carte2(String n, Partie p, Joueur j, int i) {
+		super(n, p, j, i);
 		// TODO Auto-generated constructor stub
 	}
 

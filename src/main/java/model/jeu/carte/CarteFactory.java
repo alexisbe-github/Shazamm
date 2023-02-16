@@ -1,12 +1,15 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.Joueur;
+import main.java.model.jeu.Partie;
+
 public class CarteFactory {
 	
-	public Carte createCarte(String nomCarte) {
+	public Carte createCarte(String nomCarte, Partie p, Joueur j) {
 		if(nomCarte.equals("Mutisme")) {
-			return null;
+			return new Carte1(nomCarte, p, j, 1);
 		}else if(nomCarte.equals("Clone")) {
-			return null;
+			return new Carte2(nomCarte, p, j, 2);
 		}else if(nomCarte.equals("Larcin")) {
 			return null;
 		}else if(nomCarte.equals("Fin de Manche")) {

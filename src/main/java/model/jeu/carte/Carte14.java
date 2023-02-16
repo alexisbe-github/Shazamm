@@ -6,8 +6,8 @@ import main.java.model.jeu.carte.effets.IManaStrategy;
 
 public class Carte14 extends Carte implements IManaStrategy{
 
-	protected Carte14(String path, String n, Partie p, Joueur j, int i) {
-		super(path, n, p, j, i);
+	protected Carte14(String n, Partie p, Joueur j, int i) {
+		super(n, p, j, i);
 		// TODO Auto-generated constructor stub
 	}
 
