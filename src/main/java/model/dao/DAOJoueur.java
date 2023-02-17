@@ -33,8 +33,8 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public JoueurSQL trouver(long id) {
 		JoueurSQL joueur = new JoueurSQL();
-		try (PreparedStatement pstmt = this.connexion.getConnexion()
-				.prepareStatement("SELECT * FROM joueur WHERE id = ?;")) {
+		try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
+				"SELECT * FROM joueur WHERE id = ?;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 			pstmt.setLong(1, id);
 			pstmt.execute();
 			try (ResultSet rs = pstmt.getResultSet()) {
@@ -63,20 +63,23 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public JoueurSQL creer(JoueurSQL joueur) {
 		try {
-			PreparedStatement pstmt1 = this.connexion.getConnexion().prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES "
-					+ "WHERE table_name = 'joueur'");
+			PreparedStatement pstmt1 = this.connexion.getConnexion().prepareStatement(
+					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = 'joueur'");
 			pstmt1.execute();
-			try (ResultSet rsid = pstmt1.getResultSet()) {
-				pstmt1.close();
+
+			ResultSet rsid = pstmt1.getResultSet();
+			if (rsid.next()) {
 				long id = rsid.getLong(1);
 				joueur.setId(id);
 			}
+			pstmt1.close();
+
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
-		
-		try (PreparedStatement pstmt2 = this.connexion.getConnexion().prepareStatement(
-				"INSERT INTO joueur VALUES (?, '?', '?', '?', ?);")) {
+
+		try (PreparedStatement pstmt2 = this.connexion.getConnexion()
+				.prepareStatement("INSERT INTO joueur VALUES (?, ?, ?, ?, ?);")) {
 			pstmt2.setLong(1, joueur.getId());
 			pstmt2.setString(2, joueur.getNom());
 			pstmt2.setString(3, joueur.getPrenom());
@@ -86,7 +89,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 		return joueur;
 	}
@@ -100,8 +103,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public JoueurSQL maj(JoueurSQL joueur) {
 		try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
-				"UPDATE joueur SET nom = '?', prenom = '?', avatar = '?', "
-				+ "nb_parties_gagnees = ? WHERE id = ?;")) {
+				"UPDATE joueur SET nom = ?, prenom = ?, avatar = ?, " + "nb_parties_gagnees = ? WHERE id = ?;")) {
 			pstmt.setString(1, joueur.getNom());
 			pstmt.setString(2, joueur.getPrenom());
 			pstmt.setString(3, joueur.getAvatar().getDescription());
@@ -111,7 +113,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 		return joueur;
 	}
@@ -123,14 +125,14 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public void supprimer(JoueurSQL joueur) {
-		try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
-				"DELETE FROM joueur WHERE id = ?;")) {
+		try (PreparedStatement pstmt = this.connexion.getConnexion()
+				.prepareStatement("DELETE FROM joueur WHERE id = ?;")) {
 			pstmt.setLong(1, joueur.getId());
 			pstmt.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 	}
 
