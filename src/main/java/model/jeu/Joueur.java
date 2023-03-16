@@ -19,6 +19,10 @@ public class Joueur {
 		this.AVATAR = avatar;
 		manaActuel = 0;
 	}
+	
+	public ECouleurJoueur getCouleur() {
+		return this.COULEUR;
+	}
 
 	/**
 	 * 

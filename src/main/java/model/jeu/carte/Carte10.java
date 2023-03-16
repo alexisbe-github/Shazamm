@@ -4,23 +4,30 @@ import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 import main.java.model.jeu.carte.effets.IMurStrategy;
 
-public class Carte10 extends Carte implements IMurStrategy{
+public class Carte10 extends Carte implements IMurStrategy {
 
-	protected Carte10(String n, Partie p, Joueur j, int i) {
-		super(n, p, j, i);
-		// TODO Auto-generated constructor stub
+	private final String NOM_CARTE = "Brasier";
+	private final String TEXTE_CARTE = "Le mur de feu se déplace de deux cases au lieu d’une. Seulement"
+			+ " s’il devait se déplacer, bien sûr.";
+	private final int NUMERO_CARTE = 10;
+
+	public Carte10(Partie p, Joueur j) {
+		super.partie = p;
+		super.joueur = j;
+		super.numeroCarte = NUMERO_CARTE;
+		super.nom = NOM_CARTE;
+		super.description = TEXTE_CARTE;
 	}
 
 	@Override
-	protected void jouer() {
-		// TODO Auto-generated method stub
-		
+	public void jouer() {
+
 	}
 
 	@Override
-	public int calculDpMur() {
+	public void deplacerMur() {
 		// TODO Auto-generated method stub
-		return 0;
+
 	}
 
 }

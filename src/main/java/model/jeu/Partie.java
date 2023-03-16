@@ -7,7 +7,6 @@ import main.java.model.jeu.manche.Manche;
 
 public class Partie {
 
-	private int manche;
 	private Joueur joueurVert, joueurRouge;
 	private Pont pont;
 	private List<Manche> listeManche;
@@ -15,7 +14,6 @@ public class Partie {
 	public Partie(Joueur j1, Joueur j2) {
 		joueurRouge = j1;
 		joueurVert = j2;
-		manche = 0;
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		lancerPartie();
@@ -47,10 +45,25 @@ public class Partie {
 	public void reculerJoueurRouge(int dp) {
 		pont.reculerJoueur(dp, ECouleurJoueur.ROUGE);
 	}
-	
+
 	public void lancerPartie() {
 		joueurRouge.piocherCartes(5);
 		joueurVert.piocherCartes(5);
+		this.listeManche.add(new Manche(joueurRouge, joueurRouge));
+	}
+
+	public void lancerNouvelleManche() {
+		joueurRouge.piocherCartes(3);
+		joueurVert.piocherCartes(3);
+		this.listeManche.add(new Manche(joueurRouge, joueurRouge));
+	}
+
+	public Manche getMancheCourante() {
+		return this.listeManche.get(this.listeManche.size() - 1);
+	}
+
+	public Pont getPont() {
+		return this.pont;
 	}
 
 }

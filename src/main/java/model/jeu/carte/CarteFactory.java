@@ -1,42 +1,39 @@
 package main.java.model.jeu.carte;
 
-import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CarteFactory {
-	
-	public Carte createCarte(String nomCarte, Partie p, Joueur j) {
-		if(nomCarte.equals("Mutisme")) {
-			return new Carte1(nomCarte, p, j, 1);
-		}else if(nomCarte.equals("Clone")) {
-			return new Carte2(nomCarte, p, j, 2);
-		}else if(nomCarte.equals("Larcin")) {
-			return null;
-		}else if(nomCarte.equals("Fin de Manche")) {
-			return null;
-		}else if(nomCarte.equals("Milieu")) {
-			return null;
-		}else if(nomCarte.equals("Recyclage")) {
-			return null;
-		}else if(nomCarte.equals("Boost Attaque")) {
-			return null;
-		}else if(nomCarte.equals("Double dose")) {
-			return null;
-		}else if(nomCarte.equals("Qui Perd Gagne")) {
-			return null;
-		}else if(nomCarte.equals("Braisier")) {
-			return null;
-		}else if(nomCarte.equals("Résistance")) {
-			return null;
-		}else if(nomCarte.equals("Harpagon")) {
-			return null;
-		}else if(nomCarte.equals("Boost réserve")) {
-			return null;
-		}else if(nomCarte.equals("Aspiration")) {
-			return null;
-		}else {
-			return null;
+
+	private Map<Integer, Class<? extends Carte>> carte;
+
+	public CarteFactory() {
+		carte = new HashMap<Integer, Class<? extends Carte>>();
+		carte.put(1, Carte1.class);
+		carte.put(2, Carte2.class);
+		carte.put(3, Carte3.class);
+		carte.put(4, Carte4.class);
+		carte.put(5, Carte5.class);
+		carte.put(6, Carte6.class);
+		carte.put(7, Carte7.class);
+		carte.put(8, Carte8.class);
+		carte.put(9, Carte9.class);
+		carte.put(10, Carte10.class);
+		carte.put(11, Carte11.class);
+		carte.put(12, Carte12.class);
+		carte.put(13, Carte13.class);
+		carte.put(14, Carte14.class);
+	}
+
+	public Carte createCarte(Integer numeroCarte) {
+		Class<? extends Carte> typeCarte = carte.get(numeroCarte); // on récupère la classe correspondante au numéro de
+																	// la carte
+
+		try {
+			return typeCarte.getDeclaredConstructor().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException("Erreur de création de carte", e);
 		}
 	}
-	
+
 }

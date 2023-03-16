@@ -6,21 +6,29 @@ import main.java.model.jeu.carte.effets.IManaStrategy;
 
 public class Carte6 extends Carte implements IManaStrategy{
 
-	protected Carte6(String n, Partie p, Joueur j, int i) {
-		super(n, p, j, i);
-		// TODO Auto-generated constructor stub
+	private final String NOM_CARTE = "Recyclage";
+	private final String TEXTE_CARTE = "Je peux rectifier ma mise, en ajoutant ou retranchant jusqu’à 5 points "
+			+ "de mana.";
+	private final int NUMERO_CARTE = 6;
+
+	public Carte6(Partie p, Joueur j) {
+		super.partie = p;
+		super.joueur = j;
+		super.numeroCarte = NUMERO_CARTE;
+		super.nom = NOM_CARTE;
+		super.description = TEXTE_CARTE;
 	}
 
 	@Override
-	protected void jouer() {
-		// TODO Auto-generated method stub
+	public void jouer() {
 		
 	}
 
 	@Override
-	public int calculAjoutMana() {
-		// TODO Auto-generated method stub
-		return 0;
+	public void ajouterMana(int valeur) {
+		
 	}
+
+	
 
 }

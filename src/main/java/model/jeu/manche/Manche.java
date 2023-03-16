@@ -9,24 +9,17 @@ import main.java.model.jeu.tour.Tour;
 public class Manche {
 
 	private List<Tour> listeTours;
-	private int tourCourant;
 	private Joueur joueurRouge, joueurVert;
 
 	public Manche(Joueur jr, Joueur jv) {
 		joueurRouge = jr;
 		joueurVert = jv;
-		tourCourant = 0;
 		listeTours = new ArrayList<>();
 		listeTours.add(new Tour());
 	}
 
 	public Tour getTourCourant() {
-		return listeTours.get(tourCourant);
-	}
-	
-	public void lancerNouvelleManche() {
-		joueurRouge.piocherCartes(3);
-		joueurVert.piocherCartes(3);
+		return listeTours.get(listeTours.size() - 1);
 	}
 
 }

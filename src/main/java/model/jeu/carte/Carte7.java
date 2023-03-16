@@ -6,21 +6,30 @@ import main.java.model.jeu.carte.effets.IAttaqueStrategy;
 
 public class Carte7 extends Carte implements IAttaqueStrategy{
 
-	protected Carte7(String n, Partie p, Joueur j, int i) {
-		super(n, p, j, i);
-		// TODO Auto-generated constructor stub
+	private final String NOM_CARTE = "Boost attaque";
+	private final String TEXTE_CARTE = "La puissance de mon attaque est augmentée de 7.";
+	private final int NUMERO_CARTE = 7;
+
+	public Carte7(Partie p, Joueur j) {
+		super.partie = p;
+		super.joueur = j;
+		super.numeroCarte = NUMERO_CARTE;
+		super.nom = NOM_CARTE;
+		super.description = TEXTE_CARTE;
 	}
 
 	@Override
-	public int calculAjoutAttaque() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	protected void jouer() {
-		// TODO Auto-generated method stub
+	public void jouer() {
 		
 	}
+
+	@Override
+	public void ajouterAttaque() {
+		// TODO Auto-generated method stub
+	}
+
+
+
+	
 
 }

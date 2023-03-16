@@ -1,24 +1,20 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 
 public abstract class Carte {
 
-	protected final String PATH;
-	protected final String NAME;
-	protected Partie partieActuelle;
-	protected final Joueur j;
-	protected final int index;
+	protected String nom,path,description;
+	protected Partie partie;
+	protected Joueur joueur;
+	protected int numeroCarte;
+
+	public abstract void jouer();
 	
-	protected Carte(String n, Partie p, Joueur j, int i) {
-		this.index=i;
-		this.partieActuelle = p;
-		this.j=j;
-		this.NAME = n;
-		this.PATH = "";
+	public ECouleurJoueur getCouleur() {
+		return joueur.getCouleur();
 	}
-	
-	protected abstract void jouer();
-	
+
 }

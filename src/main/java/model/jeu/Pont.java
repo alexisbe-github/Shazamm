@@ -47,5 +47,13 @@ public class Pont {
 		if (indexLave < (int) Math.ceil(TAILLE_PONT / 2))
 			indexLave++;
 	}
+	
+	public int getPosJoueurRouge() {
+		return this.positionJoueurRouge;
+	}
+	
+	public int getPosJoueurVert() {
+		return this.positionJoueurVert;
+	}
 
 }
