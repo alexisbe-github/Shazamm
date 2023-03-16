@@ -3,6 +3,7 @@ package main.java.model.jeu.carte;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 import main.java.model.jeu.carte.effets.IMurStrategy;
+import main.java.model.jeu.tour.Tour;
 
 public class Carte9 extends Carte implements IMurStrategy{
 
@@ -21,13 +22,13 @@ public class Carte9 extends Carte implements IMurStrategy{
 
 	@Override
 	public void jouer() {
-
+		this.deplacerMur();
 	}
 
 	@Override
 	public void deplacerMur() {
-		// TODO Auto-generated method stub
-		
+		Tour tour = this.partie.getMancheCourante().getTourCourant();
+		tour.setDeplacementMur(tour.getDeplacementMur()*-1);
 	}
 
 }

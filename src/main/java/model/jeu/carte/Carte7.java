@@ -20,12 +20,12 @@ public class Carte7 extends Carte implements IAttaqueStrategy{
 
 	@Override
 	public void jouer() {
-		
+		this.ajouterAttaque();
 	}
 
 	@Override
 	public void ajouterAttaque() {
-		// TODO Auto-generated method stub
+		this.partie.getMancheCourante().getTourCourant().addAttaqueJoueur(7, this.getCouleur());
 	}
 
 
