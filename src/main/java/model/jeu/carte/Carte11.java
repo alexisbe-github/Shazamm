@@ -19,6 +19,7 @@ public class Carte11 extends Carte {
 
 	@Override
 	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		//s'il se déplace vers moi (todo)
 		partie.getMancheCourante().getTourCourant().setDeplacementMur(0);
 	}
 

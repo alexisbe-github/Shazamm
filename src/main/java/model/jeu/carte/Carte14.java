@@ -19,7 +19,8 @@ public class Carte14 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster, Joueur adversaire) {
+	public void lancerEffet(Joueur caster, Joueur adversaire) { 
+		//les conditions if joueur rouge / vert a chaque fois j'pense y'a moyen d'arranger (getMiseJoueur(adversaire.getCouleur()) ou un truc comme ça ?
 		if(caster.getCouleur().equals(ECouleurJoueur.ROUGE)) caster.ajouterMana(partie.getMancheCourante().getTourCourant().getMiseJoueurVert());
 		else caster.ajouterMana(partie.getMancheCourante().getTourCourant().getMiseJoueurRouge());
 	}

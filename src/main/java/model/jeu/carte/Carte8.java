@@ -24,4 +24,4 @@ public class Carte8 extends Carte {
 		tour.addAttaqueJoueur(tour.getAttaqueJoueur(caster.getCouleur()) * 2, caster.getCouleur());
 	}
 
-}
+} 
