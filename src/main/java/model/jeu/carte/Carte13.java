@@ -1,7 +1,7 @@
 package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import main.java.model.jeu.partie.Partie;
 
 public class Carte13 extends Carte {
 
@@ -19,7 +19,7 @@ public class Carte13 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster, Joueur adversaire) {
+	public void lancerEffet(Joueur caster) {
 		joueur.ajouterMana(13); //lien avec mon com de la question 12, bien gérer l'ordre de paiement/gain de mana
 	}
 

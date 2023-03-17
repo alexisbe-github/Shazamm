@@ -2,7 +2,7 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import main.java.model.jeu.partie.Partie;
 
 public class Carte14 extends Carte {
 
@@ -19,7 +19,7 @@ public class Carte14 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster, Joueur adversaire) { 
+	public void lancerEffet(Joueur caster) { 
 		//les conditions if joueur rouge / vert a chaque fois j'pense y'a moyen d'arranger (getMiseJoueur(adversaire.getCouleur()) ou un truc comme ça ?
 		if(caster.getCouleur().equals(ECouleurJoueur.ROUGE)) caster.ajouterMana(partie.getMancheCourante().getTourCourant().getMiseJoueurVert());
 		else caster.ajouterMana(partie.getMancheCourante().getTourCourant().getMiseJoueurRouge());

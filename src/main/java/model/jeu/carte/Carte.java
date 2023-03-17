@@ -1,29 +1,47 @@
 package main.java.model.jeu.carte;
 
-import main.java.model.jeu.ECouleurJoueur;
+import java.util.Objects;
+
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import main.java.model.jeu.partie.Partie;
 
 public abstract class Carte {
 
-	protected String nom,path,description;
+	protected String nom, path, description;
 	protected Partie partie;
 	protected int numeroCarte;
 	protected Joueur joueur;
-	
-	public abstract void lancerEffet(Joueur caster,Joueur adversaire);
-	
+
+	public abstract void lancerEffet(Joueur caster);
+
 	public int getNumeroCarte() {
 		return this.numeroCarte;
 	}
-	
+
 	public Joueur getJoueur() {
 		return this.joueur;
 	}
-	
-	public Joueur getAdversaire() {
-		if(this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) return partie.getJoueurVert();
-		else return partie.getJoueurRouge();
+
+	/**
+	 * Deux cartes sont equals si elles ont le même numéro de carte et la même
+	 * couleur
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Carte other = (Carte) obj;
+		return Objects.equals(numeroCarte, other.numeroCarte)
+				&& Objects.equals(joueur.getCouleur(), other.joueur.getCouleur());
+	}
+
+	@Override
+	public String toString() {
+		return "Carte [nom=" + nom + ", path=" + path + ", description=" + description + ", numeroCarte=" + numeroCarte + "]";
 	}
 
 }

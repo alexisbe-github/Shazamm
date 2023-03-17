@@ -1,9 +1,11 @@
-package main.java.model.jeu;
+package main.java.model.jeu.partie;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.model.jeu.manche.Manche;
+import main.java.model.jeu.ECouleurJoueur;
+import main.java.model.jeu.Joueur;
+import main.java.model.jeu.Pont;
 
 public class Partie {
 
@@ -47,6 +49,8 @@ public class Partie {
 	}
 
 	public void lancerPartie() {
+		joueurRouge.initialiserPaquet(this);
+		joueurVert.initialiserPaquet(this);
 		joueurRouge.piocherCartes(5);
 		joueurVert.piocherCartes(5);
 		this.listeManche.add(new Manche(joueurRouge, joueurRouge));

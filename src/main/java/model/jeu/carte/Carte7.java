@@ -1,7 +1,7 @@
 package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import main.java.model.jeu.partie.Partie;
 
 public class Carte7 extends Carte {
 
@@ -18,7 +18,7 @@ public class Carte7 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster, Joueur adversaire) { //Le caster sera toujours le même non ? ou c'est en prévoyance des cartes contrôle ?
+	public void lancerEffet(Joueur caster) { //Le caster sera toujours le même non ? ou c'est en prévoyance des cartes contrôle ?
 		this.partie.getMancheCourante().getTourCourant().addAttaqueJoueur(7, caster.getCouleur());
 	}
 

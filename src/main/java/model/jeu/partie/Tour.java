@@ -1,4 +1,4 @@
-package main.java.model.jeu.tour;
+package main.java.model.jeu.partie;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,9 +49,9 @@ public class Tour {
 			if (i < cartesJouees.size() - 1) {
 				Carte carteSuivante = cartesJouees.get(i - 1);
 				if (carteSuivante.getNumeroCarte() != carteCourante.getNumeroCarte())
-					carteCourante.lancerEffet(carteCourante.getJoueur(), carteCourante.getAdversaire());
+					carteCourante.lancerEffet(carteCourante.getJoueur());
 			} else {
-				carteCourante.lancerEffet(carteCourante.getJoueur(), carteCourante.getAdversaire());
+				carteCourante.lancerEffet(carteCourante.getJoueur());
 			}
 		}
 	}

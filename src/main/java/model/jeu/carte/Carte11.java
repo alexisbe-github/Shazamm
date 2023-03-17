@@ -1,7 +1,7 @@
 package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import main.java.model.jeu.partie.Partie;
 
 public class Carte11 extends Carte {
 
@@ -18,7 +18,7 @@ public class Carte11 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster, Joueur adversaire) {
+	public void lancerEffet(Joueur caster) {
 		//s'il se déplace vers moi (todo)
 		partie.getMancheCourante().getTourCourant().setDeplacementMur(0);
 	}

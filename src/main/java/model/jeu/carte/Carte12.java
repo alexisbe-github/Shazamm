@@ -2,7 +2,7 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.Partie;
+import main.java.model.jeu.partie.Partie;
 
 public class Carte12 extends Carte {
 
@@ -20,7 +20,7 @@ public class Carte12 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster, Joueur adversaire) { 
+	public void lancerEffet(Joueur caster) { 
 		//le fait que la mise soit gérée dans le tour rend pas terrible la, genre pour mettre a jour la reserve de mana ça risque d'être le bazar
 		if (partie.getMancheCourante().getTourCourant().getDeplacementMur() > 0
 				&& caster.getCouleur().equals(ECouleurJoueur.VERT)

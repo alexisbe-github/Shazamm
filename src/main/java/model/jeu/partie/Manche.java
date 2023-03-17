@@ -1,10 +1,9 @@
-package main.java.model.jeu.manche;
+package main.java.model.jeu.partie;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.tour.Tour;
 
 public class Manche {
 
