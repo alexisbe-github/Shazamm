@@ -67,10 +67,11 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = 'joueur'");
 			pstmt1.execute();
 
-			ResultSet rsid = pstmt1.getResultSet();
-			if (rsid.next()) {
-				long id = rsid.getLong(1);
-				joueur.setId(id);
+			try (ResultSet rsid = pstmt1.getResultSet()) {
+				if (rsid.next()) {
+					long id = rsid.getLong(1);
+					joueur.setId(id);
+				}
 			}
 			pstmt1.close();
 

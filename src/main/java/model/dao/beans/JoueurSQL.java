@@ -20,13 +20,6 @@ public class JoueurSQL implements Serializable {
 	private int nbPartiesGagnees;
 
 	/**
-	 * Constructeur vide
-	 */
-	public JoueurSQL() {
-
-	}
-
-	/**
 	 * 
 	 * @return L'identifiant
 	 */
