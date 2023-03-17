@@ -2,9 +2,8 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IManaStrategy;
 
-public class Carte6 extends Carte implements IManaStrategy{
+public class Carte6 extends Carte {
 
 	private final String NOM_CARTE = "Recyclage";
 	private final String TEXTE_CARTE = "Je peux rectifier ma mise, en ajoutant ou retranchant jusqu’à 5 points "
@@ -20,15 +19,8 @@ public class Carte6 extends Carte implements IManaStrategy{
 	}
 
 	@Override
-	public void jouer() {
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
 		
 	}
-
-	@Override
-	public void ajouterMana(int valeur) {
-		
-	}
-
-	
 
 }

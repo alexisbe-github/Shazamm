@@ -2,10 +2,9 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IAttaqueStrategy;
 import main.java.model.jeu.tour.Tour;
 
-public class Carte8 extends Carte implements IAttaqueStrategy{
+public class Carte8 extends Carte {
 
 	private final String NOM_CARTE = "Double dose";
 	private final String TEXTE_CARTE = "La puissance de mon attaque est multipliée par deux.";
@@ -20,14 +19,9 @@ public class Carte8 extends Carte implements IAttaqueStrategy{
 	}
 
 	@Override
-	public void jouer() {
-		this.ajouterAttaque();
-	}
-
-	@Override
-	public void ajouterAttaque() {
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
 		Tour tour = this.partie.getMancheCourante().getTourCourant();
-		tour.addAttaqueJoueur( tour.getAttaqueJoueur(this.getCouleur()), this.getCouleur());
+		tour.addAttaqueJoueur(tour.getAttaqueJoueur(caster.getCouleur()) * 2, caster.getCouleur());
 	}
 
 }

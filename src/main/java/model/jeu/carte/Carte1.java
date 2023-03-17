@@ -3,7 +3,7 @@ package main.java.model.jeu.carte;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 
-public class Carte1 extends Carte{
+public class Carte1 extends Carte {
 
 	private final String NOM_CARTE = "Mutisme";
 	private final String TEXTE_CARTE = "Aucun sort n’a plus d’effet pour les deux joueurs, jusqu’à la fin de "
@@ -19,9 +19,8 @@ public class Carte1 extends Carte{
 	}
 
 	@Override
-	public void jouer() {
-		//TODO
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		this.partie.getMancheCourante().enableMutisme(true);
 	}
-
 
 }

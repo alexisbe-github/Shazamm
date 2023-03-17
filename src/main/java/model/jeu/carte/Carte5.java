@@ -2,9 +2,8 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IMurStrategy;
 
-public class Carte5 extends Carte implements IMurStrategy {
+public class Carte5 extends Carte {
 
 	private final String NOM_CARTE = "Milieu";
 	private final String TEXTE_CARTE = "Je replace immédiatement le mur de feu à égale distance des deux "
@@ -20,18 +19,8 @@ public class Carte5 extends Carte implements IMurStrategy {
 	}
 
 	@Override
-	public void jouer() {
-		deplacerMur();
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		partie.deplacerMur((partie.getPont().getPosJoueurRouge() + partie.getPont().getPosJoueurVert()) / 2);
 	}
 
-	@Override
-	public void deplacerMur() {
-		int posJoueurRouge = partie.getPont().getPosJoueurRouge();
-		int posJoueurVert = partie.getPont().getPosJoueurVert();
-		partie.deplacerMur((posJoueurVert + posJoueurRouge) / 2);
-	}
-
-
-
-	
 }

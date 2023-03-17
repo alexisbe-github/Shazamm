@@ -9,9 +9,13 @@ public class Pont {
 
 	public Pont() {
 		positionMurFeu = (int) Math.ceil(TAILLE_PONT / 2);
+		setup();
+		indexLave = 0;
+	}
+	
+	public void setup() {
 		positionJoueurRouge = positionMurFeu - ECART_MUR_DE_FEU;
 		positionJoueurVert = positionMurFeu + ECART_MUR_DE_FEU;
-		indexLave = 0;
 	}
 
 	/**
@@ -47,11 +51,11 @@ public class Pont {
 		if (indexLave < (int) Math.ceil(TAILLE_PONT / 2))
 			indexLave++;
 	}
-	
+
 	public int getPosJoueurRouge() {
 		return this.positionJoueurRouge;
 	}
-	
+
 	public int getPosJoueurVert() {
 		return this.positionJoueurVert;
 	}

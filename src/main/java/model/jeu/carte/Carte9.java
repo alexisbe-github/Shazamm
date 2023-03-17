@@ -2,10 +2,8 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IMurStrategy;
-import main.java.model.jeu.tour.Tour;
 
-public class Carte9 extends Carte implements IMurStrategy{
+public class Carte9 extends Carte {
 
 	private final String NOM_CARTE = "Qui perd gagne";
 	private final String TEXTE_CARTE = "Le mur de feu avance en sens inverse : vers celui qui a gagné ce tour."
@@ -21,14 +19,8 @@ public class Carte9 extends Carte implements IMurStrategy{
 	}
 
 	@Override
-	public void jouer() {
-		this.deplacerMur();
-	}
-
-	@Override
-	public void deplacerMur() {
-		Tour tour = this.partie.getMancheCourante().getTourCourant();
-		tour.setDeplacementMur(tour.getDeplacementMur()*-1);
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		partie.getMancheCourante().getTourCourant().inverserDeplacementMur();
 	}
 
 }

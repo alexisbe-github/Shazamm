@@ -1,5 +1,6 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
 
@@ -19,9 +20,17 @@ public class Carte12 extends Carte {
 	}
 
 	@Override
-	public void jouer() {
-
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		if (partie.getMancheCourante().getTourCourant().getDeplacementMur() > 0
+				&& caster.getCouleur().equals(ECouleurJoueur.VERT)
+				|| partie.getMancheCourante().getTourCourant().getDeplacementMur() < 0
+						&& caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			if(caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+				partie.getMancheCourante().getTourCourant().setMiseJoueurRouge(0);
+			}else {
+				partie.getMancheCourante().getTourCourant().setMiseJoueurVert(0);
+			}
+		}
 	}
-
 
 }

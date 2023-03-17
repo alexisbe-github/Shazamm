@@ -55,6 +55,7 @@ public class Partie {
 	public void lancerNouvelleManche() {
 		joueurRouge.piocherCartes(3);
 		joueurVert.piocherCartes(3);
+		pont.effondrerMorceauDuPont();
 		this.listeManche.add(new Manche(joueurRouge, joueurRouge));
 	}
 
@@ -64,6 +65,14 @@ public class Partie {
 
 	public Pont getPont() {
 		return this.pont;
+	}
+	
+	public Joueur getJoueurVert() {
+		return this.joueurVert;
+	}
+	
+	public Joueur getJoueurRouge() {
+		return this.joueurRouge;
 	}
 
 }

@@ -3,6 +3,9 @@ package main.java.model.jeu.carte;
 import java.util.HashMap;
 import java.util.Map;
 
+import main.java.model.jeu.ECouleurJoueur;
+import main.java.model.jeu.Partie;
+
 public class CarteFactory {
 
 	private Map<Integer, Class<? extends Carte>> carte;
@@ -25,12 +28,12 @@ public class CarteFactory {
 		carte.put(14, Carte14.class);
 	}
 
-	public Carte createCarte(Integer numeroCarte) {
+	public Carte createCarte(Integer numeroCarte, Partie p, ECouleurJoueur couleur) {
 		Class<? extends Carte> typeCarte = carte.get(numeroCarte); // on récupère la classe correspondante au numéro de
 																	// la carte
 
 		try {
-			return typeCarte.getDeclaredConstructor().newInstance();
+			return typeCarte.getDeclaredConstructor().newInstance(p, couleur);
 		} catch (Exception e) {
 			throw new RuntimeException("Erreur de création de carte", e);
 		}

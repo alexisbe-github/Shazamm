@@ -2,9 +2,8 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IAttaqueStrategy;
 
-public class Carte7 extends Carte implements IAttaqueStrategy{
+public class Carte7 extends Carte {
 
 	private final String NOM_CARTE = "Boost attaque";
 	private final String TEXTE_CARTE = "La puissance de mon attaque est augmentée de 7.";
@@ -19,17 +18,8 @@ public class Carte7 extends Carte implements IAttaqueStrategy{
 	}
 
 	@Override
-	public void jouer() {
-		this.ajouterAttaque();
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		this.partie.getMancheCourante().getTourCourant().addAttaqueJoueur(7, caster.getCouleur());
 	}
-
-	@Override
-	public void ajouterAttaque() {
-		this.partie.getMancheCourante().getTourCourant().addAttaqueJoueur(7, this.getCouleur());
-	}
-
-
-
-	
 
 }

@@ -2,9 +2,8 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IManaStrategy;
 
-public class Carte13 extends Carte implements IManaStrategy {
+public class Carte13 extends Carte {
 
 	private final String NOM_CARTE = "Boost réserve";
 	private final String TEXTE_CARTE = "Ma réserve de Mana s’augmente de 13 points. Après que j’ai payé"
@@ -20,14 +19,8 @@ public class Carte13 extends Carte implements IManaStrategy {
 	}
 
 	@Override
-	public void jouer() {
-
-	}
-
-	@Override
-	public void ajouterMana(int valeur) {
-		// TODO Auto-generated method stub
-
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		joueur.ajouterMana(13);
 	}
 
 }

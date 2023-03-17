@@ -19,8 +19,8 @@ public class Carte2 extends Carte {
 	}
 
 	@Override
-	public void jouer() {
-		// TODO Auto-generated method stub
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		
 	}
 
 }

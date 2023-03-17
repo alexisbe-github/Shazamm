@@ -8,13 +8,22 @@ public abstract class Carte {
 
 	protected String nom,path,description;
 	protected Partie partie;
-	protected Joueur joueur;
 	protected int numeroCarte;
-
-	public abstract void jouer();
+	protected Joueur joueur;
 	
-	public ECouleurJoueur getCouleur() {
-		return joueur.getCouleur();
+	public abstract void lancerEffet(Joueur caster,Joueur adversaire);
+	
+	public int getNumeroCarte() {
+		return this.numeroCarte;
+	}
+	
+	public Joueur getJoueur() {
+		return this.joueur;
+	}
+	
+	public Joueur getAdversaire() {
+		if(this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) return partie.getJoueurVert();
+		else return partie.getJoueurRouge();
 	}
 
 }

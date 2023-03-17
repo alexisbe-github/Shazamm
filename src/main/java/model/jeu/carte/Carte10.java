@@ -2,9 +2,8 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Partie;
-import main.java.model.jeu.carte.effets.IMurStrategy;
 
-public class Carte10 extends Carte implements IMurStrategy {
+public class Carte10 extends Carte {
 
 	private final String NOM_CARTE = "Brasier";
 	private final String TEXTE_CARTE = "Le mur de feu se déplace de deux cases au lieu d’une. Seulement"
@@ -20,14 +19,8 @@ public class Carte10 extends Carte implements IMurStrategy {
 	}
 
 	@Override
-	public void jouer() {
-
-	}
-
-	@Override
-	public void deplacerMur() {
-		// TODO Auto-generated method stub
-
+	public void lancerEffet(Joueur caster, Joueur adversaire) {
+		partie.getMancheCourante().getTourCourant().doubleDeplacementMur();
 	}
 
 }
