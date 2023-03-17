@@ -18,23 +18,24 @@ public class Manche {
 		mutismeCourant = false;
 		deplacementMur = 0;
 		listeTours = new ArrayList<>();
-		listeTours.add(new Tour());
+		listeTours.add(new Tour(mutismeCourant));
 	}
 
 	public Tour getTourCourant() {
 		return listeTours.get(listeTours.size() - 1);
 	}
-	
+
 	public void passerAuTourSuivant() {
-		this.listeTours.add(new Tour());
+		this.listeTours.add(new Tour(mutismeCourant));
 	}
-	
+
 	public boolean getMutismeCourant() {
 		return mutismeCourant;
 	}
-	
+
 	public void enableMutisme(boolean enable) {
 		this.mutismeCourant = enable;
+		this.getTourCourant().activerMutisme(enable);
 	}
 
 }

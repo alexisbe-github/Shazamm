@@ -21,6 +21,14 @@ public abstract class Carte {
 	public Joueur getJoueur() {
 		return this.joueur;
 	}
+	
+	public void changerDetenteurCarte(Joueur nouveauDetenteur) {
+		joueur = nouveauDetenteur;
+	}
+	
+	public void defausser() {
+		this.joueur.defausser(this);
+	}
 
 	/**
 	 * Deux cartes sont equals si elles ont le même numéro de carte et la même
