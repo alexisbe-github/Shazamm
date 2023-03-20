@@ -11,7 +11,9 @@ import main.java.model.dao.beans.JoueurSQL;
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
  * données et le <code>JavaBean</code>
- * {@link main.java.model.dao.beans.JoueurSQL JoueurSQL}
+ * {@link main.java.model.dao.beans.JoueurSQL JoueurSQL}, spécifiquement pour la
+ * table <code><i>joueur</i></code> de la base de données, qui enregistre les
+ * informations et les statistiques relatives aux joueurs.
  * 
  * @author Emile
  * 
@@ -24,6 +26,34 @@ import main.java.model.dao.beans.JoueurSQL;
 public class DAOJoueur extends DAO<JoueurSQL> {
 
 	/**
+	 * Table <code><i>joueur</i></code>, contenant différentes informations et
+	 * statistiques sur les joueurs.
+	 */
+	private static final String JOUEUR = "joueur";
+	/**
+	 * Colonne <code><i>id</i></code>, correspondant à l'identifiant des joueurs.
+	 */
+	private static final String ID = "id";
+	/**
+	 * Colonne <code><i>nom</i></code>, correspondant au nom des joueurs.
+	 */
+	private static final String NOM = "nom";
+	/**
+	 * Colonne <code><i>prenom</i></code>, correspondant au prénom des joueurs.
+	 */
+	private static final String PRENOM = "prenom";
+	/**
+	 * Colonne <code><i>avatar</i></code>, correspondant au chemin vers l'image
+	 * représentant l'avatar des joueurs.
+	 */
+	private static final String AVATAR = "avatar";
+	/**
+	 * Colonne <code><i>nb_parties_gagnees</i></code>, correspondant au nombre de
+	 * parties remportées par les joueurs.
+	 */
+	private static final String NB_PARTIES_GAGNEES = "nb_parties_gagnees";
+
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * @param id L'identifiant du joueur
@@ -34,22 +64,22 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	public JoueurSQL trouver(long id) {
 		JoueurSQL joueur = new JoueurSQL();
 		try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
-				"SELECT * FROM joueur WHERE id = ?;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+				"SELECT * FROM " + JOUEUR + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 			pstmt.setLong(1, id);
 			pstmt.execute();
 			try (ResultSet rs = pstmt.getResultSet()) {
 				if (rs.first()) {
 					joueur.setId(id);
-					joueur.setNom(rs.getString("nom"));
-					joueur.setPrenom(rs.getString("prenom"));
-					joueur.setAvatar(new ImageIcon(rs.getString("avatar")));
-					joueur.setNbPartiesGagnees(rs.getInt("nb_parties_gagnees"));
+					joueur.setNom(rs.getString(NOM));
+					joueur.setPrenom(rs.getString(PRENOM));
+					joueur.setAvatar(new ImageIcon(rs.getString(AVATAR)));
+					joueur.setNbPartiesGagnees(rs.getInt(NB_PARTIES_GAGNEES));
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-
+			
 		}
 		return joueur;
 	}
@@ -64,7 +94,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	public JoueurSQL creer(JoueurSQL joueur) {
 		try {
 			PreparedStatement pstmt1 = this.connexion.getConnexion().prepareStatement(
-					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = 'joueur'");
+					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '" + JOUEUR + "'");
 			pstmt1.execute();
 
 			try (ResultSet rsid = pstmt1.getResultSet()) {
@@ -80,11 +110,11 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		}
 
 		try (PreparedStatement pstmt2 = this.connexion.getConnexion()
-				.prepareStatement("INSERT INTO joueur VALUES (?, ?, ?, ?, ?);")) {
+				.prepareStatement("INSERT INTO " + JOUEUR + " VALUES (?, ?, ?, ?, ?);")) {
 			pstmt2.setLong(1, joueur.getId());
 			pstmt2.setString(2, joueur.getNom());
 			pstmt2.setString(3, joueur.getPrenom());
-			pstmt2.setString(4, joueur.getAvatar().getDescription());
+			pstmt2.setString(4, joueur.getAvatar().getDescription()); // Chemin de l'image
 			pstmt2.setInt(5, joueur.getNbPartiesGagnees());
 			pstmt2.execute();
 		} catch (SQLException e) {
@@ -103,21 +133,22 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public JoueurSQL maj(JoueurSQL joueur) {
-		try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
-				"UPDATE joueur SET nom = ?, prenom = ?, avatar = ?, " + "nb_parties_gagnees = ? WHERE id = ?;")) {
-			pstmt.setString(1, joueur.getNom());
-			pstmt.setString(2, joueur.getPrenom());
-			pstmt.setString(3, joueur.getAvatar().getDescription());
-			pstmt.setInt(4, joueur.getNbPartiesGagnees());
-			pstmt.setLong(5, joueur.getId());
-			pstmt.execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-
+	    try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
+	            "UPDATE " + JOUEUR + " SET " + NOM + " = ?, " + PRENOM + " = ?, " + AVATAR + " = ?, " + NB_PARTIES_GAGNEES + " = ? WHERE " + ID + " = ?")) {
+	        pstmt.setString(1, joueur.getNom());
+	        pstmt.setString(2, joueur.getPrenom());
+	        pstmt.setString(3, joueur.getAvatar().getDescription()); // Chemin de l'image
+	        pstmt.setInt(4, joueur.getNbPartiesGagnees());
+	        pstmt.setLong(5, joueur.getId());
+	        pstmt.execute();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+			
 		}
-		return joueur;
+	    return joueur;
 	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -127,7 +158,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public void supprimer(JoueurSQL joueur) {
 		try (PreparedStatement pstmt = this.connexion.getConnexion()
-				.prepareStatement("DELETE FROM joueur WHERE id = ?;")) {
+				.prepareStatement("DELETE FROM " + JOUEUR + " WHERE id = ?;")) {
 			pstmt.setLong(1, joueur.getId());
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -135,6 +166,12 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} finally {
 
 		}
+	}
+	
+	public static void main(String[] args) {
+		DAOJoueur dao = new DAOJoueur();
+		JoueurSQL j = dao.trouver(5);
+		dao.supprimer(j);
 	}
 
 }
