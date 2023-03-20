@@ -1,5 +1,6 @@
 package main.java.model.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,8 +64,10 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public JoueurSQL trouver(long id) {
 		JoueurSQL joueur = new JoueurSQL();
-		try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
-				"SELECT * FROM " + JOUEUR + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+		try (Connection connexion = this.connexion.getConnexion();
+				PreparedStatement pstmt = connexion.prepareStatement(
+						"SELECT * FROM " + JOUEUR + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
+						ResultSet.CONCUR_READ_ONLY)) {
 			pstmt.setLong(1, id);
 			pstmt.execute();
 			try (ResultSet rs = pstmt.getResultSet()) {
@@ -79,7 +82,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 		return joueur;
 	}
@@ -92,9 +95,10 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public JoueurSQL creer(JoueurSQL joueur) {
-		try {
-			PreparedStatement pstmt1 = this.connexion.getConnexion().prepareStatement(
-					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '" + JOUEUR + "'");
+		try (Connection connexion = this.connexion.getConnexion();
+				PreparedStatement pstmt1 = connexion
+						.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES "
+								+ "WHERE table_name = '" + JOUEUR + "'")) {
 			pstmt1.execute();
 
 			try (ResultSet rsid = pstmt1.getResultSet()) {
@@ -109,8 +113,9 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 			ex.printStackTrace();
 		}
 
-		try (PreparedStatement pstmt2 = this.connexion.getConnexion()
-				.prepareStatement("INSERT INTO " + JOUEUR + " VALUES (?, ?, ?, ?, ?);")) {
+		try (Connection connexion = this.connexion.getConnexion();
+				PreparedStatement pstmt2 = connexion
+						.prepareStatement("INSERT INTO " + JOUEUR + " VALUES (?, ?, ?, ?, ?);")) {
 			pstmt2.setLong(1, joueur.getId());
 			pstmt2.setString(2, joueur.getNom());
 			pstmt2.setString(3, joueur.getPrenom());
@@ -133,22 +138,22 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public JoueurSQL maj(JoueurSQL joueur) {
-	    try (PreparedStatement pstmt = this.connexion.getConnexion().prepareStatement(
-	            "UPDATE " + JOUEUR + " SET " + NOM + " = ?, " + PRENOM + " = ?, " + AVATAR + " = ?, " + NB_PARTIES_GAGNEES + " = ? WHERE " + ID + " = ?")) {
-	        pstmt.setString(1, joueur.getNom());
-	        pstmt.setString(2, joueur.getPrenom());
-	        pstmt.setString(3, joueur.getAvatar().getDescription()); // Chemin de l'image
-	        pstmt.setInt(4, joueur.getNbPartiesGagnees());
-	        pstmt.setLong(5, joueur.getId());
-	        pstmt.execute();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-			
-		}
-	    return joueur;
-	}
+		try (Connection connexion = this.connexion.getConnexion();
+				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + JOUEUR + " SET " + NOM + " = ?, "
+						+ PRENOM + " = ?, " + AVATAR + " = ?, " + NB_PARTIES_GAGNEES + " = ? WHERE " + ID + " = ?")) {
+			pstmt.setString(1, joueur.getNom());
+			pstmt.setString(2, joueur.getPrenom());
+			pstmt.setString(3, joueur.getAvatar().getDescription()); // Chemin de l'image
+			pstmt.setInt(4, joueur.getNbPartiesGagnees());
+			pstmt.setLong(5, joueur.getId());
+			pstmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
 
+		}
+		return joueur;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -157,8 +162,8 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public void supprimer(JoueurSQL joueur) {
-		try (PreparedStatement pstmt = this.connexion.getConnexion()
-				.prepareStatement("DELETE FROM " + JOUEUR + " WHERE id = ?;")) {
+		try (Connection connexion = this.connexion.getConnexion();
+				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + JOUEUR + " WHERE id = ?;")) {
 			pstmt.setLong(1, joueur.getId());
 			pstmt.execute();
 		} catch (SQLException e) {
