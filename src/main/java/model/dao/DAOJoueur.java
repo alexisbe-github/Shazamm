@@ -167,11 +167,5 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 
 		}
 	}
-	
-	public static void main(String[] args) {
-		DAOJoueur dao = new DAOJoueur();
-		JoueurSQL j = dao.trouver(5);
-		dao.supprimer(j);
-	}
 
 }
