@@ -3,7 +3,6 @@ package main.java.model.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
 import main.resources.utils.EnvironmentVariablesUtils;
 
 /**
@@ -18,18 +17,21 @@ public class Connexion {
 	private Connection con;
 
 	/**
-	 * Se connecte à la base de données spécifiée dans le fichier <code>ENVIRONMENT.properties</code>.
+	 * Se connecte à la base de données spécifiée dans le fichier
+	 * <code>ENVIRONMENT.properties</code>.
 	 * 
 	 * @see main.resources.utils.EnvironmentVariablesUtils
 	 */
 	private Connexion() {
 
 		try {
+			
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			this.con = DriverManager.getConnection(EnvironmentVariablesUtils.getBDDURL(),
 					EnvironmentVariablesUtils.getBDDUSER(), EnvironmentVariablesUtils.getBDDMDP());
 
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 
 		}
 
@@ -56,6 +58,14 @@ public class Connexion {
 		} catch (SQLException e) {
 
 		}
+	}
+	
+	/**
+	 * 
+	 * @return La connexion sous forme d'objet sur lequel on peut exécuter des requêtes
+	 */
+	public Connection getConnexion() {
+		return this.con;
 	}
 
 }
