@@ -82,7 +82,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-
+			this.connexion.fermerConnexion();
 		}
 		return joueur;
 	}
@@ -125,7 +125,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-
+			this.connexion.fermerConnexion();
 		}
 		return joueur;
 	}
@@ -150,7 +150,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-
+			this.connexion.fermerConnexion();
 		}
 		return joueur;
 	}
@@ -169,7 +169,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-
+			this.connexion.fermerConnexion();
 		}
 	}
 
