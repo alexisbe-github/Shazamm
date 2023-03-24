@@ -66,10 +66,10 @@ public class Joueur {
 		manaActuel = MANA_MAXIMUM;
 	}
 
-	public void initialiserPaquet(Partie p) {
+	public void initialiserPaquet(Partie partie) {
 		// Instance par la factory puis ajout des cartes dans le paquet
 		for (int i = 0; i < this.NOMBRE_CARTE; i++) {
-			Carte c = CarteFactory.creerCarte(i + 1, p, this);
+			Carte c = CarteFactory.creerCarte(i + 1, partie, this);
 			this.paquet.add(c);
 		}
 
