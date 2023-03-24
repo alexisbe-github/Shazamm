@@ -73,7 +73,11 @@ public class Joueur {
 			this.paquet.add(c);
 		}
 
-		// Mélange du paquet de cartes
+		//Puis on mélange le paquet
+		melangerPaquet();
+	}
+	
+	public void melangerPaquet() {
 		Collections.shuffle(paquet);
 	}
 

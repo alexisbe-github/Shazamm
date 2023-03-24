@@ -19,8 +19,8 @@ public class Carte2 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
-		
+	public void lancerEffet() {
+		//partie.lancerClone(joueur, );
 	}
 
 }

@@ -19,8 +19,8 @@ public class Carte1 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
-		this.partie.getMancheCourante().enableMutisme(true);
+	public void lancerEffet() {
+		this.partie.enableMutisme(true);
 	}
 
 }

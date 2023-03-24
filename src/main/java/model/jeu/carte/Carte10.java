@@ -19,7 +19,7 @@ public class Carte10 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
+	public void lancerEffet() {
 		partie.getMancheCourante().getTourCourant().doubleDeplacementMur();
 	}
 

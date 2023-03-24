@@ -18,8 +18,8 @@ public class Carte7 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) { //Le caster sera toujours le même non ? ou c'est en prévoyance des cartes contrôle ?
-		this.partie.getMancheCourante().getTourCourant().addAttaqueJoueur(7, caster.getCouleur());
+	public void lancerEffet() {
+		this.partie.addAttaqueJoueur(joueur.getCouleur(), 7);
 	}
 
 }

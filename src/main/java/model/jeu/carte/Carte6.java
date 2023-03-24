@@ -1,5 +1,7 @@
 package main.java.model.jeu.carte;
 
+import java.util.Scanner;
+
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
@@ -19,8 +21,15 @@ public class Carte6 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
-		
+	public void lancerEffet() {
+		// Pour l'instant on le fait au scanner
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Rentrez la mise de mana à modifier sur le tour (entre +5 et -5):");
+		int mana;
+		do {
+			mana = sc.nextInt();
+		} while (mana > 5 || mana < -5);
+		partie.recyclerMana(joueur, mana);
 	}
 
 }

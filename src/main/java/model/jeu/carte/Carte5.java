@@ -19,7 +19,7 @@ public class Carte5 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
+	public void lancerEffet() {
 		partie.deplacerMur((partie.getPont().getPosJoueurRouge() + partie.getPont().getPosJoueurVert()) / 2);
 	}
 

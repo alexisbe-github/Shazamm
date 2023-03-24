@@ -19,8 +19,9 @@ public class Carte4 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
+	public void lancerEffet() {
 		partie.getPont().setup();
+		partie.lancerFinDeManche();
 		partie.lancerNouvelleManche();
 	}
 

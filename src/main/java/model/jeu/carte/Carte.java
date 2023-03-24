@@ -12,7 +12,7 @@ public abstract class Carte {
 	protected int numeroCarte;
 	protected Joueur joueur;
 
-	public abstract void lancerEffet(Joueur caster);
+	public abstract void lancerEffet();
 
 	public int getNumeroCarte() {
 		return this.numeroCarte;

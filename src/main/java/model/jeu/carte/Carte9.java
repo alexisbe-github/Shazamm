@@ -19,7 +19,7 @@ public class Carte9 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
+	public void lancerEffet() {
 		partie.getMancheCourante().getTourCourant().inverserDeplacementMur();
 	}
 

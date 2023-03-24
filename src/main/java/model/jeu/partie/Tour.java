@@ -14,17 +14,22 @@ public class Tour {
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int deplacementMur;
-	private boolean mutisme;
+	private boolean mutisme, finDeManche;
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
 
 	public Tour(boolean mutisme) {
 		this.cartesJoueesRouge = new ArrayList<>();
 		this.cartesJoueesVert = new ArrayList<>();
 		this.mutisme = mutisme;
+		this.finDeManche = false;
 	}
 
 	public void activerMutisme(boolean enable) {
 		this.mutisme = enable;
+	}
+
+	public void activerFinDeManche() {
+		this.finDeManche = true;
 	}
 
 	/**
@@ -86,37 +91,91 @@ public class Tour {
 
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
-		for (int i = 0; i < cartesJouees.size(); i++) {
+		for (int i = 0; i < cartesJouees.size() && !this.finDeManche; i++) {
 			Carte carteCourante = cartesJouees.get(i);
 			if (i < cartesJouees.size() - 1) {
-				Carte carteSuivante = cartesJouees.get(i - 1);
+				Carte carteSuivante = cartesJouees.get(i + 1);
 				if (carteSuivante.getNumeroCarte() != carteCourante.getNumeroCarte())
-					carteCourante.lancerEffet(carteCourante.getJoueur());
+					carteCourante.lancerEffet();
 			} else {
-				carteCourante.lancerEffet(carteCourante.getJoueur());
+				carteCourante.lancerEffet();
 			}
 		}
 	}
 
 	/**
-	 * Ajoute atq au joueur
-	 * @param atq int
-	 * @param joueur ECouleurJoueur
+	 * En fonction de la couleur du joueur, on donne les cartes au joueur qui a
+	 * activé Larcin
+	 * 
+	 * @param joueur Joueur qui caste le sort Larcin
 	 */
-	public void addAttaqueJoueur(int atq, ECouleurJoueur joueur) {
-		if (joueur == ECouleurJoueur.ROUGE) {
-			this.attaqueJoueurRouge += atq;
+	public void activerLarcin(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			for (Carte c : this.cartesJoueesVert) {
+				c.changerDetenteurCarte(joueur);
+			}
 		} else {
-			this.attaqueJoueurVert += atq;
+			for (Carte c : this.cartesJoueesRouge) {
+				c.changerDetenteurCarte(joueur);
+			}
 		}
 	}
 
+	/**
+	 * Effet de la carte 3: change le propriétaire de la carte
+	 * 
+	 * @param caster
+	 * @param carteACloner
+	 */
+	public void clonerCarte(Joueur caster, Carte carteACloner) {
+		carteACloner.changerDetenteurCarte(caster);
+	}
+
+	/**
+	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
+	 */
+	public void doubleDeplacementMur() {
+		deplacementMur *= 2;
+	}
+
+	/**
+	 * Inverse le déplacement du mur dans le sens opposé où il devait avancer
+	 */
+	public void inverserDeplacementMur() {
+		deplacementMur *= -1;
+	}
+
+	/**
+	 * Change de mana la mise de mana du tour
+	 * 
+	 * @param caster Joueur qui a casté le sort de mise
+	 * @param mana   int montant en mana à ajouter/enlever
+	 */
+	public void changerMise(Joueur caster, int mana) {
+		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE))
+			this.miseJoueurRouge += mana;
+		else
+			this.miseJoueurVert += mana;
+	}
+
+	/**
+	 * Ajoute atq au joueur
+	 * 
+	 * @param atq    int
+	 * @param joueur ECouleurJoueur
+	 */
+	public void addAttaqueJoueur(ECouleurJoueur joueur, int atq) {
+		if (joueur == ECouleurJoueur.ROUGE)
+			this.attaqueJoueurRouge += atq;
+		else
+			this.attaqueJoueurVert += atq;
+	}
+
 	public int getAttaqueJoueur(ECouleurJoueur joueur) {
-		if (joueur == ECouleurJoueur.ROUGE) {
+		if (joueur == ECouleurJoueur.ROUGE)
 			return this.attaqueJoueurRouge;
-		} else {
+		else
 			return this.attaqueJoueurVert;
-		}
 	}
 
 	public void setMiseJoueurRouge(int mise) {
@@ -139,24 +198,10 @@ public class Tour {
 		return this.deplacementMur;
 	}
 
-	/**
-	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
-	 */
-	public void doubleDeplacementMur() {
-		deplacementMur *= 2;
-	}
-
-	/**
-	 * Inverse le déplacement du mur dans le sens opposé où il devait avancer
-	 */
-	public void inverserDeplacementMur() {
-		deplacementMur *= -1;
-	}
-
 	public void setDeplacementMur(int d) {
 		deplacementMur = d;
 	}
-	
+
 	public int getAttaqueJoueurRouge() {
 		return attaqueJoueurRouge;
 	}

@@ -19,9 +19,8 @@ public class Carte8 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) {
-		Tour tour = this.partie.getMancheCourante().getTourCourant();
-		tour.addAttaqueJoueur(tour.getAttaqueJoueur(caster.getCouleur()) * 2, caster.getCouleur());
+	public void lancerEffet() {
+		partie.addAttaqueJoueur(joueur.getCouleur(), partie.getAttaqueJoueur(joueur.getCouleur()) * 2);
 	}
 
-} 
+}

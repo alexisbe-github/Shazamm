@@ -20,15 +20,17 @@ public class Carte12 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet(Joueur caster) { 
-		//le fait que la mise soit gérée dans le tour rend pas terrible la, genre pour mettre a jour la reserve de mana ça risque d'être le bazar
+	public void lancerEffet() {
+		//Si le joueur perd le tour
 		if (partie.getMancheCourante().getTourCourant().getDeplacementMur() > 0
-				&& caster.getCouleur().equals(ECouleurJoueur.VERT)
+				&& joueur.getCouleur().equals(ECouleurJoueur.VERT)
 				|| partie.getMancheCourante().getTourCourant().getDeplacementMur() < 0
-						&& caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			if(caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+						&& joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			
+			//Alors on ne lui retire pas sa mise
+			if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 				partie.getMancheCourante().getTourCourant().setMiseJoueurRouge(0);
-			}else {
+			} else {
 				partie.getMancheCourante().getTourCourant().setMiseJoueurVert(0);
 			}
 		}

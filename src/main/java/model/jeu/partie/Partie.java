@@ -6,6 +6,7 @@ import java.util.List;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
+import main.java.model.jeu.carte.Carte;
 
 public class Partie {
 
@@ -53,14 +54,44 @@ public class Partie {
 		joueurVert.initialiserPaquet(this);
 		joueurRouge.piocherCartes(5);
 		joueurVert.piocherCartes(5);
-		this.listeManche.add(new Manche(joueurRouge, joueurRouge));
+		this.listeManche.add(new Manche());
 	}
 
 	public void lancerNouvelleManche() {
+		joueurRouge.melangerPaquet();
+		joueurVert.melangerPaquet();
 		joueurRouge.piocherCartes(3);
 		joueurVert.piocherCartes(3);
 		pont.effondrerMorceauDuPont();
-		this.listeManche.add(new Manche(joueurRouge, joueurRouge));
+		this.listeManche.add(new Manche());
+	}
+
+	public void enableMutisme(boolean enable) {
+		this.getMancheCourante().enableMutisme(enable);
+	}
+
+	public void lancerLarcin(Joueur caster) {
+		this.getMancheCourante().lancerLarcin(caster);
+	}
+
+	public void lancerClone(Joueur caster, Carte carteClonee) {
+		this.getMancheCourante().lancerClone(caster, carteClonee);
+	}
+
+	public void lancerFinDeManche() {
+		this.getMancheCourante().lancerFinDeManche();
+	}
+
+	public void recyclerMana(Joueur caster, int montant) {
+		this.getMancheCourante().changerMise(caster, montant);
+	}
+
+	public void addAttaqueJoueur(ECouleurJoueur joueur, int atq) {
+		this.getMancheCourante().addAttaqueJoueur(joueur, atq);
+	}
+
+	public int getAttaqueJoueur(ECouleurJoueur joueur) {
+		return this.getMancheCourante().getAttaqueJoueur(joueur);
 	}
 
 	public Manche getMancheCourante() {
@@ -70,11 +101,11 @@ public class Partie {
 	public Pont getPont() {
 		return this.pont;
 	}
-	
+
 	public Joueur getJoueurVert() {
 		return this.joueurVert;
 	}
-	
+
 	public Joueur getJoueurRouge() {
 		return this.joueurRouge;
 	}
