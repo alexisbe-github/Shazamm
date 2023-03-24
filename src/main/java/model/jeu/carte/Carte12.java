@@ -21,7 +21,7 @@ public class Carte12 extends Carte {
 
 	@Override
 	public void lancerEffet() {
-		//Si le joueur perd le tour
+		//Si le mur avance vers le détenteur de la carte
 		if (partie.getMancheCourante().getTourCourant().getDeplacementMur() > 0
 				&& joueur.getCouleur().equals(ECouleurJoueur.VERT)
 				|| partie.getMancheCourante().getTourCourant().getDeplacementMur() < 0

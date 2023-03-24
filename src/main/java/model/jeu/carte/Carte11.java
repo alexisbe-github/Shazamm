@@ -1,5 +1,6 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
@@ -19,8 +20,13 @@ public class Carte11 extends Carte {
 
 	@Override
 	public void lancerEffet() {
-		//s'il se déplace vers moi (todo)
-		partie.getMancheCourante().getTourCourant().setDeplacementMur(0);
+		//Si le mur se déplace dans le sens du joueur qui a lancé l'effet (=détenteur de la carte)
+		if (partie.getMancheCourante().getTourCourant().getDeplacementMur() > 0
+				&& joueur.getCouleur().equals(ECouleurJoueur.VERT)
+				|| partie.getMancheCourante().getTourCourant().getDeplacementMur() < 0
+						&& joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			partie.getMancheCourante().getTourCourant().setDeplacementMur(0); //on met le déplacement à 0
+		}
 	}
 
 }

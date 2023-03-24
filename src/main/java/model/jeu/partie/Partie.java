@@ -93,6 +93,10 @@ public class Partie {
 	public int getAttaqueJoueur(ECouleurJoueur joueur) {
 		return this.getMancheCourante().getAttaqueJoueur(joueur);
 	}
+	
+	public List<Carte> getCartesJoueesParAdversaire(Joueur joueur){
+		return this.getMancheCourante().getCartesJoueesParAdversaire(joueur);
+	}
 
 	public Manche getMancheCourante() {
 		return this.listeManche.get(this.listeManche.size() - 1);

@@ -20,7 +20,7 @@ public class Carte13 extends Carte {
 
 	@Override
 	public void lancerEffet() {
-		joueur.ajouterMana(13); //lien avec mon com de la question 12, bien gérer l'ordre de paiement/gain de mana
+		joueur.ajouterMana(13);
 	}
 
 }

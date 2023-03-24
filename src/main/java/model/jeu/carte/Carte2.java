@@ -1,5 +1,8 @@
 package main.java.model.jeu.carte;
 
+import java.util.List;
+import java.util.Scanner;
+
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
@@ -20,7 +23,28 @@ public class Carte2 extends Carte {
 
 	@Override
 	public void lancerEffet() {
-		//partie.lancerClone(joueur, );
+		List<Carte> cartesJoueesParAdversaire = partie.getCartesJoueesParAdversaire(joueur);
+		System.out.println("Entrez le numéro de la carte de l'adversaire à cloner:");
+		System.out.println(cartesJoueesParAdversaire);
+		boolean trouve = false;
+		Scanner sc = new Scanner(System.in);
+		int numCarte;
+		// Tant qu'on ne trouve pas le numéro de la carte saisie par l'utilisateur dans
+		// la liste des cartes jouées par l'adversaire
+		while (!trouve) {
+
+			// On demande à saisir le numéro de carte
+			numCarte = sc.nextInt();
+
+			// On parcourt les cartes jouées par l'adversaire et si celle-ci est trouvé on
+			// la clone
+			for (Carte carte : cartesJoueesParAdversaire) {
+				if (carte.getNumeroCarte() == numCarte)
+					trouve = true;
+				partie.lancerClone(joueur, carte);
+			}
+		}
+
 	}
 
 }

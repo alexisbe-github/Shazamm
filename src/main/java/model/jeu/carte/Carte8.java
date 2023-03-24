@@ -2,7 +2,6 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
-import main.java.model.jeu.partie.Tour;
 
 public class Carte8 extends Carte {
 

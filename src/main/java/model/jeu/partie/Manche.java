@@ -60,5 +60,9 @@ public class Manche {
 	public int getAttaqueJoueur(ECouleurJoueur joueur) {
 		return this.getTourCourant().getAttaqueJoueur(joueur);
 	}
+	
+	public List<Carte> getCartesJoueesParAdversaire(Joueur joueur){
+		return this.getTourCourant().getCartesJoueesParAdversaire(joueur);
+	}
 
 }
