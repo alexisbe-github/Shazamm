@@ -33,7 +33,7 @@ public class Partie {
 	/**
 	 * Faire reculer de dp le joueur vert du pont
 	 * 
-	 * @param dp
+	 * @param dp int
 	 */
 	public void reculerJoueurVert(int dp) {
 		pont.reculerJoueur(dp, ECouleurJoueur.VERT);
