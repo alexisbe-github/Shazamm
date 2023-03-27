@@ -27,7 +27,7 @@ public class Tour {
 	public void activerMutisme(boolean enable) {
 		this.mutisme = enable;
 	}
-	
+
 	public boolean getMutisme() {
 		return this.mutisme;
 	}
@@ -189,8 +189,11 @@ public class Tour {
 			return this.attaqueJoueurVert;
 	}
 
-	public void setMiseJoueurRouge(int mise) {
-		this.miseJoueurRouge = mise;
+	public void setMiseJoueur(Joueur joueur, int mise) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
+			this.miseJoueurVert = mise;
+		else
+			this.miseJoueurRouge = mise;
 	}
 
 	public void setMiseJoueurVert(int mise) {

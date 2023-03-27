@@ -23,15 +23,11 @@ public class Carte12 extends Carte {
 	@Override
 	public void lancerEffet(Tour tour) {
 		// Si le mur avance vers le détenteur de la carte
-		if (tour.getDeplacementMur() > 0 && joueur.getCouleur().equals(ECouleurJoueur.VERT)
-				|| tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-
+		boolean joueurRougePerdLeTour = tour.getDeplacementMur() > 0 && joueur.getCouleur().equals(ECouleurJoueur.VERT);
+		boolean joueurVertPerdLeTour = tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE);
+		if (joueurRougePerdLeTour || joueurVertPerdLeTour) {
 			// Alors on ne lui retire pas sa mise
-			if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-				tour.setMiseJoueurRouge(0);
-			} else {
-				tour.setMiseJoueurVert(0);
-			}
+			tour.changerMise(joueur, 0);
 		}
 	}
 
