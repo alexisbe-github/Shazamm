@@ -49,7 +49,7 @@ public class Partie {
 		pont.reculerJoueur(dp, ECouleurJoueur.ROUGE);
 	}
 
-	public void lancerPartie() {
+	private void lancerPartie() {
 		joueurRouge.initialiserPaquet(this);
 		joueurVert.initialiserPaquet(this);
 		joueurRouge.piocherCartes(5);
