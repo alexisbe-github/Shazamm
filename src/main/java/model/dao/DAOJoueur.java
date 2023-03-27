@@ -16,7 +16,6 @@ import main.java.model.dao.beans.JoueurSQL;
  * table <code><i>joueur</i></code> de la base de données, qui enregistre les
  * informations et les statistiques relatives aux joueurs.
  * 
- * @author Emile
  * 
  * @see JoueurSQL <code>JoueurSQL</code><a role="link" aria-disabled="true"> -
  *      Le <code>JavaBean</code> géré par la classe</a>
