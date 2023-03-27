@@ -76,6 +76,13 @@ public class Partie {
 		this.pont.setup();
 	}
 
+	public int getPosJoueur(ECouleurJoueur couleur) {
+		if (couleur.equals(ECouleurJoueur.ROUGE))
+			return this.pont.getPosJoueurRouge();
+		else
+			return this.pont.getPosJoueurVert();
+	}
+
 	public Pont getPont() {
 		return this.pont;
 	}

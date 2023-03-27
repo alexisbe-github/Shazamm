@@ -1,5 +1,6 @@
 package main.java.model.jeu.carte;
 
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
@@ -21,7 +22,9 @@ public class Carte5 extends Carte {
 
 	@Override
 	public void lancerEffet(Tour tour) {
-		partie.deplacerMur((partie.getPont().getPosJoueurRouge() + partie.getPont().getPosJoueurVert()) / 2);
+		int posJoueurRouge = partie.getPosJoueur(ECouleurJoueur.ROUGE);
+		int posJoueurVert = partie.getPosJoueur(ECouleurJoueur.VERT);
+		partie.deplacerMur((posJoueurRouge + posJoueurVert) / 2);
 	}
 
 }
