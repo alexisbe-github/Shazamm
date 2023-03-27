@@ -3,8 +3,6 @@ package main.java.model.dao;
 /**
  * La couche <code>DAO</code> principale dont vont hériter tous les
  * <code>DAO</code> de toutes les tables
- * 
- * @author Emile
  *
  * @param <T> Le type du <code>JavaBean</code>
  */
