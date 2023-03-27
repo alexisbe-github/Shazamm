@@ -7,8 +7,6 @@ import main.resources.utils.EnvironmentVariablesUtils;
 
 /**
  * Connexion à une base de données
- * 
- * @author Emile
  *
  */
 public class Connexion {
