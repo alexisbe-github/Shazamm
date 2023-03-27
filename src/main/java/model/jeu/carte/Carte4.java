@@ -21,7 +21,7 @@ public class Carte4 extends Carte {
 
 	@Override
 	public void lancerEffet(Tour tour) {
-		partie.getPont().setup();
+		partie.setupPont();
 		tour.activerFinDeManche();
 		partie.lancerNouvelleManche();
 	}

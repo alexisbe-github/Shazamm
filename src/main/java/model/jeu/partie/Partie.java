@@ -72,6 +72,10 @@ public class Partie {
 		return this.listeManche.get(this.listeManche.size() - 1);
 	}
 
+	public void setupPont() {
+		this.pont.setup();
+	}
+
 	public Pont getPont() {
 		return this.pont;
 	}
