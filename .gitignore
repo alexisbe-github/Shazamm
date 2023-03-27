@@ -28,3 +28,4 @@ bin/*
 
 #ignored files
 src/main/resources/utils/ENVIRONMENT.properties
+/target/
