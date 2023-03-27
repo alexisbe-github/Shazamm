@@ -2,6 +2,7 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte3 extends Carte {
 
@@ -19,8 +20,8 @@ public class Carte3 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
-		partie.lancerLarcin(joueur);
+	public void lancerEffet(Tour tour) {
+		tour.activerLarcin(joueur);
 	}
 
 }

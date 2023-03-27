@@ -2,6 +2,7 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte5 extends Carte {
 
@@ -19,7 +20,7 @@ public class Carte5 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
+	public void lancerEffet(Tour tour) {
 		partie.deplacerMur((partie.getPont().getPosJoueurRouge() + partie.getPont().getPosJoueurVert()) / 2);
 	}
 

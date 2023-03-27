@@ -2,6 +2,7 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte4 extends Carte {
 
@@ -19,9 +20,9 @@ public class Carte4 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
+	public void lancerEffet(Tour tour) {
 		partie.getPont().setup();
-		partie.lancerFinDeManche();
+		tour.activerFinDeManche();
 		partie.lancerNouvelleManche();
 	}
 

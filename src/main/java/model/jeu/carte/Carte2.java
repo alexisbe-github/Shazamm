@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte2 extends Carte {
 
@@ -22,8 +23,8 @@ public class Carte2 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
-		List<Carte> cartesJoueesParAdversaire = partie.getCartesJoueesParAdversaire(joueur);
+	public void lancerEffet(Tour tour) {
+		List<Carte> cartesJoueesParAdversaire = tour.getCartesJoueesParAdversaire(joueur);
 		System.out.println("Entrez le numéro de la carte de l'adversaire à cloner:");
 		System.out.println(cartesJoueesParAdversaire);
 		boolean trouve = false;
@@ -41,7 +42,7 @@ public class Carte2 extends Carte {
 			for (Carte carte : cartesJoueesParAdversaire) {
 				if (carte.getNumeroCarte() == numCarte)
 					trouve = true;
-				partie.lancerClone(joueur, carte);
+				tour.clonerCarte(joueur, carte);
 			}
 		}
 

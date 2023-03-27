@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public abstract class Carte {
 
@@ -12,7 +13,7 @@ public abstract class Carte {
 	protected int numeroCarte;
 	protected Joueur joueur;
 
-	public abstract void lancerEffet();
+	public abstract void lancerEffet(Tour tour);
 
 	public int getNumeroCarte() {
 		return this.numeroCarte;

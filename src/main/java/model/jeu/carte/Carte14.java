@@ -3,6 +3,7 @@ package main.java.model.jeu.carte;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte14 extends Carte {
 
@@ -19,11 +20,11 @@ public class Carte14 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
+	public void lancerEffet(Tour tour) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
-			joueur.ajouterMana(partie.getMancheCourante().getTourCourant().getMiseJoueurVert());
+			joueur.ajouterMana(tour.getMiseJoueurVert());
 		else
-			joueur.ajouterMana(partie.getMancheCourante().getTourCourant().getMiseJoueurRouge());
+			joueur.ajouterMana(tour.getMiseJoueurRouge());
 	}
 
 }

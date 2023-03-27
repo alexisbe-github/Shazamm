@@ -3,6 +3,7 @@ package main.java.model.jeu.carte;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte12 extends Carte {
 
@@ -20,18 +21,16 @@ public class Carte12 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
-		//Si le mur avance vers le détenteur de la carte
-		if (partie.getMancheCourante().getTourCourant().getDeplacementMur() > 0
-				&& joueur.getCouleur().equals(ECouleurJoueur.VERT)
-				|| partie.getMancheCourante().getTourCourant().getDeplacementMur() < 0
-						&& joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			
-			//Alors on ne lui retire pas sa mise
+	public void lancerEffet(Tour tour) {
+		// Si le mur avance vers le détenteur de la carte
+		if (tour.getDeplacementMur() > 0 && joueur.getCouleur().equals(ECouleurJoueur.VERT)
+				|| tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+
+			// Alors on ne lui retire pas sa mise
 			if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-				partie.getMancheCourante().getTourCourant().setMiseJoueurRouge(0);
+				tour.setMiseJoueurRouge(0);
 			} else {
-				partie.getMancheCourante().getTourCourant().setMiseJoueurVert(0);
+				tour.setMiseJoueurVert(0);
 			}
 		}
 	}

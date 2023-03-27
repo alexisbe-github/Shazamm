@@ -2,6 +2,7 @@ package main.java.model.jeu.carte;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 public class Carte8 extends Carte {
 
@@ -18,8 +19,8 @@ public class Carte8 extends Carte {
 	}
 
 	@Override
-	public void lancerEffet() {
-		partie.addAttaqueJoueur(joueur.getCouleur(), partie.getAttaqueJoueur(joueur.getCouleur()) * 2);
+	public void lancerEffet(Tour tour) {
+		tour.addAttaqueJoueur(joueur.getCouleur(), tour.getAttaqueJoueur(joueur.getCouleur()) * 2);
 	}
 
 }

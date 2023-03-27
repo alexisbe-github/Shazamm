@@ -62,40 +62,10 @@ public class Partie {
 		joueurVert.melangerPaquet();
 		joueurRouge.piocherCartes(3);
 		joueurVert.piocherCartes(3);
+		joueurRouge.remplirReserveDeMana();
+		joueurVert.remplirReserveDeMana();
 		pont.effondrerMorceauDuPont();
 		this.listeManche.add(new Manche());
-	}
-
-	public void enableMutisme(boolean enable) {
-		this.getMancheCourante().enableMutisme(enable);
-	}
-
-	public void lancerLarcin(Joueur caster) {
-		this.getMancheCourante().lancerLarcin(caster);
-	}
-
-	public void lancerClone(Joueur caster, Carte carteClonee) {
-		this.getMancheCourante().lancerClone(caster, carteClonee);
-	}
-
-	public void lancerFinDeManche() {
-		this.getMancheCourante().lancerFinDeManche();
-	}
-
-	public void recyclerMana(Joueur caster, int montant) {
-		this.getMancheCourante().changerMise(caster, montant);
-	}
-
-	public void addAttaqueJoueur(ECouleurJoueur joueur, int atq) {
-		this.getMancheCourante().addAttaqueJoueur(joueur, atq);
-	}
-
-	public int getAttaqueJoueur(ECouleurJoueur joueur) {
-		return this.getMancheCourante().getAttaqueJoueur(joueur);
-	}
-	
-	public List<Carte> getCartesJoueesParAdversaire(Joueur joueur){
-		return this.getMancheCourante().getCartesJoueesParAdversaire(joueur);
 	}
 
 	public Manche getMancheCourante() {

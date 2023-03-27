@@ -27,6 +27,10 @@ public class Tour {
 	public void activerMutisme(boolean enable) {
 		this.mutisme = enable;
 	}
+	
+	public boolean getMutisme() {
+		return this.mutisme;
+	}
 
 	public void activerFinDeManche() {
 		this.finDeManche = true;
@@ -96,9 +100,9 @@ public class Tour {
 			if (i < cartesJouees.size() - 1) {
 				Carte carteSuivante = cartesJouees.get(i + 1);
 				if (carteSuivante.getNumeroCarte() != carteCourante.getNumeroCarte())
-					carteCourante.lancerEffet();
+					carteCourante.lancerEffet(this);
 			} else {
-				carteCourante.lancerEffet();
+				carteCourante.lancerEffet(this);
 			}
 		}
 	}
