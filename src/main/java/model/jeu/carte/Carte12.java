@@ -23,9 +23,9 @@ public class Carte12 extends Carte {
 	@Override
 	public void lancerEffet(Tour tour) {
 		// Si le mur avance vers le détenteur de la carte
-		boolean joueurRougePerdLeTour = tour.getDeplacementMur() > 0 && joueur.getCouleur().equals(ECouleurJoueur.VERT);
-		boolean joueurVertPerdLeTour = tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE);
-		if (joueurRougePerdLeTour || joueurVertPerdLeTour) {
+		boolean joueurRougeEtRougePerdLeTour = tour.getDeplacementMur() > 0 && joueur.getCouleur().equals(ECouleurJoueur.VERT);
+		boolean joueurVertEtVertPerdLeTour = tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE);
+		if (joueurRougeEtRougePerdLeTour || joueurVertEtVertPerdLeTour) {
 			// Alors on ne lui retire pas sa mise
 			tour.changerMise(joueur, 0);
 		}
