@@ -29,29 +29,29 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 * Table <code><i>joueur</i></code>, contenant différentes informations et
 	 * statistiques sur les joueurs.
 	 */
-	private static final String JOUEUR = "joueur";
+	private final String JOUEUR = "joueur";
 	/**
 	 * Colonne <code><i>id</i></code>, correspondant à l'identifiant des joueurs.
 	 */
-	private static final String ID = "id";
+	private final String ID = "id";
 	/**
 	 * Colonne <code><i>nom</i></code>, correspondant au nom des joueurs.
 	 */
-	private static final String NOM = "nom";
+	private final String NOM = "nom";
 	/**
 	 * Colonne <code><i>prenom</i></code>, correspondant au prénom des joueurs.
 	 */
-	private static final String PRENOM = "prenom";
+	private final String PRENOM = "prenom";
 	/**
 	 * Colonne <code><i>avatar</i></code>, correspondant au chemin vers l'image
 	 * représentant l'avatar des joueurs.
 	 */
-	private static final String AVATAR = "avatar";
+	private final String AVATAR = "avatar";
 	/**
 	 * Colonne <code><i>nb_parties_gagnees</i></code>, correspondant au nombre de
 	 * parties remportées par les joueurs.
 	 */
-	private static final String NB_PARTIES_GAGNEES = "nb_parties_gagnees";
+	private final String NB_PARTIES_GAGNEES = "nb_parties_gagnees";
 
 	/**
 	 * {@inheritDoc}
