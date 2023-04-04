@@ -50,7 +50,7 @@ public abstract class Carte {
 
 	@Override
 	public String toString() {
-		return "Carte [nom=" + nom + ", path=" + path + ", description=" + description + ", numeroCarte=" + numeroCarte + "]";
+		return "Carte "+ numeroCarte + ": nom : " + nom + ", desc : " + description + ".";
 	}
 
 }

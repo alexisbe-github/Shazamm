@@ -54,6 +54,8 @@ public class Partie {
 		joueurVert.initialiserPaquet(this);
 		joueurRouge.piocherCartes(5);
 		joueurVert.piocherCartes(5);
+		joueurRouge.remplirReserveDeMana();
+		joueurVert.remplirReserveDeMana();
 		this.listeManche.add(new Manche());
 	}
 

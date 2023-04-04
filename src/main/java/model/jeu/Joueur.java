@@ -30,9 +30,29 @@ public class Joueur {
 
 	@Override
 	public String toString() {
-		return "Joueur [COULEUR=" + COULEUR + ", NOM=" + NOM + ", PRENOM=" + PRENOM + ", AVATAR=" + AVATAR
-				+ ", manaActuel=" + manaActuel + ", paquet=" + paquet + ", mainDuJoueur=" + mainDuJoueur + ", defausse="
-				+ defausse + "]";
+		return "Joueur " + COULEUR + ". nom : " + NOM + " " + PRENOM
+				+ ", mana : " + manaActuel + "\nmain :\n" + this.mainString("main");
+	}
+	
+	/*
+	 * @param collec : "main" si on veut la String de la main, n'importe quoi d'autre si on veut la defausse
+	 */
+	public String mainString(String collec) {
+		String res = "";
+		if(collec == "main") {
+			for(Carte c : mainDuJoueur) {
+				res+=c+"\n";
+			}
+		}else {
+			for(Carte c : defausse) {
+				res+=c+"\n";
+			}
+		}
+		return res;
+	}
+	
+	public String getNom() {
+		return this.NOM+" "+this.PRENOM;
 	}
 
 	public ECouleurJoueur getCouleur() {
