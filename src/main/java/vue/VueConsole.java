@@ -1,12 +1,15 @@
 package main.java.vue;
 
+import java.util.Scanner;
+
 import main.java.model.jeu.ECouleurJoueur;
+import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
 public class VueConsole {
 	
-	Partie partieActuelle;
-	boolean partieEnCours = true;
+	private Partie partieActuelle;
+	private boolean partieEnCours = true;
 
 	public VueConsole(Partie p){
 		this.partieActuelle = p;
@@ -18,6 +21,8 @@ public class VueConsole {
 		while(partieEnCours) {
 			//todo
 			System.out.println(this.partieActuelle.getJoueurRouge());
+			this.choixMise(this.partieActuelle.getJoueurRouge());
+			this.choixCarte(this.partieActuelle.getJoueurRouge());
 			partieEnCours = false;
 		}
 	}
@@ -26,14 +31,43 @@ public class VueConsole {
 		//todo
 	}
 	
-	private void choixCarte(ECouleurJoueur couleur) {
+	private void choixCarte(Joueur j) {
 		System.out.println("Quelle carte souhaitez-vous jouer ?");
-		System.out.println();
-		//scan todo
+		System.out.println(j.mainString("main"));
+		boolean validInput = false;
+		
+		while(!validInput) {
+			Scanner saisie = new Scanner(System.in);
+			String choix = saisie.next();
+			for(int i=0 ; i<j.getMainDuJoueur().size() ; i++) {
+				if(j.getMainDuJoueur().get(i).getNom().toLowerCase().equals(choix.toLowerCase())) {
+					j.getMainDuJoueur().get(i).lancerEffet(this.partieActuelle.getMancheCourante().getTourCourant());
+					validInput = true;
+					System.out.println(j.getMainDuJoueur().get(i)); // DEBUG
+				}
+			}
+			if(!validInput) {
+				System.out.println("carte incorrecte, veuillez ressaisir une mise valide :");
+			}
+		}
 	}
 	
-	private void choixMise(ECouleurJoueur couleur) {
-		System.out.println("Quelle quantité de mana souhaitez-vous miser ?");
-		//scan todo
+	private void choixMise(Joueur j) {
+		System.out.println(j.getNom()+" peut saisir sa mise :");
+		int choix = 0;
+		boolean validInput = false;
+		
+		while(!validInput) {
+			Scanner saisie = new Scanner(System.in);
+			choix = saisie.nextInt();
+			if(choix<=j.getManaActuel()&&choix>0) {
+				this.partieActuelle.getMancheCourante().getTourCourant().setMiseJoueur(j, choix);
+				System.out.println("Total mise de Mana : "+choix);
+				validInput=true;
+			}else {
+				System.out.println("mise incorrecte, veuillez ressaisir une mise valide :");
+			}
+		}	
 	}
+	
 }

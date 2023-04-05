@@ -23,6 +23,10 @@ public abstract class Carte {
 		return this.joueur;
 	}
 	
+	public String getNom() {
+		return nom;
+	}
+	
 	public void changerDetenteurCarte(Joueur nouveauDetenteur) {
 		joueur = nouveauDetenteur;
 	}

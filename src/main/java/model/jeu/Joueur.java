@@ -34,12 +34,22 @@ public class Joueur {
 				+ ", mana : " + manaActuel + "\nmain :\n" + this.mainString("main");
 	}
 	
+	//voir si autre accès possible depuis vue-console
+	public List<Carte> getMainDuJoueur(){
+		return mainDuJoueur;
+	}
+	
+	//voir si autre accès possible depuis vue-console
+	public int getManaActuel() {
+		return manaActuel;
+	}
+	
 	/*
 	 * @param collec : "main" si on veut la String de la main, n'importe quoi d'autre si on veut la defausse
 	 */
 	public String mainString(String collec) {
 		String res = "";
-		if(collec == "main") {
+		if(collec.equals("main")) {
 			for(Carte c : mainDuJoueur) {
 				res+=c+"\n";
 			}
