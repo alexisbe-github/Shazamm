@@ -41,7 +41,7 @@ public class VueConsole {
 	
 	private void choixCarte(Joueur j) {
 		System.out.println("["+j.getCouleur()+"] Quelle carte souhaitez-vous jouer ?");
-		System.out.println(j.mainString("main"));
+		System.out.println(j.mainString());
 		boolean validInput = false;
 		
 		while(!validInput) {

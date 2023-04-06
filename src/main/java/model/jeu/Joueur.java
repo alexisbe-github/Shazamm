@@ -31,7 +31,7 @@ public class Joueur {
 	@Override
 	public String toString() {
 		return "Joueur " + COULEUR + ". nom : " + NOM + " " + PRENOM
-				+ ", mana : " + manaActuel + "\nmain :\n" + this.mainString("main");
+				+ ", mana : " + manaActuel + "\nmain :\n" + this.mainString();
 	}
 	
 	//voir si autre accès possible depuis vue-console
@@ -47,16 +47,18 @@ public class Joueur {
 	/*
 	 * @param collec : "main" si on veut la String de la main, n'importe quoi d'autre si on veut la defausse
 	 */
-	public String mainString(String collec) {
+	public String mainString() {
 		String res = "";
-		if(collec.equals("main")) {
-			for(Carte c : mainDuJoueur) {
-				res+=c+"\n";
-			}
-		}else {
-			for(Carte c : defausse) {
-				res+=c+"\n";
-			}
+		for(Carte c : mainDuJoueur) {
+			res+=c+"\n";
+		}
+		return res;
+	}
+	
+	public String defausseString() {
+		String res = "";
+		for(Carte c : defausse) {
+			res+=c+"\n";
 		}
 		return res;
 	}
