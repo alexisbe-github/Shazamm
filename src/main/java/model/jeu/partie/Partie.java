@@ -10,13 +10,13 @@ import main.java.model.jeu.carte.Carte;
 
 public class Partie {
 
-	private Joueur joueurVert, joueurRouge;
+	private Joueur joueur1, joueur2;
 	private Pont pont;
 	private List<Manche> listeManche;
 
 	public Partie(Joueur j1, Joueur j2) {
-		joueurRouge = j1;
-		joueurVert = j2;
+		joueur2 = j1;
+		joueur1 = j2;
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		lancerPartie();
@@ -50,22 +50,22 @@ public class Partie {
 	}
 
 	private void lancerPartie() {
-		joueurRouge.initialiserPaquet(this);
-		joueurVert.initialiserPaquet(this);
-		joueurRouge.piocherCartes(5);
-		joueurVert.piocherCartes(5);
-		joueurRouge.remplirReserveDeMana();
-		joueurVert.remplirReserveDeMana();
+		joueur2.initialiserPaquet(this);
+		joueur1.initialiserPaquet(this);
+		joueur2.piocherCartes(5);
+		joueur1.piocherCartes(5);
+		joueur2.remplirReserveDeMana();
+		joueur1.remplirReserveDeMana();
 		this.listeManche.add(new Manche());
 	}
 
 	public void lancerNouvelleManche() {
-		joueurRouge.melangerPaquet();
-		joueurVert.melangerPaquet();
-		joueurRouge.piocherCartes(3);
-		joueurVert.piocherCartes(3);
-		joueurRouge.remplirReserveDeMana();
-		joueurVert.remplirReserveDeMana();
+		joueur2.melangerPaquet();
+		joueur1.melangerPaquet();
+		joueur2.piocherCartes(3);
+		joueur1.piocherCartes(3);
+		joueur2.remplirReserveDeMana();
+		joueur1.remplirReserveDeMana();
 		pont.effondrerMorceauDuPont();
 		this.pont.setup();
 		this.listeManche.add(new Manche());
@@ -90,12 +90,12 @@ public class Partie {
 		return this.pont;
 	}
 
-	public Joueur getJoueurVert() {
-		return this.joueurVert;
+	public Joueur getJoueur1() {
+		return this.joueur1;
 	}
 
-	public Joueur getJoueurRouge() {
-		return this.joueurRouge;
+	public Joueur getJoueur2() {
+		return this.joueur2;
 	}
 
 }

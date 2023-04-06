@@ -18,13 +18,16 @@ public class VueConsole {
 	
 	//Implémenter strategy
 	private void lancerJeu() {
-		while(partieEnCours) {
-			//todo
-			System.out.println(this.partieActuelle.getJoueurRouge());
-			this.jouer(this.partieActuelle.getJoueurRouge());
+		while(partieEnCours) {	
+			System.out.println(this.partieActuelle.getJoueur1());
+			this.jouer(this.partieActuelle.getJoueur1());
 			partieEnCours = false;
 		}
 	}
+	
+	
+	
+	
 	
 	private void printJeu() {
 		//todo
