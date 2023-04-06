@@ -21,8 +21,7 @@ public class VueConsole {
 		while(partieEnCours) {
 			//todo
 			System.out.println(this.partieActuelle.getJoueurRouge());
-			this.choixMise(this.partieActuelle.getJoueurRouge());
-			this.choixCarte(this.partieActuelle.getJoueurRouge());
+			this.jouer(this.partieActuelle.getJoueurRouge());
 			partieEnCours = false;
 		}
 	}
@@ -31,8 +30,14 @@ public class VueConsole {
 		//todo
 	}
 	
+	private void jouer(Joueur j) {
+		System.out.println("["+j.getCouleur()+"] TOUR DE "+j.getNom()+".");
+		choixCarte(j);
+		choixMise(j);
+	}
+	
 	private void choixCarte(Joueur j) {
-		System.out.println("Quelle carte souhaitez-vous jouer ?");
+		System.out.println("["+j.getCouleur()+"] Quelle carte souhaitez-vous jouer ?");
 		System.out.println(j.mainString("main"));
 		boolean validInput = false;
 		
@@ -53,7 +58,8 @@ public class VueConsole {
 	}
 	
 	private void choixMise(Joueur j) {
-		System.out.println(j.getNom()+" peut saisir sa mise :");
+		System.out.println("["+j.getCouleur()+"] Mana de "+j.getNom()+" : "+j.getManaActuel()+".");
+		System.out.println("["+j.getCouleur()+"] "+j.getNom()+" peut saisir sa mise :");
 		int choix = 0;
 		boolean validInput = false;
 		

@@ -67,6 +67,7 @@ public class Partie {
 		joueurRouge.remplirReserveDeMana();
 		joueurVert.remplirReserveDeMana();
 		pont.effondrerMorceauDuPont();
+		this.pont.setup();
 		this.listeManche.add(new Manche());
 	}
 
