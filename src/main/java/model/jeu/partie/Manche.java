@@ -26,5 +26,9 @@ public class Manche {
 	public boolean getMutismeCourant() {
 		return mutismeCourant;
 	}
+	
+	public int getNombreTours() {
+		return listeTours.size();
+	}
 
 }

@@ -14,7 +14,7 @@ public class Main {
 		ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 		ECouleurJoueur couleurJ2 = couleursTirees.get(1);
 		Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
-		Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "Vert", "blabla");
+		Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 		Partie p = new Partie(joueur1, joueur2);
 		//System.out.println(joueur1);
 		//System.out.println(joueur2);

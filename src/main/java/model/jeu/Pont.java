@@ -29,7 +29,7 @@ public class Pont {
             res+=" ";
         }
         res+="|";
-        for(int i=this.positionMurFeu;i<this.positionJoueurVert;i++) {
+        for(int i=this.positionMurFeu;i<this.positionJoueurVert-1;i++) {
             res+=" ";
         }
         res+="V\n";
