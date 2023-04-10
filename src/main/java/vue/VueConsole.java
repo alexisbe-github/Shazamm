@@ -43,7 +43,6 @@ public class VueConsole {
 		choixCarte(j);
 	}
 	
-	//scanner non close() ça pose soucis je sais pas trop pourquoi
 	private Carte choixCarte(Joueur j) {
 		System.out.println("["+j.getCouleur()+"] Quelle carte souhaitez-vous jouer ? (saisir le numéro)");
 		System.out.println(j.mainString());

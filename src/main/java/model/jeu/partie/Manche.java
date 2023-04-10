@@ -19,7 +19,8 @@ public class Manche {
 	}
 
 	public void passerAuTourSuivant() {
-		this.mutismeCourant = this.getTourCourant().getMutisme();
+		Tour tourCourant = getTourCourant();
+		this.mutismeCourant = tourCourant.getMutisme();
 		this.listeTours.add(new Tour(mutismeCourant));
 	}
 
@@ -29,6 +30,10 @@ public class Manche {
 	
 	public int getNombreTours() {
 		return listeTours.size();
+	}
+	
+	public List<Tour> getListeTours(){
+		return listeTours;
 	}
 
 }

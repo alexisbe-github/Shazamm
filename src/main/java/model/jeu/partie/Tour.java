@@ -125,13 +125,6 @@ public class Tour {
 		}
 	}
 
-	public List<Carte> getCartesJoueesParAdversaire(Joueur joueur) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
-			return this.cartesJoueesVert;
-		else
-			return this.cartesJoueesRouge;
-	}
-
 	/**
 	 * Effet de la carte 3: change le propriétaire de la carte
 	 * 
@@ -222,6 +215,14 @@ public class Tour {
 
 	public int getAttaqueJoueurVert() {
 		return attaqueJoueurVert;
+	}
+
+	public List<Carte> getCartesJoueesVert() {
+		return cartesJoueesVert;
+	}
+
+	public List<Carte> getCartesJoueesRouge() {
+		return cartesJoueesRouge;
 	}
 
 }

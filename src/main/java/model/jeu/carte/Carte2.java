@@ -24,7 +24,7 @@ public class Carte2 extends Carte {
 
 	@Override
 	public void lancerEffet(Tour tour) {
-		List<Carte> cartesJoueesParAdversaire = tour.getCartesJoueesParAdversaire(joueur);
+		List<Carte> cartesJoueesParAdversaire = partie.getCartesJoueesParAdversaireTourPrecedent(joueur);
 		System.out.println("Entrez le numéro de la carte de l'adversaire à cloner:");
 		System.out.println(cartesJoueesParAdversaire);
 		boolean trouve = false;

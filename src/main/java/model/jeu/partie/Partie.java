@@ -15,10 +15,10 @@ public class Partie {
 	private List<Manche> listeManche;
 
 	public Partie(Joueur j1, Joueur j2) {
-		if(j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			joueurRouge = j1;
 			joueurVert = j2;
-		}else {
+		} else {
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
@@ -76,6 +76,35 @@ public class Partie {
 		this.listeManche.add(new Manche());
 	}
 
+	/**
+	 * Récupère la liste des cartes jouées par l'adversaire au tour précédent Si on
+	 * est en début de manche on va chercher le dernier tour de la manche précédente
+	 * 
+	 * @param joueur qui demande les cartes adverses
+	 * @return List<Carte> jouées par l'adversaire
+	 */
+	public List<Carte> getCartesJoueesParAdversaireTourPrecedent(Joueur joueur) {
+		List<Carte> res = new ArrayList<Carte>();
+		Tour tourPrecedent;
+		Manche mancheCourante = this.getMancheCourante();
+
+		// On calcule le tour précédent
+		if (mancheCourante.getNombreTours() <= 1) {
+			Manche manchePrecedente = this.listeManche.get(this.listeManche.size() - 2);
+			List<Tour> tours = manchePrecedente.getListeTours();
+			tourPrecedent = tours.get(manchePrecedente.getNombreTours() - 1);
+		} else {
+			List<Tour> tours = mancheCourante.getListeTours();
+			tourPrecedent = tours.get(mancheCourante.getNombreTours() - 2);
+		}
+
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			return tourPrecedent.getCartesJoueesVert();
+		else
+			return tourPrecedent.getCartesJoueesRouge();
+
+	}
+
 	public Manche getMancheCourante() {
 		return this.listeManche.get(this.listeManche.size() - 1);
 	}
@@ -106,5 +135,5 @@ public class Partie {
 	public int getNombreManches() {
 		return this.listeManche.size();
 	}
-	
+
 }
