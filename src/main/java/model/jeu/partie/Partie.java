@@ -77,7 +77,7 @@ public class Partie {
 	}
 
 	/**
-	 * Récupère la liste des cartes jouées par l'adversaire au tour précédent Si on
+	 * Récupère la liste des cartes jouées par l'adversaire au tour précédent. Si on
 	 * est en début de manche on va chercher le dernier tour de la manche précédente
 	 * 
 	 * @param joueur qui demande les cartes adverses
