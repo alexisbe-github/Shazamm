@@ -20,7 +20,7 @@ public class Pont {
 
 	public boolean unSorcierEstTombe() {
 		boolean res = false;
-		if (positionJoueurRouge <= indexLave || positionJoueurVert >= indexLave)
+		if (positionJoueurRouge <= indexLave || positionJoueurVert >= this.TAILLE_PONT-this.indexLave)
 			res = true;
 		return res;
 	}
@@ -47,6 +47,7 @@ public class Pont {
 				res += "O";
 			}
 		}
+		res+="\n R:"+this.positionJoueurRouge+" Mur:"+this.positionMurFeu+" V :"+this.positionJoueurVert;
 		return res;
 	}
 
@@ -54,10 +55,16 @@ public class Pont {
 	 * Deplace le mur de feu sur le pont
 	 * 
 	 * @param dp int
+	 * DISTANCE A REMETTRE SELON SUJET
 	 */
 	public void deplacerMurDeFeu(int dp) {
 		if (positionMurFeu > 1 && positionMurFeu < TAILLE_PONT)
 			positionMurFeu += dp;
+		if (positionMurFeu-positionJoueurRouge<=1) {
+			positionJoueurRouge-=2;
+		}else if(positionMurFeu-positionJoueurVert>=-1) {
+			positionJoueurVert+=2;
+		}
 	}
 
 	/**

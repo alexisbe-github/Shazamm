@@ -37,7 +37,12 @@ public class VueConsole {
 			// lancement du tour
 			this.partie.getMancheCourante().getTourCourant().jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
 
-			this.partie.getMancheCourante().passerAuTourSuivant();
+			this.partie.lancerNouveauTour();
+			/*
+			 * BUG / MANQUE : 
+			 * DPMUR TOUT LE TEMPS A 1 (dans Tour)
+			 * LE MUR POUSSE PAS LE JOUEUR
+			 */
 		}
 	}
 

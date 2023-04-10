@@ -30,11 +30,8 @@ public class Manche {
 		Tour tourCourant = getTourCourant();
 		this.mutismeCourant = tourCourant.getMutisme();
 		this.listeTours.add(new Tour(mutismeCourant));
-		// utilisation de la fonction sigmoid pour faire tenir la différence entre les
-		// deux attaques en 3 valeurs possibles: -1,0,-1
-		System.out.println("R:" +tourCourant.getAttaqueJoueurRouge() + "       V:" + tourCourant.getAttaqueJoueurVert());
-		System.out.println( (1 / (1 + Math.exp(-(tourCourant.getAttaqueJoueurRouge() - tourCourant.getAttaqueJoueurVert())))));
-		return (int) (1 / (1 + Math.exp(-(tourCourant.getAttaqueJoueurRouge() - tourCourant.getAttaqueJoueurVert()))));
+		System.out.println("R:" +tourCourant.getAttaqueJoueurRouge() + "       V:" + tourCourant.getAttaqueJoueurVert());//DEBUG PRINT ATTAQUES JOUEURS
+		return tourCourant.getDeplacementMur();
 	}
 
 	public boolean getMutismeCourant() {

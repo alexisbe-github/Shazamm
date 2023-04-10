@@ -60,7 +60,7 @@ public class Tour {
 	 */
 	public void jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
 		// Initialisation des variables pour le tour
-		this.deplacementMur = 0;
+		this.deplacementMur = 1;
 		this.miseJoueurRouge = miseRouge;
 		this.miseJoueurVert = miseVert;
 		this.attaqueJoueurRouge = miseRouge;
@@ -70,6 +70,8 @@ public class Tour {
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
 
+		
+		
 		// On defausse toutes les cartes jouées
 		for (Carte cRouge : this.cartesJoueesRouge) {
 			cRouge.defausser();
@@ -78,8 +80,18 @@ public class Tour {
 			cVert.defausser();
 		}
 		
+		this.calculDeplacementMur();
+		
+		System.out.println("DEBUG DPMUR="+this.deplacementMur);
 		joueurRouge.depenserMana(this.miseJoueurRouge);
 		joueurVert.depenserMana(this.miseJoueurVert);
+	}
+	
+	private void calculDeplacementMur() {
+		if(this.attaqueJoueurRouge==this.attaqueJoueurVert)
+			this.deplacementMur=0;
+		else
+			this.deplacementMur*=(this.attaqueJoueurRouge-this.attaqueJoueurVert)/Math.abs(this.attaqueJoueurRouge-this.attaqueJoueurVert);
 	}
 
 	/**
@@ -104,7 +116,7 @@ public class Tour {
 
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
-		for (int i = 0; i < cartesJouees.size() && !this.finDeManche; i++) {
+		for (int i = 0; i < cartesJouees.size() && !this.finDeManche &&!this.mutisme; i++) {
 			Carte carteCourante = cartesJouees.get(i);
 			if (i < cartesJouees.size() - 1) {
 				Carte carteSuivante = cartesJouees.get(i + 1);
