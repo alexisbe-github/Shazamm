@@ -58,7 +58,7 @@ public class Tour {
 	 * @param miseRouge int
 	 * @param miseVert  int
 	 */
-	public void jouerTour(int miseRouge, int miseVert) {
+	public void jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
 		// Initialisation des variables pour le tour
 		this.deplacementMur = 0;
 		this.miseJoueurRouge = miseRouge;
@@ -77,6 +77,9 @@ public class Tour {
 		for (Carte cVert : this.cartesJoueesVert) {
 			cVert.defausser();
 		}
+		
+		joueurRouge.depenserMana(miseRouge);
+		joueurVert.depenserMana(miseVert);
 	}
 
 	/**
@@ -162,10 +165,12 @@ public class Tour {
 	 * @param mana   int montant en mana à ajouter/enlever
 	 */
 	public void changerMise(Joueur caster, int mana) {
-		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE))
+		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			this.miseJoueurRouge += mana;
-		else
+		}else {
 			this.miseJoueurVert += mana;
+		}
+		caster.depenserMana(mana);
 	}
 
 	/**

@@ -35,7 +35,7 @@ public class VueConsole {
 			choixCarte(joueurVert);
 
 			// lancement du tour
-			this.partie.getMancheCourante().getTourCourant().jouerTour(miseRouge, miseVert);
+			this.partie.getMancheCourante().getTourCourant().jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
 
 			this.partie.getMancheCourante().passerAuTourSuivant();
 		}
