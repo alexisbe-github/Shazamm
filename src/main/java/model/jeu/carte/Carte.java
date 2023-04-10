@@ -54,7 +54,7 @@ public abstract class Carte {
 
 	@Override
 	public String toString() {
-		return "Carte "+ numeroCarte + ": nom : " + nom + ", desc : " + description + ".";
+		return "Carte "+ numeroCarte + ": nom : " + nom + ", desc : " + description;
 	}
 
 }

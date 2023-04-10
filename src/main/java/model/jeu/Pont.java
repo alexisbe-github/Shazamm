@@ -12,36 +12,43 @@ public class Pont {
 		indexLave = 0;
 		placerJoueurs();
 	}
-	
+
 	public void placerJoueurs() {
 		positionJoueurRouge = positionMurFeu - ECART_MUR_DE_FEU;
 		positionJoueurVert = positionMurFeu + ECART_MUR_DE_FEU;
 	}
-	
+
+	public boolean unSorcierEstTombe() {
+		boolean res = false;
+		if (positionJoueurRouge <= indexLave || positionJoueurVert >= indexLave)
+			res = true;
+		return res;
+	}
+
 	@Override
-    public String toString() {
-        String res = "\n";
-        for(int i = 0;i<this.positionJoueurRouge;i++) {
-            res+=" ";
-        }
-        res+="R";
-        for(int i=this.positionJoueurRouge+1;i<this.positionMurFeu;i++) {
-            res+=" ";
-        }
-        res+="|";
-        for(int i=this.positionMurFeu;i<this.positionJoueurVert-1;i++) {
-            res+=" ";
-        }
-        res+="V\n";
-        for(int i=0;i<this.TAILLE_PONT;i++) {
-            if(i<indexLave || this.TAILLE_PONT - this.indexLave < i) {
-                res += "X";
-            }else {
-                res += "O";
-            }
-        }
-        return res;
-    }
+	public String toString() {
+		String res = "\n";
+		for (int i = 0; i < this.positionJoueurRouge; i++) {
+			res += " ";
+		}
+		res += "R";
+		for (int i = this.positionJoueurRouge + 1; i < this.positionMurFeu; i++) {
+			res += " ";
+		}
+		res += "|";
+		for (int i = this.positionMurFeu; i < this.positionJoueurVert - 1; i++) {
+			res += " ";
+		}
+		res += "V\n";
+		for (int i = 0; i < this.TAILLE_PONT; i++) {
+			if (i < indexLave || this.TAILLE_PONT - this.indexLave < i) {
+				res += "X";
+			} else {
+				res += "O";
+			}
+		}
+		return res;
+	}
 
 	/**
 	 * Deplace le mur de feu sur le pont

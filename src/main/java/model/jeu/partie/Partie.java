@@ -13,6 +13,7 @@ public class Partie {
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
 	private List<Manche> listeManche;
+	private boolean partieFinie;
 
 	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
@@ -24,6 +25,7 @@ public class Partie {
 		}
 		pont = new Pont();
 		listeManche = new ArrayList<>();
+		partieFinie = false;
 		lancerPartie();
 	}
 
@@ -65,15 +67,28 @@ public class Partie {
 	}
 
 	public void lancerNouvelleManche() {
-		joueurRouge.melangerPaquet();
-		joueurVert.melangerPaquet();
-		joueurRouge.piocherCartes(3);
-		joueurVert.piocherCartes(3);
-		joueurRouge.remplirReserveDeMana();
-		joueurVert.remplirReserveDeMana();
-		pont.effondrerMorceauDuPont();
-		pont.placerJoueurs();
-		this.listeManche.add(new Manche());
+		if (!pont.unSorcierEstTombe()) {
+			joueurRouge.melangerPaquet();
+			joueurVert.melangerPaquet();
+			joueurRouge.piocherCartes(3);
+			joueurVert.piocherCartes(3);
+			joueurRouge.remplirReserveDeMana();
+			joueurVert.remplirReserveDeMana();
+			pont.effondrerMorceauDuPont();
+			pont.placerJoueurs();
+			this.listeManche.add(new Manche());
+		} else {
+			partieFinie = true;
+		}
+	}
+
+	public void lancerNouveauTour() {
+		Manche mancheCourante = this.getMancheCourante();
+		pont.deplacerMurDeFeu(mancheCourante.passerAuTourSuivant());
+	}
+
+	public boolean getPartieFinie() {
+		return this.partieFinie;
 	}
 
 	/**

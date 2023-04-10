@@ -20,7 +20,7 @@ public class Carte8 extends Carte {
 
 	@Override
 	public void lancerEffet(Tour tour) {
-		tour.addAttaqueJoueur(joueur.getCouleur(), tour.getAttaqueJoueur(joueur.getCouleur()) * 2);
+		tour.addAttaqueJoueur(joueur.getCouleur(), tour.getAttaqueJoueur(joueur.getCouleur()));
 	}
 
 }

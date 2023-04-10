@@ -39,6 +39,10 @@ public class Joueur {
 		return mainDuJoueur;
 	}
 	
+	public void retirerCarteDeLaMain(Carte c) {
+		this.mainDuJoueur.remove(c);
+	}
+	
 	//voir si autre accès possible depuis vue-console
 	public int getManaActuel() {
 		return manaActuel;

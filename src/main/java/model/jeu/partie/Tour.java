@@ -43,10 +43,13 @@ public class Tour {
 	 * @param joueur      Joueur qui joue la carte
 	 */
 	public void jouerCarte(Carte carteAJouer, Joueur joueur) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			this.cartesJoueesRouge.add(carteAJouer);
-		else
+			joueur.retirerCarteDeLaMain(carteAJouer);
+		} else {
 			this.cartesJoueesVert.add(carteAJouer);
+			joueur.retirerCarteDeLaMain(carteAJouer);
+		}
 	}
 
 	/**
@@ -57,11 +60,11 @@ public class Tour {
 	 */
 	public void jouerTour(int miseRouge, int miseVert) {
 		// Initialisation des variables pour le tour
-		this.attaqueJoueurRouge = 0;
-		this.attaqueJoueurVert = 0;
 		this.deplacementMur = 0;
 		this.miseJoueurRouge = miseRouge;
 		this.miseJoueurVert = miseVert;
+		this.attaqueJoueurRouge = miseRouge;
+		this.attaqueJoueurVert = miseVert;
 
 		// Si mutisme n'est pas activé pour la manche alors on peut jouer les cartes
 		if (!this.mutisme)
@@ -91,6 +94,9 @@ public class Tour {
 		cartesJouees.addAll(this.cartesJoueesRouge);
 		cartesJouees.addAll(this.cartesJoueesVert);
 
+
+
+		
 		Collections.sort(cartesJouees, c); // Tri des cartes jouées
 
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
