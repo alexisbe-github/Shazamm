@@ -44,6 +44,9 @@ public class VueMenu extends JPanel {
 		init();
 	}
 
+	/**
+	 * Initialise le panel.
+	 */
 	private void init() {
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		
