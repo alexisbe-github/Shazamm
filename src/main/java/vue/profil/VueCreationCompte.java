@@ -43,8 +43,7 @@ public class VueCreationCompte extends JPanel {
 	private final JButton boutonOK = new JButton("OK");
 
 	/**
-	 * Construit un <code>JPanel</code> avec un espacement entre les composants de
-	 * 10px et un alignement centré.
+	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
 	 */
 	public VueCreationCompte() {
 		super(new GridBagLayout());
@@ -54,7 +53,7 @@ public class VueCreationCompte extends JPanel {
 	/**
 	 * Initialise le panel.
 	 */
-	public void init() {
+	private void init() {
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		
 		c.fill = GridBagConstraints.HORIZONTAL; // Remplissage horizontal
@@ -63,39 +62,33 @@ public class VueCreationCompte extends JPanel {
 		c.gridy = 0; // Position en Y
 		this.add(labelNom, c); // Ajout du composant avec les contraintes
 		
-		c.fill = GridBagConstraints.HORIZONTAL; // On réassigne la valeur par souci de lisibilité
 		c.weightx = 0.75;
 		c.gridx = 1;
 		c.gridy = 0;
 		this.add(textFieldNom, c);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.25;
 		c.gridx = 0;
 		c.gridy = 1;
 		this.add(labelPrenom, c);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.75;
 		c.gridx = 1;
 		c.gridy = 1;
 		this.add(textFieldPrenom, c);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.65;
 		c.gridx = 0;
 		c.gridy = 2;
 		c.insets = new Insets(10, 30, 10, 30); // Padding du composant
 		this.add(boutonSelectionAvatar, c);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.35;
 		c.gridx = 1;
 		c.gridy = 2;
 		c.insets = new Insets(10, 10, 10, 10);
 		this.add(avatarSelectionne, c);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 3;

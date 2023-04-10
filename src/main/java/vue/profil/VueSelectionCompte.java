@@ -28,8 +28,7 @@ public class VueSelectionCompte extends JPanel {
 	private JComboBox<Object> listeChoix;
 	
 	/**
-	 * Construit un <code>JPanel</code> avec un espacement entre les composants de
-	 * 10px et un alignement centré.
+	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
 	 */
 	public VueSelectionCompte() {
 		super(new GridBagLayout());
@@ -39,7 +38,7 @@ public class VueSelectionCompte extends JPanel {
 	/**
 	 * Initialise le panel.
 	 */
-	public void init() {
+	private void init() {
 		Object[] choix = {}; //TODO À modifier/importer depuis la BDD
 		listeChoix = new JComboBox<>(choix);
 		
@@ -51,7 +50,6 @@ public class VueSelectionCompte extends JPanel {
 		c.gridy = 0; // Position en Y
 		this.add(labelSelection);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 0.8;
 		c.gridx = 1;
 		c.gridy = 0;
