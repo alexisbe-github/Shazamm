@@ -78,8 +78,8 @@ public class Tour {
 			cVert.defausser();
 		}
 		
-		joueurRouge.depenserMana(miseRouge);
-		joueurVert.depenserMana(miseVert);
+		joueurRouge.depenserMana(this.miseJoueurRouge);
+		joueurVert.depenserMana(this.miseJoueurVert);
 	}
 
 	/**
@@ -165,12 +165,10 @@ public class Tour {
 	 * @param mana   int montant en mana à ajouter/enlever
 	 */
 	public void changerMise(Joueur caster, int mana) {
-		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE))
 			this.miseJoueurRouge += mana;
-		}else {
+		else
 			this.miseJoueurVert += mana;
-		}
-		caster.depenserMana(mana);
 	}
 
 	/**
