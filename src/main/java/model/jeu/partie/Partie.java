@@ -72,7 +72,7 @@ public class Partie {
 		joueurRouge.remplirReserveDeMana();
 		joueurVert.remplirReserveDeMana();
 		pont.effondrerMorceauDuPont();
-		this.pont.setup();
+		pont.placerJoueurs();
 		this.listeManche.add(new Manche());
 	}
 
@@ -107,10 +107,6 @@ public class Partie {
 
 	public Manche getMancheCourante() {
 		return this.listeManche.get(this.listeManche.size() - 1);
-	}
-
-	public void setupPont() {
-		this.pont.setup();
 	}
 
 	public int getPosJoueur(ECouleurJoueur couleur) {

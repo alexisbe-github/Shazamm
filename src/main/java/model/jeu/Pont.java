@@ -9,11 +9,11 @@ public class Pont {
 
 	public Pont() {
 		positionMurFeu = (int) Math.ceil(TAILLE_PONT / 2);
-		setup();
 		indexLave = 0;
+		placerJoueurs();
 	}
 	
-	public void setup() {
+	public void placerJoueurs() {
 		positionJoueurRouge = positionMurFeu - ECART_MUR_DE_FEU;
 		positionJoueurVert = positionMurFeu + ECART_MUR_DE_FEU;
 	}
