@@ -109,6 +109,10 @@ public class Partie {
 		return this.listeManche.get(this.listeManche.size() - 1);
 	}
 
+	public void placerJoueurs() {
+		this.pont.placerJoueurs();
+	}
+
 	public int getPosJoueur(ECouleurJoueur couleur) {
 		if (couleur.equals(ECouleurJoueur.ROUGE))
 			return this.pont.getPosJoueurRouge();
