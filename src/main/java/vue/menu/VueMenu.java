@@ -15,6 +15,9 @@ import javax.swing.JPanel;
  */
 public class VueMenu extends JPanel {
 
+	/**
+	 * L'icône permettant d'accéder au profil du joueur
+	 */
 	private final JLabel iconeProfil = new JLabel();
 	/**
 	 * Le bouton qui permet de lancer une partie
