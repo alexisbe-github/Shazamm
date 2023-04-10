@@ -1,6 +1,5 @@
 package main.java.vue.profil;
 
-import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 
 /**

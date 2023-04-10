@@ -1,6 +1,5 @@
 package main.java.vue.profil;
 
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -45,6 +44,7 @@ public class VueSelectionCompte extends JPanel {
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		
 		c.fill = GridBagConstraints.HORIZONTAL; // Remplissage horizontal
+		
 		c.weightx = 0.2; // Poids en X
 		c.gridx = 0; // Position en X (index 0)
 		c.gridy = 0; // Position en Y
@@ -55,6 +55,6 @@ public class VueSelectionCompte extends JPanel {
 		c.gridy = 0;
 		this.add(listeChoix);
 		
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Padding de 10px de chaque côté du panneau
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 	}
 }

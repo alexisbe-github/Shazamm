@@ -1,6 +1,8 @@
 package main.java.vue;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
@@ -23,6 +25,13 @@ public class VueJeu extends JFrame {
 		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
 		setAlwaysOnTop(false); // Empêche la fenêtre de rester au-dessus
 		setExtendedState(MAXIMIZED_BOTH); // Met la fenêtre en plein écran
+
+		try { // Utilise l'apparence par défaut des applications système
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e) {
+		}
+
 	}
 
 }
