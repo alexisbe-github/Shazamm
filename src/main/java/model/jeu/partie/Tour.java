@@ -72,6 +72,10 @@ public class Tour {
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
 
+		//On met à jour l'attaque des joueurs le cas où les mises ont été modif
+		this.attaqueJoueurRouge = miseJoueurRouge;
+		this.attaqueJoueurVert = miseJoueurVert;
+		
 		// On defausse toutes les cartes jouées
 		for (Carte cRouge : this.cartesJoueesRouge) {
 			cRouge.defausser();

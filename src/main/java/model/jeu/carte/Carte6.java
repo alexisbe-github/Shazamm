@@ -25,7 +25,7 @@ public class Carte6 extends Carte {
 	public void lancerEffet(Tour tour) {
 		// Pour l'instant on le fait au scanner
 		Scanner sc = new Scanner(System.in);
-		System.out.println("Rentrez la mise de mana à modifier sur le tour (entre +5 et -5):");
+		System.out.println("["+joueur.getCouleur()+"]"+"Rentrez la mise de mana à modifier sur le tour (entre +5 et -5):");
 		int mana;
 		do {
 			mana = sc.nextInt();
