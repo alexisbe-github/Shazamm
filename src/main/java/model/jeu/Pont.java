@@ -19,7 +19,7 @@ public class Pont {
 	}
 
 	public boolean murDeFeuPousseUnSorcier() {
-		return this.indexLave == this.positionJoueurRouge || this.indexLave == this.positionJoueurRouge;
+		return this.positionMurFeu == this.positionJoueurRouge || this.positionMurFeu == this.positionJoueurVert;
 	}
 
 	public boolean unSorcierEstTombe() {

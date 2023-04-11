@@ -110,7 +110,12 @@ public class Partie {
 		Manche mancheCourante = this.getMancheCourante();
 		int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
 		pont.deplacerMurDeFeu(dpMur);
-		this.lancerNouveauTour();
+		System.out.println(pont.murDeFeuPousseUnSorcier());
+		if (pont.murDeFeuPousseUnSorcier()) {
+			this.lancerNouvelleManche();
+		} else {
+			this.lancerNouveauTour();
+		}
 		// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
 		// joueur avec 0 de mana
 		if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
