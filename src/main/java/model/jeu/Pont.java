@@ -84,7 +84,7 @@ public class Pont {
 	/**
 	 * Incrémente le nombre de cases de lave pour chaque extrémité du pont
 	 */
-	public void effondrerMorceauDuPont() {
+	public void effondrerMorceauxDuPont() {
 		if (indexLave < (int) Math.ceil(TAILLE_PONT / 2))
 			indexLave++;
 	}

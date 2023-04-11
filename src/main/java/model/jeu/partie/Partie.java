@@ -79,7 +79,7 @@ public class Partie {
 			joueurVert.piocherCartes(3);
 			joueurRouge.remplirReserveDeMana();
 			joueurVert.remplirReserveDeMana();
-			pont.effondrerMorceauDuPont();
+			pont.effondrerMorceauxDuPont();
 			pont.placerJoueurs();
 			this.listeManche.add(new Manche());
 		} else {

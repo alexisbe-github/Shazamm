@@ -89,6 +89,9 @@ public class Tour {
 		joueurRouge.depenserMana(this.miseJoueurRouge);
 		joueurVert.depenserMana(this.miseJoueurVert);
 
+		if (this.finDeManche)
+			this.deplacementMur = 0;
+		
 		return this.deplacementMur;
 	}
 
@@ -141,7 +144,7 @@ public class Tour {
 			if (carteCourante.getNumeroCarte() < 9) {
 				this.calculDeplacementMur();
 			}
-			
+
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
 			if (!carteJoueeDeuxFois)
