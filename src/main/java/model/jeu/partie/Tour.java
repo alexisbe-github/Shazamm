@@ -57,21 +57,21 @@ public class Tour {
 	 * 
 	 * @param miseRouge int
 	 * @param miseVert  int
+	 * @return int le déplacement du mur à la fin du tour
 	 */
-	public void jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
+	public int jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
 		// Initialisation des variables pour le tour
 		this.deplacementMur = 1;
 		this.miseJoueurRouge = miseRouge;
 		this.miseJoueurVert = miseVert;
 		this.attaqueJoueurRouge = miseRouge;
 		this.attaqueJoueurVert = miseVert;
+		this.calculDeplacementMur();
 
 		// Si mutisme n'est pas activé pour la manche alors on peut jouer les cartes
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
 
-		
-		
 		// On defausse toutes les cartes jouées
 		for (Carte cRouge : this.cartesJoueesRouge) {
 			cRouge.defausser();
@@ -79,19 +79,21 @@ public class Tour {
 		for (Carte cVert : this.cartesJoueesVert) {
 			cVert.defausser();
 		}
-		
-		this.calculDeplacementMur();
-		
-		System.out.println("DEBUG DPMUR="+this.deplacementMur);
+
+		System.out.println("Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
+				+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
 		joueurRouge.depenserMana(this.miseJoueurRouge);
 		joueurVert.depenserMana(this.miseJoueurVert);
+
+		return this.deplacementMur;
 	}
-	
+
 	private void calculDeplacementMur() {
-		if(this.attaqueJoueurRouge==this.attaqueJoueurVert)
-			this.deplacementMur=0;
+		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
+			this.deplacementMur = 0;
 		else
-			this.deplacementMur*=(this.attaqueJoueurRouge-this.attaqueJoueurVert)/Math.abs(this.attaqueJoueurRouge-this.attaqueJoueurVert);
+			this.deplacementMur *= (this.attaqueJoueurRouge - this.attaqueJoueurVert)
+					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
 	}
 
 	/**
@@ -109,17 +111,21 @@ public class Tour {
 		cartesJouees.addAll(this.cartesJoueesRouge);
 		cartesJouees.addAll(this.cartesJoueesVert);
 
-
-
-		
 		Collections.sort(cartesJouees, c); // Tri des cartes jouées
 
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
-		for (int i = 0; i < cartesJouees.size() && !this.finDeManche &&!this.mutisme; i++) {
+		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
 			Carte carteCourante = cartesJouees.get(i);
+
 			if (i < cartesJouees.size() - 1) {
 				Carte carteSuivante = cartesJouees.get(i + 1);
+				int numCarteSuivante = carteSuivante.getNumeroCarte();
+				if (carteCourante.getNumeroCarte() < 9 && numCarteSuivante >= 9) { // si la carte suivante concerne les
+																					// deplacements de mur on calcule le
+																					// déplacement
+					this.calculDeplacementMur();
+				}
 				if (carteSuivante.getNumeroCarte() != carteCourante.getNumeroCarte())
 					carteCourante.lancerEffet(this);
 			} else {

@@ -56,6 +56,11 @@ public class Partie {
 		pont.reculerJoueur(dp, ECouleurJoueur.ROUGE);
 	}
 
+	public void printMancheEtTour() {
+		System.out.println("[PARTIE] MANCHE " + this.getNombreManches() + " TOUR NUMERO "
+				+ getMancheCourante().getNumeroTourCourant());
+	}
+
 	private void lancerPartie() {
 		joueurRouge.initialiserPaquet(this);
 		joueurVert.initialiserPaquet(this);
@@ -84,11 +89,56 @@ public class Partie {
 
 	public void lancerNouveauTour() {
 		Manche mancheCourante = this.getMancheCourante();
-		pont.deplacerMurDeFeu(mancheCourante.passerAuTourSuivant());
+		if (pont.murDeFeuPousseUnSorcier())
+			this.lancerNouvelleManche();
+		else
+			mancheCourante.passerAuTourSuivant();
 	}
 
 	public boolean getPartieFinie() {
 		return this.partieFinie;
+	}
+
+	public void jouerTour(int miseRouge, int miseVert) {
+		Manche mancheCourante = this.getMancheCourante();
+		int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
+		pont.deplacerMurDeFeu(dpMur);
+		this.lancerNouveauTour();
+		// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+		// joueur avec 0 de mana
+		if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
+			this.deplacerMurDeFeuVersJoueurAvec0Mana();
+			this.lancerNouvelleManche();
+		}
+	}
+
+	/**
+	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana S'arrête
+	 * lorsqu'il croise le perdant où lorsque le gagnant a moins de mana que la
+	 * différence de cases entre le mur et le perdant.
+	 */
+	private void deplacerMurDeFeuVersJoueurAvec0Mana() {
+		// on établit qui perd, qui gagne et dans quel sens le mur va se déplacer
+		int sensDeplacementMur = 0;
+		Joueur gagnant, perdant;
+		if (joueurRouge.getManaActuel() == 0) {
+			sensDeplacementMur = -1;
+			gagnant = joueurVert;
+			perdant = joueurRouge;
+		} else {
+			sensDeplacementMur = 1;
+			gagnant = joueurRouge;
+			perdant = joueurVert;
+
+		}
+
+		// Pour chaque point de mana on deplace le mur de feu d'une case vers le perdant
+		int diffMurPerdant = Math.abs(pont.getPosMurDeFeu() - pont.getPosJoueur(perdant));
+		if (diffMurPerdant > gagnant.getManaActuel()) {
+			pont.deplacerMurDeFeu(gagnant.getManaActuel() * sensDeplacementMur);
+		} else {
+			pont.deplacerMurDeFeu(diffMurPerdant * sensDeplacementMur);
+		}
 	}
 
 	/**

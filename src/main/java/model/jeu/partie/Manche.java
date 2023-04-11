@@ -3,6 +3,8 @@ package main.java.model.jeu.partie;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.model.jeu.Joueur;
+
 public class Manche {
 
 	private List<Tour> listeTours;
@@ -22,16 +24,15 @@ public class Manche {
 		return listeTours.size();
 	}
 
-	/**
-	 * 
-	 * @return int deplacement du mur sur le tour courant
-	 */
-	public int passerAuTourSuivant() {
+	public void passerAuTourSuivant() {
 		Tour tourCourant = getTourCourant();
 		this.mutismeCourant = tourCourant.getMutisme();
 		this.listeTours.add(new Tour(mutismeCourant));
-		System.out.println("R:" +tourCourant.getAttaqueJoueurRouge() + "       V:" + tourCourant.getAttaqueJoueurVert());//DEBUG PRINT ATTAQUES JOUEURS
-		return tourCourant.getDeplacementMur();
+	}
+
+	public int jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
+		Tour tourCourant = this.getTourCourant();
+		return tourCourant.jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
 	}
 
 	public boolean getMutismeCourant() {

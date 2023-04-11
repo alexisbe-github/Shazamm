@@ -19,8 +19,7 @@ public class VueConsole {
 	// Implémenter strategy
 	private void lancerJeu() {
 		while (!partie.getPartieFinie()) {
-			System.out.println("[PARTIE] MANCHE " + this.partie.getNombreManches() + " TOUR NUMERO "
-					+ this.partie.getMancheCourante().getNumeroTourCourant());
+			partie.printMancheEtTour();
 			this.printJeu();
 
 			Joueur joueurRouge = this.partie.getJoueurRouge();
@@ -35,14 +34,8 @@ public class VueConsole {
 			choixCarte(joueurVert);
 
 			// lancement du tour
-			this.partie.getMancheCourante().getTourCourant().jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
-
-			this.partie.lancerNouveauTour();
-			/*
-			 * BUG / MANQUE : 
-			 * DPMUR TOUT LE TEMPS A 1 (dans Tour)
-			 * LE MUR POUSSE PAS LE JOUEUR
-			 */
+			this.partie.jouerTour(miseRouge, miseVert);
+			
 		}
 	}
 
@@ -53,10 +46,10 @@ public class VueConsole {
 	private void choixCarte(Joueur j) {
 		Scanner saisie = new Scanner(System.in);
 		Carte carte;
-		boolean validInput = true;
+		boolean validInput = false;
 
 		int choix = 1;
-		while (validInput && choix != 0 && j.getMainDuJoueur().size() > 0) {
+		while (choix != 0 && j.getMainDuJoueur().size() > 0) {
 			System.out.println("[" + j.getCouleur() + "] Quelle carte souhaitez-vous jouer ? (saisir le numéro)");
 			System.out.println(j.mainString());
 			System.out.println("0: Arrêter de choisir une carte");
@@ -75,13 +68,14 @@ public class VueConsole {
 			}
 
 			if (!validInput) {
-				System.out.println("carte incorrecte, veuillez ressaisir une mise valide :");
+				System.out.println("Numéro de carte incorrecte, veuillez ressaisir un numéro de carte valide!\n");
 			}
 		}
 	}
 
 	private int choixMise(Joueur j) {
 		System.out.println("[" + j.getCouleur() + "] Mana de " + j.getNom() + " : " + j.getManaActuel() + ".");
+		System.out.println(j.mainString());
 		System.out.println("[" + j.getCouleur() + "] " + j.getNom() + " peut saisir sa mise :");
 		int choix = 0;
 		boolean validInput = false;
@@ -97,7 +91,7 @@ public class VueConsole {
 				System.out.println("mise incorrecte, veuillez ressaisir une mise valide :");
 			}
 		}
-
+		System.out.println("\n");
 		return choix;
 	}
 
