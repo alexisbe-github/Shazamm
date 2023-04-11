@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -79,10 +80,6 @@ public class Tour {
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
 
-		// On met à jour l'attaque des joueurs le cas où les mises ont été modif
-		this.attaqueJoueurRouge = miseJoueurRouge;
-		this.attaqueJoueurVert = miseJoueurVert;
-
 		// On defausse toutes les cartes jouées
 		for (Carte cRouge : this.cartesJoueesRouge) {
 			cRouge.defausser();
@@ -114,7 +111,7 @@ public class Tour {
 		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
 			this.deplacementMur = 0;
 		else
-			this.deplacementMur *= (this.attaqueJoueurRouge - this.attaqueJoueurVert)
+			this.deplacementMur = (this.attaqueJoueurRouge - this.attaqueJoueurVert)
 					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
 	}
 
@@ -161,15 +158,18 @@ public class Tour {
 
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
-			if (!carteJoueeDeuxFois)
+			if (!carteJoueeDeuxFois) {
+				System.out.println(carteCourante);
 				carteCourante.lancerEffet(this);
+			}
 
 			cartesJouees.clear();
 		}
 	}
-	
+
 	/**
 	 * Effet carte 2
+	 * 
 	 * @param carte
 	 */
 	public void activerClone(Carte carte) {
@@ -177,34 +177,49 @@ public class Tour {
 	}
 
 	/**
-	 * Effet Carte 3
-	 * En fonction de la couleur du joueur, on donne les cartes au joueur qui a
-	 * activé Larcin
+	 * Effet Carte 3 En fonction de la couleur du joueur, on donne les cartes au
+	 * joueur qui a activé Larcin
 	 * 
 	 * @param joueur Joueur qui caste le sort Larcin
 	 */
 	public void activerLarcin(Joueur joueur) {
+		Scanner sc = new Scanner(System.in);
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			for (Carte c : this.cartesJoueesVert) {
-				c.changerDetenteurCarte(joueur);
+				System.out.println(c + "\n[" + joueur.getCouleur()
+						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
+				String res = sc.nextLine();
+				if (res.equals("oui")) {
+					c.changerDetenteurCarte(joueur);
+				} else {
+					c.defausser();
+				}
 			}
 		} else {
 			for (Carte c : this.cartesJoueesRouge) {
-				c.changerDetenteurCarte(joueur);
+				System.out.println(c + "\n[" + joueur.getCouleur()
+						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
+				String res = sc.nextLine();
+				if (res.equals("oui")) {
+					c.changerDetenteurCarte(joueur);
+				} else {
+					c.defausser();
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Effet carte 12
+	 * 
 	 * @param joueur
 	 */
 	public void activerHarpagon(Joueur joueur) {
-		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) this.harpagonRouge = true;
-		else this.harpagonVert = true;
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			this.harpagonRouge = true;
+		else
+			this.harpagonVert = true;
 	}
-
-
 
 	/**
 	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
@@ -227,10 +242,13 @@ public class Tour {
 	 * @param mana   int montant en mana à ajouter/enlever
 	 */
 	public void changerMise(Joueur caster, int mana) {
-		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE))
+		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			this.miseJoueurRouge += mana;
-		else
+			this.attaqueJoueurRouge += mana;
+		} else {
 			this.miseJoueurVert += mana;
+			this.attaqueJoueurVert += mana;
+		}
 	}
 
 	/**

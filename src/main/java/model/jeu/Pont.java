@@ -79,6 +79,14 @@ public class Pont {
 		if (positionMurFeu > 1 && positionMurFeu < TAILLE_PONT)
 			positionMurFeu += dp;
 	}
+	
+	/**
+	 * Place le mur de feu sur l'index en paramètre
+	 * @param index int
+	 */
+	public void placerMurDeFeu(int index) {
+		this.positionMurFeu = index;
+	}
 
 	/**
 	 * Fait reculer selon le joueur (rouge ou vert) sur le pont

@@ -37,23 +37,13 @@ public class Partie {
 	public void deplacerMur(int dp) {
 		pont.deplacerMurDeFeu(dp);
 	}
-
+	
 	/**
-	 * Faire reculer de dp le joueur vert du pont
-	 * 
-	 * @param dp int
+	 * Place le mur de feu sur l'index en paramètre
+	 * @param index int
 	 */
-	public void reculerJoueurVert(int dp) {
-		pont.reculerJoueur(dp, ECouleurJoueur.VERT);
-	}
-
-	/**
-	 * Faire reculer de dp le joueur rouge du pont
-	 * 
-	 * @param dp
-	 */
-	public void reculerJoueurRouge(int dp) {
-		pont.reculerJoueur(dp, ECouleurJoueur.ROUGE);
+	public void placerMur(int index) {
+		pont.placerMurDeFeu(index);
 	}
 
 	public void printMancheEtTour() {
