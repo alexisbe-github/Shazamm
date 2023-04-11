@@ -72,10 +72,10 @@ public class Tour {
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
 
-		//On met à jour l'attaque des joueurs le cas où les mises ont été modif
+		// On met à jour l'attaque des joueurs le cas où les mises ont été modif
 		this.attaqueJoueurRouge = miseJoueurRouge;
 		this.attaqueJoueurVert = miseJoueurVert;
-		
+
 		// On defausse toutes les cartes jouées
 		for (Carte cRouge : this.cartesJoueesRouge) {
 			cRouge.defausser();
@@ -121,20 +121,31 @@ public class Tour {
 		// et on active l'effet
 		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
 			Carte carteCourante = cartesJouees.get(i);
+			boolean carteJoueeDeuxFois = false;
 
 			if (i < cartesJouees.size() - 1) {
 				Carte carteSuivante = cartesJouees.get(i + 1);
 				int numCarteSuivante = carteSuivante.getNumeroCarte();
-				if (carteCourante.getNumeroCarte() < 9 && numCarteSuivante >= 9) { // si la carte suivante concerne les
-																					// deplacements de mur on calcule le
-																					// déplacement
-					this.calculDeplacementMur();
-				}
-				if (carteSuivante.getNumeroCarte() != carteCourante.getNumeroCarte())
-					carteCourante.lancerEffet(this);
-			} else {
-				carteCourante.lancerEffet(this);
+				if (numCarteSuivante == carteCourante.getNumeroCarte())
+					carteJoueeDeuxFois = true;
 			}
+			if (i > 0) {
+				Carte cartePrecedente = cartesJouees.get(i - 1);
+				int numCartePrecedente = cartePrecedente.getNumeroCarte();
+				if (numCartePrecedente == carteCourante.getNumeroCarte())
+					carteJoueeDeuxFois = true;
+			}
+
+			// si la carte suivante concerne les deplacements de mur on calcule le
+			// déplacement
+			if (carteCourante.getNumeroCarte() < 9) {
+				this.calculDeplacementMur();
+			}
+			
+			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
+			// s'annulent
+			if (!carteJoueeDeuxFois)
+				carteCourante.lancerEffet(this);
 		}
 	}
 
