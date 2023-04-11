@@ -155,7 +155,7 @@ public class Tour {
 
 			// si la carte suivante concerne les deplacements de mur on calcule le
 			// déplacement
-			if (carteCourante.getNumeroCarte() < 9) {
+			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1) {
 				this.calculDeplacementMur();
 			}
 
