@@ -91,7 +91,7 @@ public class Partie {
 		Manche mancheCourante = this.getMancheCourante();
 		if (pont.murDeFeuPousseUnSorcier())
 			this.lancerNouvelleManche();
-		else
+		else if (mancheCourante.getNombreTours() > 1)
 			mancheCourante.passerAuTourSuivant();
 	}
 
