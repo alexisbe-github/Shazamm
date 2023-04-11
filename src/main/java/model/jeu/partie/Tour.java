@@ -171,16 +171,6 @@ public class Tour {
 	}
 
 	/**
-	 * Effet de la carte 3: change le propriétaire de la carte
-	 * 
-	 * @param caster
-	 * @param carteACloner
-	 */
-	public void clonerCarte(Joueur caster, Carte carteACloner) {
-		carteACloner.changerDetenteurCarte(caster);
-	}
-
-	/**
 	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
 	 */
 	public void doubleDeplacementMur() {
