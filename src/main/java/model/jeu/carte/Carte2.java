@@ -26,28 +26,31 @@ public class Carte2 extends Carte {
 	@Override
 	public void lancerEffet(Tour tour) {
 		Manche mancheCourante = partie.getMancheCourante();
-		if (partie.getNombreManches() != 1 && mancheCourante.getNombreTours() != 1) {
+		if(!(partie.getNombreManches() == 1 && mancheCourante.getNombreTours() == 1)) {
 			List<Carte> cartesJoueesParAdversaire = partie.getCartesJoueesParAdversaireTourPrecedent(joueur);
-			System.out.println("Entrez le numéro de la carte de l'adversaire à cloner:");
-			System.out.println(cartesJoueesParAdversaire);
-			boolean trouve = false;
-			Scanner sc = new Scanner(System.in);
-			int numCarte;
-			// Tant qu'on ne trouve pas le numéro de la carte saisie par l'utilisateur dans
-			// la liste des cartes jouées par l'adversaire
-			while (!trouve) {
+			if(cartesJoueesParAdversaire.size()>0) {
+				System.out.println("["+this.joueur.getCouleur()+"] Entrez le numéro de la carte de l'adversaire à cloner:");
+				System.out.println(cartesJoueesParAdversaire);
+				boolean trouve = false;
+				Scanner sc = new Scanner(System.in);
+				int numCarte;
+				// Tant qu'on ne trouve pas le numéro de la carte saisie par l'utilisateur dans
+				// la liste des cartes jouées par l'adversaire
+				while (!trouve) {
 
-				// On demande à saisir le numéro de carte
-				numCarte = sc.nextInt();
+					// On demande à saisir le numéro de carte
+					numCarte = sc.nextInt();
 
-				// On parcourt les cartes jouées par l'adversaire et si celle-ci est trouvé on
-				// la clone
-				for (Carte carte : cartesJoueesParAdversaire) {
-					if (carte.getNumeroCarte() == numCarte)
-						trouve = true;
-					tour.clonerCarte(joueur, carte);
+					// On parcourt les cartes jouées par l'adversaire et si celle-ci est trouvé on
+					// la clone
+					for (Carte carte : cartesJoueesParAdversaire) {
+						if (carte.getNumeroCarte() == numCarte)
+							trouve = true;
+						tour.clonerCarte(joueur, carte);
+					}
 				}
 			}
+			
 
 		}
 	}
