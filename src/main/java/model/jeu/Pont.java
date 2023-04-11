@@ -32,7 +32,7 @@ public class Pont {
 	@Override
 	public String toString() {
 		String res = "\n";
-		for (int i = 0; i < this.positionJoueurRouge; i++) {
+		for (int i = 1; i <= this.positionJoueurRouge; i++) {
 			res += " ";
 		}
 		res += "R";
