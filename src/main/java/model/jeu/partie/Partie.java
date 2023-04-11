@@ -87,11 +87,18 @@ public class Partie {
 		}
 	}
 
+	public void lancerFinDeManche() {
+		this.placerJoueurs();
+		this.lancerNouvelleManche();
+		this.getMancheCourante().getListeTours().remove(0); // on retire le premier Tour qui est auto instancié à
+															// l'instanciation de manche
+	}
+
 	public void lancerNouveauTour() {
 		Manche mancheCourante = this.getMancheCourante();
 		if (pont.murDeFeuPousseUnSorcier())
 			this.lancerNouvelleManche();
-		else if (mancheCourante.getNombreTours() > 1)
+		else
 			mancheCourante.passerAuTourSuivant();
 	}
 
@@ -113,7 +120,7 @@ public class Partie {
 	}
 
 	/**
-	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana S'arrête
+	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana. S'arrête
 	 * lorsqu'il croise le perdant où lorsque le gagnant a moins de mana que la
 	 * différence de cases entre le mur et le perdant.
 	 */

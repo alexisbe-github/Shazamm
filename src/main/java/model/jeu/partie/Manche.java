@@ -25,9 +25,13 @@ public class Manche {
 	}
 
 	public void passerAuTourSuivant() {
-		Tour tourCourant = getTourCourant();
-		this.mutismeCourant = tourCourant.getMutisme();
-		this.listeTours.add(new Tour(mutismeCourant));
+		if (this.listeTours.size() > 0) {
+			Tour tourCourant = getTourCourant();
+			this.mutismeCourant = tourCourant.getMutisme();
+			this.listeTours.add(new Tour(mutismeCourant));
+		} else {
+			this.listeTours.add(new Tour(false));
+		}
 	}
 
 	public int jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
