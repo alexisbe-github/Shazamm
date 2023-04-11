@@ -28,6 +28,21 @@ public class Pont {
 			res = true;
 		return res;
 	}
+	
+	public String getVainqueur() {
+		String res = "";
+		if(positionJoueurRouge <= indexLave && positionJoueurVert >= this.TAILLE_PONT - this.indexLave) {
+			res = "Egalité!";
+		}else {
+			if(positionJoueurRouge <= indexLave) {
+				res = "Vert Grand Vainqueur!";
+			}
+			if(positionJoueurVert >= this.TAILLE_PONT - this.indexLave) {
+				res = "Rouge Grand Vainqueur!";
+			}
+		}
+		return res;
+	}
 
 	@Override
 	public String toString() {

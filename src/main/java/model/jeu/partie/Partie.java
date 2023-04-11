@@ -72,19 +72,15 @@ public class Partie {
 	}
 
 	public void lancerNouvelleManche() {
-		if (!pont.unSorcierEstTombe()) {
-			joueurRouge.melangerPaquet();
-			joueurVert.melangerPaquet();
-			joueurRouge.piocherCartes(3);
-			joueurVert.piocherCartes(3);
-			joueurRouge.remplirReserveDeMana();
-			joueurVert.remplirReserveDeMana();
-			pont.effondrerMorceauxDuPont();
-			pont.placerJoueurs();
-			this.listeManche.add(new Manche());
-		} else {
-			partieFinie = true;
-		}
+		joueurRouge.melangerPaquet();
+		joueurVert.melangerPaquet();
+		joueurRouge.piocherCartes(3);
+		joueurVert.piocherCartes(3);
+		joueurRouge.remplirReserveDeMana();
+		joueurVert.remplirReserveDeMana();
+		pont.effondrerMorceauxDuPont();
+		pont.placerJoueurs();
+		this.listeManche.add(new Manche());
 	}
 
 	public void lancerFinDeManche() {
@@ -110,7 +106,6 @@ public class Partie {
 		Manche mancheCourante = this.getMancheCourante();
 		int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
 		pont.deplacerMurDeFeu(dpMur);
-		System.out.println(pont.murDeFeuPousseUnSorcier());
 		if (pont.murDeFeuPousseUnSorcier()) {
 			this.lancerNouvelleManche();
 		} else {
@@ -121,6 +116,10 @@ public class Partie {
 		if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
 			this.deplacerMurDeFeuVersJoueurAvec0Mana();
 			this.lancerNouvelleManche();
+		}
+		if (pont.unSorcierEstTombe()) {
+			System.out.println(pont.getVainqueur());
+			this.partieFinie = true;
 		}
 	}
 
