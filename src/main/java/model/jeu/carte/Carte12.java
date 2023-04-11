@@ -27,7 +27,7 @@ public class Carte12 extends Carte {
 		boolean joueurVertEtVertPerdLeTour = tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE);
 		if (joueurRougeEtRougePerdLeTour || joueurVertEtVertPerdLeTour) {
 			// Alors on ne lui retire pas sa mise
-			tour.changerMise(joueur, 0);
+			tour.setMiseJoueur(joueur, 0);
 		}
 	}
 
