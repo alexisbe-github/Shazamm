@@ -45,7 +45,7 @@ public class Pont {
 		}
 		res += "V\n";
 		for (int i = 0; i < this.TAILLE_PONT; i++) {
-			if (i < indexLave || this.TAILLE_PONT - this.indexLave < i) {
+			if (i < indexLave || this.TAILLE_PONT - this.indexLave <= i) {
 				res += "X";
 			} else {
 				res += "O";
