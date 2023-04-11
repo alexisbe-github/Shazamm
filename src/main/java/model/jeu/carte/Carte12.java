@@ -26,8 +26,8 @@ public class Carte12 extends Carte {
 		boolean joueurRougeEtRougePerdLeTour = tour.getDeplacementMur() > 0 && joueur.getCouleur().equals(ECouleurJoueur.VERT);
 		boolean joueurVertEtVertPerdLeTour = tour.getDeplacementMur() < 0 && joueur.getCouleur().equals(ECouleurJoueur.ROUGE);
 		if (joueurRougeEtRougePerdLeTour || joueurVertEtVertPerdLeTour) {
-			// Alors on ne lui retire pas sa mise
-			tour.setMiseJoueur(joueur, 0);
+			// Alors on active harpagon pour le joueur
+			tour.activerHarpagon(joueur);
 		}
 	}
 

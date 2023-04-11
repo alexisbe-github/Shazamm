@@ -15,13 +15,18 @@ public class Tour {
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int deplacementMur;
 	private boolean mutisme, finDeManche;
+	private boolean harpagonRouge, harpagonVert;
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
+	private List<Carte> cartesJouees;
 
 	public Tour(boolean mutisme) {
 		this.cartesJoueesRouge = new ArrayList<>();
 		this.cartesJoueesVert = new ArrayList<>();
+		this.cartesJouees = new ArrayList<>();
 		this.mutisme = mutisme;
 		this.finDeManche = false;
+		this.harpagonRouge = false;
+		this.harpagonVert = false;
 	}
 
 	public void activerMutisme(boolean enable) {
@@ -61,6 +66,8 @@ public class Tour {
 	 */
 	public int jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
 		// Initialisation des variables pour le tour
+		this.harpagonRouge = false;
+		this.harpagonVert = false;
 		this.deplacementMur = 1;
 		this.miseJoueurRouge = miseRouge;
 		this.miseJoueurVert = miseVert;
@@ -86,12 +93,18 @@ public class Tour {
 
 		System.out.println("Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
 				+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
-		joueurRouge.depenserMana(this.miseJoueurRouge);
-		joueurVert.depenserMana(this.miseJoueurVert);
+
+		if (!this.harpagonRouge) {
+			joueurRouge.depenserMana(this.miseJoueurRouge);
+		}
+
+		if (!this.harpagonVert) {
+			joueurVert.depenserMana(this.miseJoueurVert);
+		}
 
 		if (this.finDeManche)
 			this.deplacementMur = 0;
-		
+
 		return this.deplacementMur;
 	}
 
@@ -114,7 +127,6 @@ public class Tour {
 				return o1.getNumeroCarte() - o2.getNumeroCarte();
 			}
 		};
-		ArrayList<Carte> cartesJouees = new ArrayList<>();
 		cartesJouees.addAll(this.cartesJoueesRouge);
 		cartesJouees.addAll(this.cartesJoueesVert);
 
@@ -149,10 +161,21 @@ public class Tour {
 			// s'annulent
 			if (!carteJoueeDeuxFois)
 				carteCourante.lancerEffet(this);
+
+			cartesJouees.clear();
 		}
+	}
+	
+	/**
+	 * Effet carte 2
+	 * @param carte
+	 */
+	public void activerClone(Carte carte) {
+		this.cartesJouees.add(carte);
 	}
 
 	/**
+	 * Effet Carte 3
 	 * En fonction de la couleur du joueur, on donne les cartes au joueur qui a
 	 * activé Larcin
 	 * 
@@ -169,6 +192,17 @@ public class Tour {
 			}
 		}
 	}
+	
+	/**
+	 * Effet carte 12
+	 * @param joueur
+	 */
+	public void activerHarpagon(Joueur joueur) {
+		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) this.harpagonRouge = true;
+		else this.harpagonVert = true;
+	}
+
+
 
 	/**
 	 * Double le déplacement du mur dans le sens dans lequel il doit avancer

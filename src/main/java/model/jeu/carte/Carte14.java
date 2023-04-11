@@ -21,10 +21,11 @@ public class Carte14 extends Carte {
 
 	@Override
 	public void lancerEffet(Tour tour) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			joueur.ajouterMana(tour.getMiseJoueurVert());
-		else
+		} else {
 			joueur.ajouterMana(tour.getMiseJoueurRouge());
+		}
 	}
 
 }

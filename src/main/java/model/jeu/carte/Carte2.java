@@ -49,6 +49,7 @@ public class Carte2 extends Carte {
 						if (carte.getNumeroCarte() == numCarte) {
 							trouve = true;
 							carte.changerDetenteurCarte(joueur);
+							tour.activerClone(carte);
 						}
 					}
 				}
