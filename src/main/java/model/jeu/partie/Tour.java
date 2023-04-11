@@ -96,10 +96,12 @@ public class Tour {
 
 		if (!this.harpagonRouge) {
 			joueurRouge.depenserMana(this.miseJoueurRouge);
+			joueurRouge.verifierMana();
 		}
 
 		if (!this.harpagonVert) {
 			joueurVert.depenserMana(this.miseJoueurVert);
+			joueurVert.verifierMana();
 		}
 
 		if (this.finDeManche)
