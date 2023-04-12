@@ -69,13 +69,12 @@ public class Tour {
 		// Initialisation des variables pour le tour
 		this.harpagonRouge = false;
 		this.harpagonVert = false;
-		this.deplacementMur = 1;
 		this.miseJoueurRouge = miseRouge;
 		this.miseJoueurVert = miseVert;
 		this.attaqueJoueurRouge = miseRouge;
 		this.attaqueJoueurVert = miseVert;
 		this.calculDeplacementMur();
-		
+
 		// Si mutisme n'est pas activé pour la manche alors on peut jouer les cartes
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
@@ -111,7 +110,7 @@ public class Tour {
 		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
 			this.deplacementMur = 0;
 		else
-			this.deplacementMur *= (this.attaqueJoueurRouge - this.attaqueJoueurVert)
+			this.deplacementMur = (this.attaqueJoueurRouge - this.attaqueJoueurVert)
 					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
 	}
 
@@ -119,18 +118,10 @@ public class Tour {
 	 * Joue les cartes en jeu en fonction de leur numéro de carte
 	 */
 	private void jouerTourDesCartes() {
-		// Comparateur pour trier les cartes en fonction de leur numéro
-		Comparator<Carte> c = new Comparator<Carte>() {
-			@Override
-			public int compare(Carte o1, Carte o2) {
-				return o1.getNumeroCarte() - o2.getNumeroCarte();
-			}
-		};
 		cartesJouees.addAll(this.cartesJoueesRouge);
 		cartesJouees.addAll(this.cartesJoueesVert);
-
-		Collections.sort(cartesJouees, c); // Tri des cartes jouées
-
+		this.trierCartesJouees();
+		
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
 		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
@@ -152,19 +143,30 @@ public class Tour {
 
 			// si la carte suivante ne concerne pas les deplacements de mur on calcule le
 			// déplacement
-			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1) {
+			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1)
 				this.calculDeplacementMur();
-			}
 
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
+			System.out.println(carteCourante);
 			if (!carteJoueeDeuxFois) {
 				carteCourante.lancerEffet(this);
-				System.out.println(carteCourante);
 			}
 
-			cartesJouees.clear();
 		}
+		cartesJouees.clear();
+	}
+
+	private void trierCartesJouees() {
+		// Comparateur pour trier les cartes en fonction de leur numéro
+		Comparator<Carte> c = new Comparator<Carte>() {
+			@Override
+			public int compare(Carte o1, Carte o2) {
+				return o1.getNumeroCarte() - o2.getNumeroCarte();
+			}
+		};
+
+		Collections.sort(cartesJouees, c); // Tri des cartes jouées
 	}
 
 	/**
@@ -174,6 +176,7 @@ public class Tour {
 	 */
 	public void activerClone(Carte carte) {
 		this.cartesJouees.add(carte);
+		this.trierCartesJouees();
 	}
 
 	/**
