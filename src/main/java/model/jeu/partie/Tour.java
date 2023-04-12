@@ -112,6 +112,7 @@ public class Tour {
 		else
 			this.deplacementMur = (this.attaqueJoueurRouge - this.attaqueJoueurVert)
 					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
+		System.out.println((this.attaqueJoueurRouge - this.attaqueJoueurVert));
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class Tour {
 		cartesJouees.addAll(this.cartesJoueesRouge);
 		cartesJouees.addAll(this.cartesJoueesVert);
 		this.trierCartesJouees();
-		
+
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
 		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
@@ -141,17 +142,17 @@ public class Tour {
 					carteJoueeDeuxFois = true;
 			}
 
-			// si la carte suivante ne concerne pas les deplacements de mur on calcule le
-			// déplacement
-			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1)
-				this.calculDeplacementMur();
-
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
 			System.out.println(carteCourante);
 			if (!carteJoueeDeuxFois) {
 				carteCourante.lancerEffet(this);
 			}
+
+			// si la carte suivante ne concerne pas les deplacements de mur on calcule le
+			// déplacement
+			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1)
+				this.calculDeplacementMur();
 
 		}
 		cartesJouees.clear();
@@ -272,6 +273,13 @@ public class Tour {
 			return this.attaqueJoueurRouge;
 		else
 			return this.attaqueJoueurVert;
+	}
+
+	public int getMiseJoueur(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			return this.miseJoueurRouge;
+		else
+			return this.miseJoueurVert;
 	}
 
 	public void setMiseJoueur(Joueur joueur, int mise) {
