@@ -75,7 +75,7 @@ public class Tour {
 		this.attaqueJoueurRouge = miseRouge;
 		this.attaqueJoueurVert = miseVert;
 		this.calculDeplacementMur();
-
+		
 		// Si mutisme n'est pas activé pour la manche alors on peut jouer les cartes
 		if (!this.mutisme)
 			this.jouerTourDesCartes();
@@ -111,7 +111,7 @@ public class Tour {
 		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
 			this.deplacementMur = 0;
 		else
-			this.deplacementMur = (this.attaqueJoueurRouge - this.attaqueJoueurVert)
+			this.deplacementMur *= (this.attaqueJoueurRouge - this.attaqueJoueurVert)
 					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
 	}
 
@@ -150,7 +150,7 @@ public class Tour {
 					carteJoueeDeuxFois = true;
 			}
 
-			// si la carte suivante concerne les deplacements de mur on calcule le
+			// si la carte suivante ne concerne pas les deplacements de mur on calcule le
 			// déplacement
 			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1) {
 				this.calculDeplacementMur();
@@ -159,8 +159,8 @@ public class Tour {
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
 			if (!carteJoueeDeuxFois) {
-				System.out.println(carteCourante);
 				carteCourante.lancerEffet(this);
+				System.out.println(carteCourante);
 			}
 
 			cartesJouees.clear();

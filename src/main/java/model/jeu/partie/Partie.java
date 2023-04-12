@@ -76,6 +76,8 @@ public class Partie {
 	public void lancerFinDeManche() {
 		this.placerJoueurs();
 		this.lancerNouvelleManche();
+		this.joueurRouge.remplirReserveDeMana();
+		this.joueurVert.remplirReserveDeMana();
 		this.getMancheCourante().getListeTours().remove(0); // on retire le premier Tour qui est auto instancié à
 															// l'instanciation de manche
 	}
