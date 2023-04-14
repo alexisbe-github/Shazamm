@@ -112,7 +112,6 @@ public class Tour {
 		else
 			this.deplacementMur = (this.attaqueJoueurRouge - this.attaqueJoueurVert)
 					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
-		System.out.println((this.attaqueJoueurRouge - this.attaqueJoueurVert));
 	}
 
 	/**
@@ -144,8 +143,10 @@ public class Tour {
 
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
-			System.out.println(carteCourante);
 			if (!carteJoueeDeuxFois) {
+				System.out.println("["+carteCourante.getJoueur().getCouleur()+"]"+carteCourante);
+				System.out.println("Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
+						+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
 				carteCourante.lancerEffet(this);
 			}
 
@@ -155,6 +156,7 @@ public class Tour {
 				this.calculDeplacementMur();
 
 		}
+		System.out.println();
 		cartesJouees.clear();
 	}
 
