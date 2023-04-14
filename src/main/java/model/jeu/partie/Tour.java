@@ -196,7 +196,7 @@ public class Tour {
 				System.out.println(c + "\n[" + joueur.getCouleur()
 						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
 				String res = sc.nextLine();
-				if (res.equals("oui")) {
+				if (res.equalsIgnoreCase("oui")) {
 					c.changerDetenteurCarte(joueur);
 				} else {
 					c.defausser();
