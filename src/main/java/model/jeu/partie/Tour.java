@@ -144,9 +144,10 @@ public class Tour {
 			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
 			// s'annulent
 			if (!carteJoueeDeuxFois) {
-				System.out.println("["+carteCourante.getJoueur().getCouleur()+"]"+carteCourante);
-				System.out.println("Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
-						+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
+				System.out.println("[" + carteCourante.getJoueur().getCouleur() + "]" + carteCourante);
+				System.out.println(
+						"Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
+								+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
 				carteCourante.lancerEffet(this);
 			}
 
@@ -228,6 +229,7 @@ public class Tour {
 	}
 
 	/**
+	 * Effet carte 10
 	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
 	 */
 	public void doubleDeplacementMur() {
@@ -235,6 +237,7 @@ public class Tour {
 	}
 
 	/**
+	 * Effet carte 9
 	 * Inverse le déplacement du mur dans le sens opposé où il devait avancer
 	 */
 	public void inverserDeplacementMur() {
@@ -254,6 +257,16 @@ public class Tour {
 		} else {
 			this.miseJoueurVert += mana;
 			this.attaqueJoueurVert += mana;
+		}
+
+		if (this.miseJoueurVert < 0) {
+			this.miseJoueurVert = 0;
+			this.attaqueJoueurVert = 0;
+		}
+
+		if (this.miseJoueurRouge < 0) {
+			this.miseJoueurRouge = 0;
+			this.attaqueJoueurRouge = 0;
 		}
 	}
 

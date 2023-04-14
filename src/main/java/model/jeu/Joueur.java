@@ -15,7 +15,7 @@ public class Joueur {
 	private final int MANA_MAXIMUM = 50;
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
-	private List<Carte> paquet, mainDuJoueur, defausse;
+	private List<Carte> paquet, mainDuJoueur;
 
 	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		this.COULEUR = couleur;
@@ -25,7 +25,6 @@ public class Joueur {
 		manaActuel = 0;
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
-		defausse = new ArrayList<>();
 	}
 
 	@Override
@@ -49,14 +48,6 @@ public class Joueur {
 	public String mainString() {
 		String res = "";
 		for (Carte c : mainDuJoueur) {
-			res += c + "\n";
-		}
-		return res;
-	}
-
-	public String defausseString() {
-		String res = "";
-		for (Carte c : defausse) {
 			res += c + "\n";
 		}
 		return res;
@@ -137,12 +128,11 @@ public class Joueur {
 	}
 
 	/**
-	 * Ajoute dans la défausse la carte jouée en paramètre
+	 * Defausse une carte en la supprimant dans la main
 	 * 
 	 * @param carteJouee Carte
 	 */
 	public void defausser(Carte carteJouee) {
-		this.defausse.add(carteJouee);
 		this.mainDuJoueur.remove(carteJouee);
 	}
 
