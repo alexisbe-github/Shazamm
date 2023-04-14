@@ -9,7 +9,7 @@ public class Carte1 extends Carte {
 	private final String NOM_CARTE = "Mutisme";
 	private final String TEXTE_CARTE = "Aucun sort n’a plus d’effet pour les deux joueurs, jusqu’à la fin de "
 			+ "la manche. Les autres sorts éventuellement posés sont perdus.";
-	private final int NUMERO_CARTE = 2;
+	private final int NUMERO_CARTE = 1;
 
 	public Carte1(Partie p, Joueur j) {
 		super.partie = p;

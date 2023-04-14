@@ -15,7 +15,7 @@ public class Joueur {
 	private final int MANA_MAXIMUM = 50;
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
-	private List<Carte> paquet, mainDuJoueur, defausse;
+	private List<Carte> paquet, mainDuJoueur;
 
 	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		this.COULEUR = couleur;
@@ -25,14 +25,36 @@ public class Joueur {
 		manaActuel = 0;
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
-		defausse = new ArrayList<>();
 	}
 
 	@Override
 	public String toString() {
-		return "Joueur [COULEUR=" + COULEUR + ", NOM=" + NOM + ", PRENOM=" + PRENOM + ", AVATAR=" + AVATAR
-				+ ", manaActuel=" + manaActuel + ", paquet=" + paquet + ", mainDuJoueur=" + mainDuJoueur + ", defausse="
-				+ defausse + "]";
+		return "Joueur " + COULEUR + ". nom : " + NOM + " " + PRENOM + ", mana : " + manaActuel + "\nmain :\n"
+				+ this.mainString();
+	}
+
+	public List<Carte> getMainDuJoueur() {
+		return mainDuJoueur;
+	}
+
+	public void retirerCarteDeLaMain(Carte c) {
+		this.mainDuJoueur.remove(c);
+	}
+
+	public int getManaActuel() {
+		return manaActuel;
+	}
+
+	public String mainString() {
+		String res = "";
+		for (Carte c : mainDuJoueur) {
+			res += c + "\n";
+		}
+		return res;
+	}
+
+	public String getNom() {
+		return this.NOM + " " + this.PRENOM;
 	}
 
 	public ECouleurJoueur getCouleur() {
@@ -51,12 +73,21 @@ public class Joueur {
 
 	/**
 	 * 
-	 * @param ajout de mana
+	 * @param int montant d'ajout de mana
 	 */
 	public void ajouterMana(int ajout) {
 		manaActuel += ajout;
+
+	}
+
+	/**
+	 * Vérifie si le mana actuel a bien une valeur correcte
+	 */
+	public void verifierMana() {
 		if (manaActuel > MANA_MAXIMUM)
 			manaActuel = MANA_MAXIMUM;
+		if (manaActuel < 0)
+			manaActuel = 0;
 	}
 
 	/**
@@ -73,10 +104,10 @@ public class Joueur {
 			this.paquet.add(c);
 		}
 
-		//Puis on mélange le paquet
+		// Puis on mélange le paquet
 		melangerPaquet();
 	}
-	
+
 	public void melangerPaquet() {
 		Collections.shuffle(paquet);
 	}
@@ -97,12 +128,11 @@ public class Joueur {
 	}
 
 	/**
-	 * Ajoute dans la défausse la carte jouée en paramètre
+	 * Defausse une carte en la supprimant dans la main
 	 * 
 	 * @param carteJouee Carte
 	 */
 	public void defausser(Carte carteJouee) {
-		this.defausse.add(carteJouee);
 		this.mainDuJoueur.remove(carteJouee);
 	}
 

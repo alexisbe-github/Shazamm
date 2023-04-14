@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -15,13 +16,18 @@ public class Tour {
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int deplacementMur;
 	private boolean mutisme, finDeManche;
+	private boolean harpagonRouge, harpagonVert;
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
+	private List<Carte> cartesJouees;
 
 	public Tour(boolean mutisme) {
 		this.cartesJoueesRouge = new ArrayList<>();
 		this.cartesJoueesVert = new ArrayList<>();
+		this.cartesJouees = new ArrayList<>();
 		this.mutisme = mutisme;
 		this.finDeManche = false;
+		this.harpagonRouge = false;
+		this.harpagonVert = false;
 	}
 
 	public void activerMutisme(boolean enable) {
@@ -43,10 +49,13 @@ public class Tour {
 	 * @param joueur      Joueur qui joue la carte
 	 */
 	public void jouerCarte(Carte carteAJouer, Joueur joueur) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			this.cartesJoueesRouge.add(carteAJouer);
-		else
+			joueur.retirerCarteDeLaMain(carteAJouer);
+		} else {
 			this.cartesJoueesVert.add(carteAJouer);
+			joueur.retirerCarteDeLaMain(carteAJouer);
+		}
 	}
 
 	/**
@@ -54,14 +63,17 @@ public class Tour {
 	 * 
 	 * @param miseRouge int
 	 * @param miseVert  int
+	 * @return int le déplacement du mur à la fin du tour
 	 */
-	public void jouerTour(int miseRouge, int miseVert) {
+	public int jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
 		// Initialisation des variables pour le tour
-		this.attaqueJoueurRouge = 0;
-		this.attaqueJoueurVert = 0;
-		this.deplacementMur = 0;
+		this.harpagonRouge = false;
+		this.harpagonVert = false;
 		this.miseJoueurRouge = miseRouge;
 		this.miseJoueurVert = miseVert;
+		this.attaqueJoueurRouge = miseRouge;
+		this.attaqueJoueurVert = miseVert;
+		this.calculDeplacementMur();
 
 		// Si mutisme n'est pas activé pour la manche alors on peut jouer les cartes
 		if (!this.mutisme)
@@ -74,12 +86,82 @@ public class Tour {
 		for (Carte cVert : this.cartesJoueesVert) {
 			cVert.defausser();
 		}
+
+		System.out.println("Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
+				+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
+
+		if (!this.harpagonRouge) {
+			joueurRouge.depenserMana(this.miseJoueurRouge);
+			joueurRouge.verifierMana();
+		}
+
+		if (!this.harpagonVert) {
+			joueurVert.depenserMana(this.miseJoueurVert);
+			joueurVert.verifierMana();
+		}
+
+		if (this.finDeManche)
+			this.deplacementMur = 0;
+
+		return this.deplacementMur;
+	}
+
+	private void calculDeplacementMur() {
+		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
+			this.deplacementMur = 0;
+		else
+			this.deplacementMur = (this.attaqueJoueurRouge - this.attaqueJoueurVert)
+					/ Math.abs(this.attaqueJoueurRouge - this.attaqueJoueurVert);
 	}
 
 	/**
 	 * Joue les cartes en jeu en fonction de leur numéro de carte
 	 */
 	private void jouerTourDesCartes() {
+		cartesJouees.addAll(this.cartesJoueesRouge);
+		cartesJouees.addAll(this.cartesJoueesVert);
+		this.trierCartesJouees();
+
+		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
+		// et on active l'effet
+		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
+			Carte carteCourante = cartesJouees.get(i);
+			boolean carteJoueeDeuxFois = false;
+
+			if (i < cartesJouees.size() - 1) {
+				Carte carteSuivante = cartesJouees.get(i + 1);
+				int numCarteSuivante = carteSuivante.getNumeroCarte();
+				if (numCarteSuivante == carteCourante.getNumeroCarte())
+					carteJoueeDeuxFois = true;
+			}
+			if (i > 0) {
+				Carte cartePrecedente = cartesJouees.get(i - 1);
+				int numCartePrecedente = cartePrecedente.getNumeroCarte();
+				if (numCartePrecedente == carteCourante.getNumeroCarte())
+					carteJoueeDeuxFois = true;
+			}
+
+			// On verifie qu'une carte n'est pas jouée deux fois, sinon les deux cartes
+			// s'annulent
+			if (!carteJoueeDeuxFois) {
+				System.out.println("[" + carteCourante.getJoueur().getCouleur() + "]" + carteCourante);
+				System.out.println(
+						"Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
+								+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
+				carteCourante.lancerEffet(this);
+			}
+
+			// si la carte suivante ne concerne pas les deplacements de mur on calcule le
+			// déplacement
+			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1)
+				this.calculDeplacementMur();
+
+		}
+		System.out.println();
+		cartesJouees.clear();
+	}
+
+	private void trierCartesJouees() {
 		// Comparateur pour trier les cartes en fonction de leur numéro
 		Comparator<Carte> c = new Comparator<Carte>() {
 			@Override
@@ -87,62 +169,67 @@ public class Tour {
 				return o1.getNumeroCarte() - o2.getNumeroCarte();
 			}
 		};
-		ArrayList<Carte> cartesJouees = new ArrayList<>();
-		cartesJouees.addAll(this.cartesJoueesRouge);
-		cartesJouees.addAll(this.cartesJoueesVert);
 
 		Collections.sort(cartesJouees, c); // Tri des cartes jouées
-
-		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
-		// et on active l'effet
-		for (int i = 0; i < cartesJouees.size() && !this.finDeManche; i++) {
-			Carte carteCourante = cartesJouees.get(i);
-			if (i < cartesJouees.size() - 1) {
-				Carte carteSuivante = cartesJouees.get(i + 1);
-				if (carteSuivante.getNumeroCarte() != carteCourante.getNumeroCarte())
-					carteCourante.lancerEffet(this);
-			} else {
-				carteCourante.lancerEffet(this);
-			}
-		}
 	}
 
 	/**
-	 * En fonction de la couleur du joueur, on donne les cartes au joueur qui a
-	 * activé Larcin
+	 * Effet carte 2
+	 * 
+	 * @param carte
+	 */
+	public void activerClone(Carte carte) {
+		this.cartesJouees.add(carte);
+		this.trierCartesJouees();
+	}
+
+	/**
+	 * Effet Carte 3 En fonction de la couleur du joueur, on donne les cartes au
+	 * joueur qui a activé Larcin
 	 * 
 	 * @param joueur Joueur qui caste le sort Larcin
 	 */
 	public void activerLarcin(Joueur joueur) {
+		Scanner sc = new Scanner(System.in);
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			for (Carte c : this.cartesJoueesVert) {
-				c.changerDetenteurCarte(joueur);
+				System.out.println(c + "\n[" + joueur.getCouleur()
+						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
+				String res = sc.nextLine();
+				if (res.equalsIgnoreCase("oui")) {
+					c.changerDetenteurCarte(joueur);
+				} else {
+					c.defausser();
+				}
 			}
 		} else {
 			for (Carte c : this.cartesJoueesRouge) {
-				c.changerDetenteurCarte(joueur);
+				System.out.println(c + "\n[" + joueur.getCouleur()
+						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
+				String res = sc.nextLine();
+				if (res.equals("oui")) {
+					c.changerDetenteurCarte(joueur);
+				} else {
+					c.defausser();
+				}
 			}
 		}
 	}
 
-	public List<Carte> getCartesJoueesParAdversaire(Joueur joueur) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
-			return this.cartesJoueesVert;
-		else
-			return this.cartesJoueesRouge;
-	}
-
 	/**
-	 * Effet de la carte 3: change le propriétaire de la carte
+	 * Effet carte 12
 	 * 
-	 * @param caster
-	 * @param carteACloner
+	 * @param joueur
 	 */
-	public void clonerCarte(Joueur caster, Carte carteACloner) {
-		carteACloner.changerDetenteurCarte(caster);
+	public void activerHarpagon(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			this.harpagonRouge = true;
+		else
+			this.harpagonVert = true;
 	}
 
 	/**
+	 * Effet carte 10
 	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
 	 */
 	public void doubleDeplacementMur() {
@@ -150,6 +237,7 @@ public class Tour {
 	}
 
 	/**
+	 * Effet carte 9
 	 * Inverse le déplacement du mur dans le sens opposé où il devait avancer
 	 */
 	public void inverserDeplacementMur() {
@@ -163,10 +251,23 @@ public class Tour {
 	 * @param mana   int montant en mana à ajouter/enlever
 	 */
 	public void changerMise(Joueur caster, int mana) {
-		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE))
+		if (caster.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			this.miseJoueurRouge += mana;
-		else
+			this.attaqueJoueurRouge += mana;
+		} else {
 			this.miseJoueurVert += mana;
+			this.attaqueJoueurVert += mana;
+		}
+
+		if (this.miseJoueurVert < 0) {
+			this.miseJoueurVert = 0;
+			this.attaqueJoueurVert = 0;
+		}
+
+		if (this.miseJoueurRouge < 0) {
+			this.miseJoueurRouge = 0;
+			this.attaqueJoueurRouge = 0;
+		}
 	}
 
 	/**
@@ -187,6 +288,13 @@ public class Tour {
 			return this.attaqueJoueurRouge;
 		else
 			return this.attaqueJoueurVert;
+	}
+
+	public int getMiseJoueur(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			return this.miseJoueurRouge;
+		else
+			return this.miseJoueurVert;
 	}
 
 	public void setMiseJoueur(Joueur joueur, int mise) {
@@ -222,6 +330,14 @@ public class Tour {
 
 	public int getAttaqueJoueurVert() {
 		return attaqueJoueurVert;
+	}
+
+	public List<Carte> getCartesJoueesVert() {
+		return cartesJoueesVert;
+	}
+
+	public List<Carte> getCartesJoueesRouge() {
+		return cartesJoueesRouge;
 	}
 
 }
