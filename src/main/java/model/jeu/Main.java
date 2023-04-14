@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import main.java.model.jeu.partie.Partie;
+import main.java.vue.VueLancement;
 
 public class Main {
 
@@ -17,6 +18,8 @@ public class Main {
 		Partie p = new Partie(joueur1, joueur2);
 		System.out.println(joueur1);
 		System.out.println(joueur2);
+		
+		VueLancement vl = new VueLancement("Choix");
 	}
 
 	private static List<ECouleurJoueur> tirerCouleurs() {
