@@ -7,7 +7,7 @@ import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 
-public class VueConsole {
+public class VueConsole implements ILancement{
 
 	private Partie partie;
 
@@ -16,8 +16,7 @@ public class VueConsole {
 		this.lancerJeu();
 	}
 
-	// Implémenter strategy
-	private void lancerJeu() {
+	public void lancerJeu() {
 		while (!partie.getPartieFinie()) {
 			partie.printMancheEtTour();
 			this.printJeu();

@@ -16,10 +16,8 @@ public class Main {
 		Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
 		Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 		Partie p = new Partie(joueur1, joueur2);
-		//System.out.println(joueur1);
-		//System.out.println(joueur2);
-		VueConsole vc = new VueConsole(p);
 
+		VueConsole vc = new VueConsole(p);
 	}
 
 	private static List<ECouleurJoueur> tirerCouleurs() {
