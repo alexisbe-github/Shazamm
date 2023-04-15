@@ -24,7 +24,7 @@ public class Carte5 extends Carte {
 	public void lancerEffet(Tour tour) {
 		int posJoueurRouge = partie.getPosJoueur(ECouleurJoueur.ROUGE);
 		int posJoueurVert = partie.getPosJoueur(ECouleurJoueur.VERT);
-		partie.deplacerMur((posJoueurRouge + posJoueurVert) / 2);
+		partie.placerMur((posJoueurRouge + posJoueurVert) / 2);
 	}
 
 }

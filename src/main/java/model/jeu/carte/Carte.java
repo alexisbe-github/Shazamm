@@ -23,6 +23,10 @@ public abstract class Carte {
 		return this.joueur;
 	}
 	
+	public String getNom() {
+		return nom;
+	}
+	
 	public void changerDetenteurCarte(Joueur nouveauDetenteur) {
 		joueur = nouveauDetenteur;
 	}
@@ -50,7 +54,7 @@ public abstract class Carte {
 
 	@Override
 	public String toString() {
-		return "Carte [nom=" + nom + ", path=" + path + ", description=" + description + ", numeroCarte=" + numeroCarte + "]";
+		return "Carte "+ numeroCarte + ": nom : " + nom + ", desc : " + description;
 	}
 
 }
