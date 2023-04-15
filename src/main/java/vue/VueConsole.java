@@ -39,8 +39,8 @@ public class VueConsole implements ILancementStrategy {
 
 			// lancement du tour
 			this.partie.jouerTour(miseRouge, miseVert);
-
 		}
+		new VueLancement();
 	}
 
 	private void printJeu() {

@@ -7,17 +7,19 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 import main.java.vue.VueConsole;
 import main.java.vue.VueLancement;
+import main.java.vue.menu.VueMenu;
 
 public class ControleurLancement implements ActionListener {
-	
+
 	private VueLancement vl;
-	
+
 	public ControleurLancement(VueLancement vl) {
 		this.vl = vl;
 	}
@@ -25,9 +27,9 @@ public class ControleurLancement implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
-		switch(bouton.getText()) {
+		switch (bouton.getText()) {
 		case "Console":
-			vl.setVisible(false);
+			vl.dispose();
 			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
@@ -36,13 +38,16 @@ public class ControleurLancement implements ActionListener {
 			Partie p = new Partie(joueur1, joueur2);
 			VueConsole vc = new VueConsole(p);
 			break;
-		case "Inerface Graphique":
-			
+		case "Interface Graphique":
+			vl.dispose();
+			JFrame fenetre = new JFrame("Menu de Shazamm");
+			fenetre.add(new VueMenu());
+			fenetre.setVisible(true);
 			break;
 		}
 	}
-	
-	private  List<ECouleurJoueur> tirerCouleurs() {
+
+	private List<ECouleurJoueur> tirerCouleurs() {
 		List<ECouleurJoueur> couleurs = new ArrayList<>();
 		Random r = new Random();
 		if (r.nextBoolean()) {

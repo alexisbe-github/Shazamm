@@ -42,11 +42,12 @@ public class VueLancement extends JFrame {
 		this.add(texte);
 		this.add(panelBoutons);
 		
-		//controleurs
+		//controleur
 		ControleurLancement cl = new ControleurLancement(this);
 		
-		//ajout des controleurs sur les boutons
+		//ajout du controleur sur les boutons
 		boutonConsole.addActionListener(cl);
+		boutonIG.addActionListener(cl);
 
 		setPreferredSize(new Dimension(400, 200));
 		pack();
