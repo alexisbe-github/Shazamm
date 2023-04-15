@@ -1,5 +1,6 @@
 package main.java.controleur.lancement;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -41,6 +42,11 @@ public class ControleurLancement implements ActionListener {
 		case "Interface Graphique":
 			vl.dispose();
 			JFrame fenetre = new JFrame("Menu de Shazamm");
+			fenetre.setPreferredSize(new Dimension(400, 400));
+			fenetre.pack();
+			fenetre.setResizable(false);
+			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+			fenetre.setLocationRelativeTo(null);
 			fenetre.add(new VueMenu());
 			fenetre.setVisible(true);
 			break;

@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.java.controleur.menu.ControleurMenu;
+
 /**
  * Le panneau correspondant au menu du joueur.
  */
@@ -88,6 +90,9 @@ public class VueMenu extends JPanel {
 		c.gridx = 0;
 		c.gridy = 4;
 		this.add(boutonOptions, c);
+		
+		ControleurMenu cm = new ControleurMenu(this);
+		boutonJouer.addActionListener(cm);
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 	}
