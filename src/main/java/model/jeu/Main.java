@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import main.java.model.jeu.partie.Partie;
-import main.java.vue.VueConsole;
+import main.java.vue.VueLancement;
+
+
 
 public class Main {
 
@@ -13,11 +14,10 @@ public class Main {
 		List<ECouleurJoueur> couleursTirees = tirerCouleurs();
 		ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 		ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-		Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
-		Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
-		Partie p = new Partie(joueur1, joueur2);
 
-		VueConsole vc = new VueConsole(p);
+		new VueLancement();
+		
+		//Partie p = new Partie(joueur1, joueur2);
 	}
 
 	private static List<ECouleurJoueur> tirerCouleurs() {

@@ -1,6 +1,6 @@
 package main.java.vue;
 
-public interface ILancement {
+public interface ILancementStrategy {
 
 	public void lancerJeu();
 	

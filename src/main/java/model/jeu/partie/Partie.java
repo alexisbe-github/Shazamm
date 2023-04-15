@@ -7,6 +7,7 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.vue.ILancementStrategy;
 
 public class Partie {
 
@@ -14,8 +15,9 @@ public class Partie {
 	private Pont pont;
 	private List<Manche> listeManche;
 	private boolean partieFinie;
+	private ILancementStrategy strategy;
 
-	public Partie(Joueur j1, Joueur j2) {
+	public Partie(Joueur j1, Joueur j2, ILancementStrategy strategy) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			joueurRouge = j1;
 			joueurVert = j2;
@@ -23,6 +25,7 @@ public class Partie {
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
+		this.strategy = strategy;
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
@@ -37,9 +40,10 @@ public class Partie {
 	public void deplacerMur(int dp) {
 		pont.deplacerMurDeFeu(dp);
 	}
-	
+
 	/**
 	 * Place le mur de feu sur l'index en paramètre
+	 * 
 	 * @param index int
 	 */
 	public void placerMur(int index) {
