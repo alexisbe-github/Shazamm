@@ -7,6 +7,7 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.vue.ILancementStrategy;
 
 public class Partie {
 
@@ -14,6 +15,7 @@ public class Partie {
 	private Pont pont;
 	private List<Manche> listeManche;
 	private boolean partieFinie;
+	private ILancementStrategy strategy;
 
 	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
@@ -29,6 +31,46 @@ public class Partie {
 		lancerPartie();
 	}
 
+	public void setStrategy(ILancementStrategy strategy) {
+		this.strategy = strategy;
+	}
+
+	/**
+	 * En fonction de la strategy la méthode va lancer l'effet de la carte 2 au
+	 * scanner ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
+		strategy.lancerClone(p, tour, joueur);
+	}
+
+	/**
+	 * En fonction de strategy la méthode va lancer l'effet de la carte 6 au scanner
+	 * ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
+		strategy.lancerRecyclage(p, tour, joueur);
+	}
+	
+	/**
+	 * En fonction de strategy la méthode va lancer l'effet de la carte 3 au scanner
+	 * ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
+		strategy.lancerLarcin(p, tour, joueur);
+	}
+
 	/**
 	 * Déplace le mur de feu de dp sur le pont (dp pouvant être négatif)
 	 * 
@@ -37,9 +79,10 @@ public class Partie {
 	public void deplacerMur(int dp) {
 		pont.deplacerMurDeFeu(dp);
 	}
-	
+
 	/**
 	 * Place le mur de feu sur l'index en paramètre
+	 * 
 	 * @param index int
 	 */
 	public void placerMur(int index) {
