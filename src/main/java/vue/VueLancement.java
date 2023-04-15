@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.java.controleur.lancement.ControleurLancement;
+
 public class VueLancement extends JFrame {
 
 	// panel contenant les boutons
@@ -39,10 +41,17 @@ public class VueLancement extends JFrame {
 		panelBoutons.add(boutonIG);
 		this.add(texte);
 		this.add(panelBoutons);
+		
+		//controleurs
+		ControleurLancement cl = new ControleurLancement(this);
+		
+		//ajout des controleurs sur les boutons
+		boutonConsole.addActionListener(cl);
 
 		setPreferredSize(new Dimension(400, 200));
 		pack();
 		setVisible(true); // Rend la fenêtre visible
+		this.setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
 	}

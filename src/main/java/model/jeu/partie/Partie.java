@@ -17,7 +17,7 @@ public class Partie {
 	private boolean partieFinie;
 	private ILancementStrategy strategy;
 
-	public Partie(Joueur j1, Joueur j2, ILancementStrategy strategy) {
+	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			joueurRouge = j1;
 			joueurVert = j2;
@@ -25,11 +25,50 @@ public class Partie {
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
-		this.strategy = strategy;
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
 		lancerPartie();
+	}
+
+	public void setStrategy(ILancementStrategy strategy) {
+		this.strategy = strategy;
+	}
+
+	/**
+	 * En fonction de la strategy la méthode va lancer l'effet de la carte 2 au
+	 * scanner ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
+		strategy.lancerClone(p, tour, joueur);
+	}
+
+	/**
+	 * En fonction de strategy la méthode va lancer l'effet de la carte 6 au scanner
+	 * ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
+		strategy.lancerRecyclage(p, tour, joueur);
+	}
+	
+	/**
+	 * En fonction de strategy la méthode va lancer l'effet de la carte 3 au scanner
+	 * ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
+		strategy.lancerLarcin(p, tour, joueur);
 	}
 
 	/**

@@ -184,39 +184,6 @@ public class Tour {
 	}
 
 	/**
-	 * Effet Carte 3 En fonction de la couleur du joueur, on donne les cartes au
-	 * joueur qui a activé Larcin
-	 * 
-	 * @param joueur Joueur qui caste le sort Larcin
-	 */
-	public void activerLarcin(Joueur joueur) {
-		Scanner sc = new Scanner(System.in);
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			for (Carte c : this.cartesJoueesVert) {
-				System.out.println(c + "\n[" + joueur.getCouleur()
-						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
-				String res = sc.nextLine();
-				if (res.equalsIgnoreCase("oui")) {
-					c.changerDetenteurCarte(joueur);
-				} else {
-					c.defausser();
-				}
-			}
-		} else {
-			for (Carte c : this.cartesJoueesRouge) {
-				System.out.println(c + "\n[" + joueur.getCouleur()
-						+ "]Tapez oui si vous voulez utiliser cette carte, n'importe quelle touche si vous voulez la défausser.");
-				String res = sc.nextLine();
-				if (res.equals("oui")) {
-					c.changerDetenteurCarte(joueur);
-				} else {
-					c.defausser();
-				}
-			}
-		}
-	}
-
-	/**
 	 * Effet carte 12
 	 * 
 	 * @param joueur
