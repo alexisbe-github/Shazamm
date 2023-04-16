@@ -38,6 +38,7 @@ public class VueJeu extends JFrame {
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
 		setResizable(true);
@@ -49,15 +50,14 @@ public class VueJeu extends JFrame {
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
-		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
-		
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 0;
-		c.anchor = GridBagConstraints.CENTER;
 		getContentPane().add(logo, c);
+		
+		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
+		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 		
 		panelPont = new JPanel();
 		panelPont.setBounds(0,this.getHeight()*2/10,this.getWidth(),this.getHeight()*2/10);
@@ -73,12 +73,15 @@ public class VueJeu extends JFrame {
 
 	}
 	
-	public void paintPont() {
+	/**
+	 * Ajoute les images des morceaux du pont au label les englobant
+	 */
+	private void paintPont() {
 		for(int i=0;i<Pont.TAILLE_PONT;i++) {
 			JLabel tmp = new JLabel();
 			String source = "src/main/resources/pont/pont_";
 			if(i<9) source += "0";
-			source += (i+1) + ".gif";
+			source += (i+1) + ".png";
 			tmp.setIcon(new ImageIcon(source));
 			panelPont.add(tmp);
 			
