@@ -61,7 +61,7 @@ public class VueJeu extends JFrame {
 		
 		panelPont = new JPanel();
 		panelPont.setBounds(0,this.getHeight()*2/10,this.getWidth(),this.getHeight()*2/10);
-		panelPont.setLayout(new GridLayout(1,Pont.TAILLE_PONT));
+		panelPont.setLayout(new GridLayout(1, Pont.TAILLE_PONT, 0, 0));
 		panelPont.setBackground(Color.BLACK);
 		paintPont();
 		
@@ -70,6 +70,7 @@ public class VueJeu extends JFrame {
 		c.gridx = 0;
 		c.gridy = 1;
 		getContentPane().add(panelPont, c);
+
 	}
 	
 	public void paintPont() {
@@ -80,6 +81,26 @@ public class VueJeu extends JFrame {
 			source += (i+1) + ".gif";
 			tmp.setIcon(new ImageIcon(source));
 			panelPont.add(tmp);
+			
+			panelPont.addComponentListener(new ComponentAdapter() {
+			    @Override
+			    public void componentResized(ComponentEvent e) {
+			        int panelWidth = panelPont.getWidth();
+			        int panelHeight = panelPont.getHeight();
+			        int imageWidth = tmp.getIcon().getIconWidth();
+			        int imageHeight = tmp.getIcon().getIconHeight();
+			        int imageCount = panelPont.getComponentCount();
+
+			        int marginWidth = (panelWidth - imageCount * imageWidth) / 2;
+			        int marginHeight = (panelHeight - imageHeight) / 2;
+
+			        for (int i = 0; i < imageCount; i++) {
+			            JLabel imageLabel = (JLabel) panelPont.getComponent(i);
+			            imageLabel.setBounds(marginWidth + i * imageWidth, marginHeight, imageWidth, imageHeight);
+			        }
+			    }
+			});
+
 		}
 	}
 }
