@@ -78,6 +78,10 @@ public class Pont {
 	public void deplacerMurDeFeu(int dp) {
 		if (positionMurFeu > 1 && positionMurFeu < TAILLE_PONT)
 			positionMurFeu += dp;
+		if(this.positionMurFeu < this.positionJoueurRouge)
+			positionMurFeu++;
+		if(this.positionMurFeu > this.positionJoueurVert)
+			positionMurFeu--;
 	}
 	
 	/**
