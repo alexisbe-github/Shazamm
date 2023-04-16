@@ -41,14 +41,7 @@ public class ControleurLancement implements ActionListener {
 			break;
 		case "Interface Graphique":
 			vl.dispose();
-			JFrame fenetre = new JFrame("Menu de Shazamm");
-			fenetre.setPreferredSize(new Dimension(400, 400));
-			fenetre.pack();
-			fenetre.setResizable(false);
-			fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-			fenetre.setLocationRelativeTo(null);
-			fenetre.add(new VueMenu());
-			fenetre.setVisible(true);
+			new VueMenu();
 			break;
 		}
 	}

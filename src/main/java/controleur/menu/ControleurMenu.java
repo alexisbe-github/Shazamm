@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
-import main.java.vue.VueJeu;
+import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
 
 public class ControleurMenu implements ActionListener {

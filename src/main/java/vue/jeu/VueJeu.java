@@ -1,4 +1,4 @@
-package main.java.vue;
+package main.java.vue.jeu;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,6 +15,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.partie.Partie;
+import javax.swing.SwingConstants;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
@@ -46,7 +47,7 @@ public class VueJeu extends JFrame {
 		panelPont = new JPanel();
 		panelPont.setBounds(0,this.getHeight()*2/10,this.getWidth(),this.getHeight()*2/10);
 		panelPont.setLayout(new GridLayout(1,Pont.TAILLE_PONT));
-		panelPont.setBackground(Color.BLACK);
+		panelPont.setBackground(Color.WHITE);
 		paintPont();
 		
 		getContentPane().add(panelPont);
@@ -54,21 +55,13 @@ public class VueJeu extends JFrame {
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
-		setAlwaysOnTop(false); // Empêche la fenêtre de rester au-dessus
-
-		try { // Utilise l'apparence par défaut des applications système
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
-		}
 	}
 	
 	public void paintPont() {
-		panelPont.removeAll();
 		for(int i=0;i<Pont.TAILLE_PONT;i++) {
 			JLabel tmp = new JLabel();
 			String source = "src/main/resources/pont/pont_";
-			if(i<11) source += "0";
+			if(i<9) source += "0";
 			source += (i+1) + ".gif";
 			tmp.setIcon(new ImageIcon(source));
 			panelPont.add(tmp);
