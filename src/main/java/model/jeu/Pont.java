@@ -5,7 +5,7 @@ public class Pont {
 	private int positionMurFeu;
 	private int indexLave, positionJoueurRouge, positionJoueurVert;
 	private final int ECART_MUR_DE_FEU = 3;
-	private final int TAILLE_PONT = 19;
+	public static final int TAILLE_PONT = 19;
 
 	public Pont() {
 		positionMurFeu = (int) Math.ceil(TAILLE_PONT / 2);

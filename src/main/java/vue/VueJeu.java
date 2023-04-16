@@ -2,15 +2,18 @@ package main.java.vue;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import main.java.model.jeu.Joueur;
+import main.java.model.jeu.Pont;
 import main.java.model.jeu.partie.Partie;
 
 /**
@@ -21,6 +24,7 @@ public class VueJeu extends JFrame {
 
 	private Joueur joueur;
 	private Partie partie;
+	private JPanel panelPont;
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -38,7 +42,15 @@ public class VueJeu extends JFrame {
 		label.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 		label.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
 		getContentPane().add(label);
-
+		
+		panelPont = new JPanel();
+		panelPont.setBounds(0,this.getHeight()*2/10,this.getWidth(),this.getHeight()*2/10);
+		panelPont.setLayout(new GridLayout(1,Pont.TAILLE_PONT));
+		panelPont.setBackground(Color.BLACK);
+		paintPont();
+		
+		getContentPane().add(panelPont);
+		
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
@@ -49,6 +61,17 @@ public class VueJeu extends JFrame {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
 		}
-
+	}
+	
+	public void paintPont() {
+		panelPont.removeAll();
+		for(int i=0;i<Pont.TAILLE_PONT;i++) {
+			JLabel tmp = new JLabel();
+			String source = "src/main/resources/pont/pont_";
+			if(i<11) source += "0";
+			source += (i+1) + ".gif";
+			tmp.setIcon(new ImageIcon(source));
+			panelPont.add(tmp);
+		}
 	}
 }
