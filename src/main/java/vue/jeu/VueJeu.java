@@ -2,20 +2,22 @@ package main.java.vue.jeu;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.partie.Partie;
-import javax.swing.SwingConstants;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
@@ -26,35 +28,48 @@ public class VueJeu extends JFrame {
 	private Joueur joueur;
 	private Partie partie;
 	private JPanel panelPont;
+	private JLabel logo = new JLabel();
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
 	 * correspond à l'interface graphique affichant le jeu.
 	 */
 	public VueJeu(Joueur joueur, Partie partie) {
-		getContentPane().setBackground(Color.BLACK);
-		getContentPane().setLayout(null);
-
+		setVisible(true); // Rend la fenêtre visible
+		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
+		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
-		setResizable(false);
-
-		JLabel label = new JLabel();
-		label.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
-		label.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
-		getContentPane().add(label);
+		setResizable(true);
+		
+		getContentPane().setBackground(Color.BLACK);
+		getContentPane().setLayout(new GridBagLayout());
+		
+		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
+		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
+		c.fill = GridBagConstraints.HORIZONTAL;
+		
+		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
+		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
+		
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.anchor = GridBagConstraints.CENTER;
+		getContentPane().add(logo, c);
 		
 		panelPont = new JPanel();
 		panelPont.setBounds(0,this.getHeight()*2/10,this.getWidth(),this.getHeight()*2/10);
 		panelPont.setLayout(new GridLayout(1,Pont.TAILLE_PONT));
-		panelPont.setBackground(Color.WHITE);
+		panelPont.setBackground(Color.BLACK);
 		paintPont();
 		
-		getContentPane().add(panelPont);
-		
-		setVisible(true); // Rend la fenêtre visible
-		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
-		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
+		c.weightx = 1;
+		c.weighty = 0.5;
+		c.gridx = 0;
+		c.gridy = 1;
+		getContentPane().add(panelPont, c);
 	}
 	
 	public void paintPont() {
