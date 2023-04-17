@@ -37,11 +37,11 @@ public class VueJeu extends JFrame {
 	public VueJeu(Joueur joueur, Partie partie) {
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
-		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
 		setResizable(true);
+		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
 		
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(new GridBagLayout());
