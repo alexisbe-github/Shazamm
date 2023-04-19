@@ -54,7 +54,19 @@ public class VueJeu extends JFrame {
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 0;
-		getContentPane().add(logo, c);
+		getContentPane().add(new JLabel(), c); // Contraint le logo à se déplacer à droite
+		
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridx = 1;
+		c.gridy = 0;
+		getContentPane().add(logo, c); // Logo centré
+		
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridx = 2;
+		c.gridy = 0;
+		getContentPane().add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 		
 		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
@@ -69,6 +81,7 @@ public class VueJeu extends JFrame {
 		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 1;
+		c.gridwidth = 3;
 		getContentPane().add(panelPont, c);
 
 	}
