@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
@@ -30,7 +31,7 @@ public class VueJeu extends JFrame {
 
 	private Joueur joueur;
 	private Partie partie;
-	private JPanel panelPont, panelMain;
+	private JPanel panelLogo, panelPont, panelMain;
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 
@@ -56,26 +57,35 @@ public class VueJeu extends JFrame {
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.HORIZONTAL;
 
+		panelLogo = new JPanel(new GridBagLayout());
+		panelLogo.setBackground(Color.BLACK);
+		
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 0;
-		getContentPane().add(new JLabel(), c); // Contraint le logo à se déplacer à droite
+		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à droite
 
 		c.weightx = 0;
 		c.weighty = 0;
 		c.gridx = 1;
 		c.gridy = 0;
-		getContentPane().add(logo, c); // Logo centré
+		panelLogo.add(logo, c); // Logo centré
 
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridx = 2;
 		c.gridy = 0;
-		getContentPane().add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
+		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 
 		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
+		
+		c.weightx = 1;
+		c.weighty = 0.33;
+		c.gridx = 0;
+		c.gridy = 0;
+		getContentPane().add(panelLogo, c);
 
 		//Affichage du pont
 		panelPont = new JPanel();
@@ -89,19 +99,17 @@ public class VueJeu extends JFrame {
 		c.weighty = 0.33;
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 3;
 		getContentPane().add(panelPont, c);
 
 		//Affichage des cartes de la main du joueur
-		panelMain = new JPanel();
-		panelMain.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
+		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
+		panelMain.setBackground(Color.BLACK);
 		imagesCartesJoueur = new ArrayList<>();
 		this.paintMain();
 		c.weightx = 1;
-		c.weighty = 0.33;
+		c.weighty = 2;
 		c.gridx = 0;
 		c.gridy = 2;
-		c.gridwidth = 3;
 		getContentPane().add(panelMain, c);
 	}
 
@@ -115,7 +123,7 @@ public class VueJeu extends JFrame {
 			tmp.setIcon(new ImageIcon(source));
 			imagesPont.add(tmp);
 			panelPont.add(tmp);
-
+			
 			panelPont.addComponentListener(new ComponentAdapter() {
 				@Override
 				public void componentResized(ComponentEvent e) {
@@ -134,6 +142,7 @@ public class VueJeu extends JFrame {
 					}
 				}
 			});
+			
 		}
 	}
 
@@ -178,11 +187,26 @@ public class VueJeu extends JFrame {
 		for (int i=0;i<mainJoueur.size();i++) {
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
-			tmp.setIcon(new ImageIcon(c.getPath()));
+			ImageIcon image = new ImageIcon(c.getPath());
+			tmp.setIcon(VueJeu.redimensionnerImage(image, 140, 250));
 			this.imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 		}
 		
 
+	}
+	
+	/**
+	 * Redimensionne un objet <code>ImageIcon</code> selon les paramètres spécifiés.
+	 * 
+	 * @param img L'image à redimensionner
+	 * @param largeur La nouvelle largeur
+	 * @param hauteur La nouvelle hauteur
+	 * @return L'image redimensionnée
+	 */
+	public static ImageIcon redimensionnerImage(ImageIcon img, int largeur, int hauteur) {
+		Image image = img.getImage(); // Transformation en Image
+		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
+		return new ImageIcon(nvimg);  // Transformation en ImageIcon
 	}
 }
