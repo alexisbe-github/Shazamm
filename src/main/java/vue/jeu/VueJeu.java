@@ -48,7 +48,6 @@ public class VueJeu extends JFrame {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
 		setResizable(true);
-		setLocationRelativeTo(null); // Centre la fenêtre par rapport à l'écran
 
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(new GridBagLayout());
@@ -87,7 +86,7 @@ public class VueJeu extends JFrame {
 		initPont();
 		updatePont();
 		c.weightx = 1;
-		c.weighty = 1/3;
+		c.weighty = 0.33;
 		c.gridx = 0;
 		c.gridy = 1;
 		c.gridwidth = 3;
@@ -176,10 +175,14 @@ public class VueJeu extends JFrame {
 			panelMain.remove(label);
 		}
 
-		for (Carte c : mainJoueur) {
+		for (int i=0;i<mainJoueur.size();i++) {
+			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			tmp.setIcon(new ImageIcon(c.getPath()));
+			this.imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 		}
+		
+
 	}
 }
