@@ -107,7 +107,7 @@ public class VueJeu extends JFrame {
 		imagesCartesJoueur = new ArrayList<>();
 		this.paintMain();
 		c.weightx = 1;
-		c.weighty = 2;
+		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 2;
 		getContentPane().add(panelMain, c);
