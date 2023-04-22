@@ -2,6 +2,7 @@ package main.java.model.jeu.carte;
 
 import java.util.Objects;
 
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
@@ -57,4 +58,12 @@ public abstract class Carte {
 		return "Carte "+ numeroCarte + ": nom : " + nom + ", desc : " + description;
 	}
 
+	public String getPath() {
+		String res = "src/main/resources/cartes/";
+		if(this.numeroCarte < 10) res += "0";
+		res+=this.numeroCarte;
+		if(this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) res+= "r";
+		res += "v";
+		return res+".jpg";
+	}
 }

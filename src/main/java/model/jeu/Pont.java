@@ -13,6 +13,18 @@ public class Pont {
 		placerJoueurs();
 	}
 
+	/**
+	 * Permet de savoir si la case est une case de lave à l'aide de son index passé
+	 * en paramètre
+	 * 
+	 * @param indexCase int
+	 * @return boolean si c'est une case de lave
+	 */
+	public boolean estUneCaseLave(int indexCase) {
+		return (indexCase < indexLave && indexCase <= Math.ceil(TAILLE_PONT / 2))
+				|| (indexCase >= TAILLE_PONT - this.indexLave && indexCase >= Math.ceil(TAILLE_PONT / 2));
+	}
+
 	public void placerJoueurs() {
 		positionJoueurRouge = positionMurFeu - ECART_MUR_DE_FEU;
 		positionJoueurVert = positionMurFeu + ECART_MUR_DE_FEU;
@@ -24,20 +36,20 @@ public class Pont {
 
 	public boolean unSorcierEstTombe() {
 		boolean res = false;
-		if (positionJoueurRouge <= indexLave || positionJoueurVert >= this.TAILLE_PONT - this.indexLave)
+		if (positionJoueurRouge <= indexLave || positionJoueurVert >= TAILLE_PONT - this.indexLave)
 			res = true;
 		return res;
 	}
-	
+
 	public String getVainqueur() {
 		String res = "";
-		if(positionJoueurRouge <= indexLave && positionJoueurVert >= this.TAILLE_PONT - this.indexLave) {
+		if (positionJoueurRouge <= indexLave && positionJoueurVert >= TAILLE_PONT - this.indexLave) {
 			res = "Egalité!";
-		}else {
-			if(positionJoueurRouge <= indexLave) {
+		} else {
+			if (positionJoueurRouge <= indexLave) {
 				res = "Vert Grand Vainqueur!";
 			}
-			if(positionJoueurVert >= this.TAILLE_PONT - this.indexLave) {
+			if (positionJoueurVert >= TAILLE_PONT - this.indexLave) {
 				res = "Rouge Grand Vainqueur!";
 			}
 		}
@@ -59,8 +71,8 @@ public class Pont {
 			res += " ";
 		}
 		res += "V\n";
-		for (int i = 0; i < this.TAILLE_PONT; i++) {
-			if (i < indexLave || this.TAILLE_PONT - this.indexLave <= i) {
+		for (int i = 0; i < TAILLE_PONT; i++) {
+			if (i < indexLave || TAILLE_PONT - this.indexLave <= i) {
 				res += "X";
 			} else {
 				res += "O";
@@ -78,14 +90,15 @@ public class Pont {
 	public void deplacerMurDeFeu(int dp) {
 		if (positionMurFeu > 1 && positionMurFeu < TAILLE_PONT)
 			positionMurFeu += dp;
-		if(this.positionMurFeu < this.positionJoueurRouge)
+		if (this.positionMurFeu < this.positionJoueurRouge)
 			positionMurFeu++;
-		if(this.positionMurFeu > this.positionJoueurVert)
+		if (this.positionMurFeu > this.positionJoueurVert)
 			positionMurFeu--;
 	}
-	
+
 	/**
 	 * Place le mur de feu sur l'index en paramètre
+	 * 
 	 * @param index int
 	 */
 	public void placerMurDeFeu(int index) {
@@ -103,7 +116,7 @@ public class Pont {
 			if (this.positionJoueurRouge + deplacement > indexLave)
 				this.positionJoueurRouge -= deplacement;
 		} else {
-			if (this.positionJoueurVert + deplacement < this.TAILLE_PONT - indexLave)
+			if (this.positionJoueurVert + deplacement < TAILLE_PONT - indexLave)
 				this.positionJoueurVert += deplacement;
 		}
 	}
@@ -131,8 +144,7 @@ public class Pont {
 	public int getPosJoueur(Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
 			return this.positionJoueurRouge;
-		else
-			return this.positionJoueurVert;
+		return this.positionJoueurVert;
 	}
 
 }
