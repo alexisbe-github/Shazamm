@@ -62,8 +62,8 @@ public abstract class Carte {
 		String res = "src/main/resources/cartes/";
 		if(this.numeroCarte < 10) res += "0";
 		res+=this.numeroCarte;
-		if(this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) res+= "r";
-		res += "v";
+		if(this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) res+= "r"; 
+		else res += "v";
 		return res+".jpg";
 	}
 }
