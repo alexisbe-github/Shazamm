@@ -12,7 +12,7 @@ public class Joueur {
 
 	private final ECouleurJoueur COULEUR;
 	private final String NOM, PRENOM, AVATAR;
-	private final int MANA_MAXIMUM = 50;
+	public static final int MANA_MAXIMUM = 50;
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
 	private List<Carte> paquet, mainDuJoueur;

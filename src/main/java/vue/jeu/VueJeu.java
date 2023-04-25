@@ -17,9 +17,11 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -34,7 +36,8 @@ public class VueJeu extends JFrame {
 
 	private Joueur joueur;
 	private Partie partie;
-	private JPanel panelLogo, panelPont, panelMain;
+	private JPanel panelLogo, panelPont, panelMain, panelAction;
+	private JProgressBar barreMana;
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
@@ -88,7 +91,6 @@ public class VueJeu extends JFrame {
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 
 		c.weightx = 1;
-		c.weighty = 0.33;
 		c.gridx = 0;
 		c.gridy = 0;
 		getContentPane().add(panelLogo, c);
@@ -102,7 +104,7 @@ public class VueJeu extends JFrame {
 		initPont();
 		updatePont();
 		c.weightx = 1;
-		c.weighty = 0.33;
+		c.weighty = 0.3;
 		c.gridx = 0;
 		c.gridy = 1;
 		getContentPane().add(panelPont, c);
@@ -113,10 +115,40 @@ public class VueJeu extends JFrame {
 		imagesCartesJoueur = new ArrayList<>();
 		this.paintMain();
 		c.weightx = 1;
-		c.weighty = 0.5;
+		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 2;
 		getContentPane().add(panelMain, c);
+		
+		//Affichage du panel d'actions
+		panelAction = new JPanel();
+		panelAction.setBackground(Color.black);
+		JButton boutonJouer = new JButton("Jouer le tour");
+		JButton historique = new JButton("Historique de la partie");
+		JLabel mise = new JLabel();
+		System.out.println("src/main/resources/fr_votremise"+Character.toLowerCase(joueur.getCouleur().toString().charAt(0))+".gif");
+		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"+Character.toLowerCase(joueur.getCouleur().toString().charAt(0))+".gif"));
+		panelAction.add(boutonJouer);
+		panelAction.add(historique);
+		panelAction.add(mise);
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 3;
+		getContentPane().add(panelAction, c);
+		
+		// Affichage du mana
+		barreMana = new JProgressBar();
+		barreMana.setStringPainted(true);
+		barreMana.setForeground(Color.magenta);
+		barreMana.setBackground(Color.black);
+		barreMana.setString(String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM) + " mana");
+		barreMana.setValue(100);
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 4;
+		getContentPane().add(barreMana, c);
 	}
 
 	/**
@@ -200,8 +232,6 @@ public class VueJeu extends JFrame {
 			tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1)); // passer les borders en constantes ?
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
-			
-			
 
 			tmp.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent e) {
@@ -235,7 +265,7 @@ public class VueJeu extends JFrame {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					// TODO Auto-generated method stub
-					
+
 				}
 			});
 		}
