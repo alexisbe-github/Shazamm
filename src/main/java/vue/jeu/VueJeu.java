@@ -111,7 +111,7 @@ public class VueJeu extends JFrame {
 		c.weightx = 1;
 		c.weighty = 0.5;
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 2;
 		getContentPane().add(panelMain, c);
 	}
 
