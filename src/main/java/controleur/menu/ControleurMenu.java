@@ -15,9 +15,11 @@ import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
 
 public class ControleurMenu implements ActionListener {
+	
+	private VueMenu vm;
 
 	public ControleurMenu(VueMenu vm) {
-		
+		this.vm = vm;
 	}
 
 	@Override
@@ -32,6 +34,8 @@ public class ControleurMenu implements ActionListener {
 			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 			Partie p = new Partie(joueur1, joueur2);
 			new VueJeu(joueur1,p);
+			new VueJeu(joueur2,p);
+			vm.dispose();
 			break;
 		}
 	}
