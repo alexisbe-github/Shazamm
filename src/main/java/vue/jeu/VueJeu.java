@@ -10,8 +10,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +20,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
-import main.java.model.jeu.partie.Tour;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
@@ -202,20 +200,16 @@ public class VueJeu extends JFrame {
 			tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1)); // passer les borders en constantes ?
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
+			
+			
 
-			tmp.addMouseListener(new MouseAdapter() {
+			tmp.addMouseListener(new MouseListener() {
 				public void mouseClicked(MouseEvent e) {
-					Integer index = panelMain.getComponentZOrder(tmp);
-					if (!cartesJouees.contains(index)) {
-						cartesJouees.add(index);
-					} else {
-						cartesJouees.remove(index);
-					}
-					displayCartesJouees();
+
 				}
 
 				public void mouseEntered(MouseEvent e) {
-					tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+					tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));F
 				}
 
 				public void mouseExited(MouseEvent e) {
@@ -225,6 +219,23 @@ public class VueJeu extends JFrame {
 					} else {
 						tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 					}
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					Integer index = panelMain.getComponentZOrder(tmp);
+					if (!cartesJouees.contains(index)) {
+						cartesJouees.add(index);
+					} else {
+						cartesJouees.remove(index);
+					}
+					displayCartesJouees();
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
 				}
 			});
 		}
