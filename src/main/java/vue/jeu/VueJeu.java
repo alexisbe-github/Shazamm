@@ -15,15 +15,18 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
@@ -192,6 +195,8 @@ public class VueJeu extends JFrame {
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
 			tmp.setIcon(VueJeu.redimensionnerImage(image, 140, 250));
+			tmp.setHorizontalAlignment(JLabel.CENTER);
+			tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1)); // passer les borders en constantes ?
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 			
@@ -200,8 +205,20 @@ public class VueJeu extends JFrame {
 					int index = panelMain.getComponentZOrder(tmp);
 					Carte carteAJouer = joueur.getMainDuJoueur().get(index);
 					if(!partie.getListeCartesJoueesParJoueur(joueur).contains(carteAJouer)) {
-						
+						/*
+						 * ArrayOutOfBoundsException a cause de l'index (ligne 205) quand on fait ça
+						 * Tour tourCourant = partie.getMancheCourante().getTourCourant();
+						 * tourCourant.jouerCarte(carteAJouer, joueur);
+						 */	
 					}
+				}
+				public void mouseEntered(MouseEvent e) {
+					JLabel jlbl = (JLabel)e.getComponent();
+					jlbl.setBorder(BorderFactory.createLineBorder(Color.white,1));	
+				}
+				public void mouseExited(MouseEvent e) {
+					JLabel jlbl = (JLabel)e.getComponent();
+					jlbl.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 				}
 			});
 		}
