@@ -223,7 +223,7 @@ public class VueJeu extends JFrame {
 					if (cartesJouees.contains(index)) {
 						tmp.setBorder(BorderFactory.createLineBorder(Color.red, 1));
 					} else {
-						tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+						tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 					}
 				}
 			});
