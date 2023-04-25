@@ -39,6 +39,7 @@ public class VueJeu extends JFrame {
 	private JPanel panelLogo, panelPont, panelMain;
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
+	private List<Integer> cartesJouees;
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -47,6 +48,8 @@ public class VueJeu extends JFrame {
 	public VueJeu(Joueur joueur, Partie partie) {
 		this.joueur = joueur;
 		this.partie = partie;
+
+		cartesJouees = new ArrayList<>();
 
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
@@ -105,7 +108,7 @@ public class VueJeu extends JFrame {
 		c.gridx = 0;
 		c.gridy = 1;
 		getContentPane().add(panelPont, c);
-		
+
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
 		panelMain.setBackground(Color.BLACK);
@@ -199,28 +202,42 @@ public class VueJeu extends JFrame {
 			tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1)); // passer les borders en constantes ?
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
-			
+
 			tmp.addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					int index = panelMain.getComponentZOrder(tmp);
-					Carte carteAJouer = joueur.getMainDuJoueur().get(index);
-					if(!partie.getListeCartesJoueesParJoueur(joueur).contains(carteAJouer)) {
-						/*
-						 * ArrayOutOfBoundsException a cause de l'index (ligne 205) quand on fait ça
-						 * Tour tourCourant = partie.getMancheCourante().getTourCourant();
-						 * tourCourant.jouerCarte(carteAJouer, joueur);
-						 */	
+					Integer index = panelMain.getComponentZOrder(tmp);
+					if (!cartesJouees.contains(index)) {
+						cartesJouees.add(index);
+					} else {
+						cartesJouees.remove(index);
 					}
+					displayCartesJouees();
 				}
+
 				public void mouseEntered(MouseEvent e) {
-					tmp.setBorder(BorderFactory.createLineBorder(Color.white,1));	
+					tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 				}
+
 				public void mouseExited(MouseEvent e) {
-					tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+					Integer index = panelMain.getComponentZOrder(tmp);
+					if (cartesJouees.contains(index)) {
+						tmp.setBorder(BorderFactory.createLineBorder(Color.red, 1));
+					} else {
+						tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+					}
 				}
 			});
 		}
+	}
 
+	private void displayCartesJouees() {
+		for (int i = 0; i < this.imagesCartesJoueur.size(); i++) {
+			if (this.cartesJouees.contains(i)) {
+				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.red, 1));
+			} else {
+				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.white, 1));
+			}
+		}
 	}
 
 	/**
