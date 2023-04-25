@@ -48,6 +48,25 @@ public class Partie {
 	}
 
 	/**
+	 * Donne la liste des cartes jouées par un joueur passé en paramètre du tour
+	 * courant
+	 * 
+	 * @param joueur
+	 * @return List<Carte>
+	 */
+	public List<Carte> getListeCartesJoueesParJoueur(Joueur joueur) {
+		Tour tourCourant = this.getMancheCourante().getTourCourant();
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			return tourCourant.getCartesJoueesRouge();
+		return tourCourant.getCartesJoueesVert();
+	}
+	
+	public void jouerCarte(Carte carteAJouer, Joueur joueur) {
+		Tour tourCourant = this.getMancheCourante().getTourCourant();
+		tourCourant.jouerCarte(carteAJouer, joueur);
+	}
+
+	/**
 	 * En fonction de strategy la méthode va lancer l'effet de la carte 6 au scanner
 	 * ou sur l'interface graphique
 	 * 
@@ -58,7 +77,7 @@ public class Partie {
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		strategy.lancerRecyclage(p, tour, joueur);
 	}
-	
+
 	/**
 	 * En fonction de strategy la méthode va lancer l'effet de la carte 3 au scanner
 	 * ou sur l'interface graphique

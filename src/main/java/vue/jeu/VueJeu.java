@@ -10,6 +10,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +61,7 @@ public class VueJeu extends JFrame {
 
 		panelLogo = new JPanel(new GridBagLayout());
 		panelLogo.setBackground(Color.BLACK);
-		
+
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridx = 0;
@@ -80,14 +82,14 @@ public class VueJeu extends JFrame {
 
 		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
-		
+
 		c.weightx = 1;
 		c.weighty = 0.33;
 		c.gridx = 0;
 		c.gridy = 0;
 		getContentPane().add(panelLogo, c);
 
-		//Affichage du pont
+		// Affichage du pont
 		panelPont = new JPanel();
 		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
 		panelPont.setLayout(new GridLayout(1, Pont.TAILLE_PONT, 0, 0));
@@ -100,8 +102,8 @@ public class VueJeu extends JFrame {
 		c.gridx = 0;
 		c.gridy = 1;
 		getContentPane().add(panelPont, c);
-
-		//Affichage des cartes de la main du joueur
+		
+		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
 		panelMain.setBackground(Color.BLACK);
 		imagesCartesJoueur = new ArrayList<>();
@@ -109,7 +111,7 @@ public class VueJeu extends JFrame {
 		c.weightx = 1;
 		c.weighty = 0.5;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 3;
 		getContentPane().add(panelMain, c);
 	}
 
@@ -123,7 +125,7 @@ public class VueJeu extends JFrame {
 			tmp.setIcon(new ImageIcon(source));
 			imagesPont.add(tmp);
 			panelPont.add(tmp);
-			
+
 			panelPont.addComponentListener(new ComponentAdapter() {
 				@Override
 				public void componentResized(ComponentEvent e) {
@@ -142,7 +144,7 @@ public class VueJeu extends JFrame {
 					}
 				}
 			});
-			
+
 		}
 	}
 
@@ -180,26 +182,36 @@ public class VueJeu extends JFrame {
 
 	private void paintMain() {
 		List<Carte> mainJoueur = this.joueur.getMainDuJoueur();
+
 		for (JLabel label : this.imagesCartesJoueur) {
 			panelMain.remove(label);
 		}
 
-		for (int i=0;i<mainJoueur.size();i++) {
+		for (int i = 0; i < mainJoueur.size(); i++) {
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
 			tmp.setIcon(VueJeu.redimensionnerImage(image, 140, 250));
-			this.imagesCartesJoueur.add(tmp);
+			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
+			
+			tmp.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					int index = panelMain.getComponentZOrder(tmp);
+					Carte carteAJouer = joueur.getMainDuJoueur().get(index);
+					if(!partie.getListeCartesJoueesParJoueur(joueur).contains(carteAJouer)) {
+						
+					}
+				}
+			});
 		}
-		
 
 	}
-	
+
 	/**
 	 * Redimensionne un objet <code>ImageIcon</code> selon les paramètres spécifiés.
 	 * 
-	 * @param img L'image à redimensionner
+	 * @param img     L'image à redimensionner
 	 * @param largeur La nouvelle largeur
 	 * @param hauteur La nouvelle hauteur
 	 * @return L'image redimensionnée
@@ -207,6 +219,6 @@ public class VueJeu extends JFrame {
 	public static ImageIcon redimensionnerImage(ImageIcon img, int largeur, int hauteur) {
 		Image image = img.getImage(); // Transformation en Image
 		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
-		return new ImageIcon(nvimg);  // Transformation en ImageIcon
+		return new ImageIcon(nvimg); // Transformation en ImageIcon
 	}
 }
