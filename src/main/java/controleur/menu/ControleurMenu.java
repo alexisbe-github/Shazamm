@@ -1,5 +1,8 @@
 package main.java.controleur.menu;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -33,8 +36,11 @@ public class ControleurMenu implements ActionListener {
 			Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
 			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 			Partie p = new Partie(joueur1, joueur2);
-			new VueJeu(joueur1,p);
-			new VueJeu(joueur2,p);
+			VueJeu fenetreJ1 = new VueJeu(joueur1,p);
+			VueJeu fenetreJ2 = new VueJeu(joueur2,p);
+			int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+			fenetreJ1.setLocation(new Point(0,0));
+			fenetreJ1.setLocation(new Point(width/2,0));
 			vm.dispose();
 			break;
 		}
