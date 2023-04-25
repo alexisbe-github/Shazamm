@@ -209,7 +209,7 @@ public class VueJeu extends JFrame {
 				}
 
 				public void mouseEntered(MouseEvent e) {
-					tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));F
+					tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 				}
 
 				public void mouseExited(MouseEvent e) {
