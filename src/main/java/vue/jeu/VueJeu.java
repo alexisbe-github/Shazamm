@@ -213,12 +213,10 @@ public class VueJeu extends JFrame {
 					}
 				}
 				public void mouseEntered(MouseEvent e) {
-					JLabel jlbl = (JLabel)e.getComponent();
-					jlbl.setBorder(BorderFactory.createLineBorder(Color.white,1));	
+					tmp.setBorder(BorderFactory.createLineBorder(Color.white,1));	
 				}
 				public void mouseExited(MouseEvent e) {
-					JLabel jlbl = (JLabel)e.getComponent();
-					jlbl.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+					tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 				}
 			});
 		}
