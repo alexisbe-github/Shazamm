@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import main.java.exceptions.PositionInaccessibleException;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
@@ -36,11 +37,15 @@ public class VueJeu extends JFrame {
 
 	private Joueur joueur;
 	private Partie partie;
-	private JPanel panelLogo, panelPont, panelMain, panelAction;
+	private JPanel panelLogo, panelPont, panelSorciers, panelJeu, panelMain, panelAction;
 	private JProgressBar barreMana;
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
+	private int positionSorcierVert, positionSorcierRouge, positionMurFeu;
+	private final String CHEMIN_SORCIER_ROUGE = "src/main/resources/perso/rouge.gif",
+			CHEMIN_SORCIER_VERT = "src/main/resources/perso/vert.gif",
+			CHEMIN_MUR_FEU = "src/main/resources/perso/mur.gif";
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -57,14 +62,14 @@ public class VueJeu extends JFrame {
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
-		setResizable(true);
+		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.BOTH;
 
 		panelLogo = new JPanel(new GridBagLayout());
 		panelLogo.setBackground(Color.BLACK);
@@ -87,7 +92,7 @@ public class VueJeu extends JFrame {
 		c.gridy = 0;
 		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 
-		logo.setIcon(new ImageIcon("src/main/resources/logo_shazamm.gif"));
+		logo.setIcon(VueJeu.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 
 		c.weightx = 1;
@@ -95,19 +100,58 @@ public class VueJeu extends JFrame {
 		c.gridy = 0;
 		getContentPane().add(panelLogo, c);
 
+		// Affichage du panneau contenant le pont, les sorciers et le mur
+		panelJeu = new JPanel(new GridBagLayout());
+		panelJeu.setBackground(Color.BLACK);
+		c.weightx = 1;
+		c.weighty = 0.5;
+		c.gridx = 0;
+		c.gridy = 1;
+		getContentPane().add(panelJeu, c);
+
+		// Affichage des sorciers et du mur de feu
+		panelSorciers = new JPanel(new GridBagLayout());
+		panelSorciers.setBackground(Color.BLACK);
+		// TODO Peut-être qu'il faut remplir toutes les cases avec des labels vides et
+		// les remplacer quand on met une vraie image
+		c.gridx = Pont.TAILLE_PONT - 1;
+		panelSorciers.add(new JLabel(), c); // Label vide qui occupe le dernier index
+		c.gridx = 0;
+		panelSorciers.add(new JLabel(), c); // Label vide qui occupe le premier index
+		// Positions initiales
+		positionSorcierRouge = 6;
+		positionMurFeu = 9;
+		positionSorcierVert = 12;
+		// Décalage des images vers le bas
+		c.insets = new Insets(50, 0, 0, 0);
+		// Ajout des images
+		c.gridx = positionSorcierRouge;
+		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_SORCIER_ROUGE)), c);
+		c.gridx = positionMurFeu;
+		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_MUR_FEU)), c);
+		c.gridx = positionSorcierVert;
+		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_SORCIER_VERT)), c);
+		// Ajout du panel
+		c.insets = new Insets(0, 20, 0, 20);
+		c.weightx = 1;
+		c.weighty = 2;
+		c.gridx = 0;
+		c.gridy = 0;
+		panelJeu.add(panelSorciers, c);
+
 		// Affichage du pont
 		panelPont = new JPanel();
 		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
-		panelPont.setLayout(new GridLayout(1, Pont.TAILLE_PONT, 0, 0));
 		panelPont.setBackground(Color.BLACK);
 		imagesPont = new ArrayList<>();
 		initPont();
 		updatePont();
 		c.weightx = 1;
-		c.weighty = 0.3;
+		c.weighty = 0.5;
 		c.gridx = 0;
 		c.gridy = 1;
-		getContentPane().add(panelPont, c);
+		c.insets = new Insets(-10, 10, 5, 10);
+		panelJeu.add(panelPont, c);
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
@@ -118,16 +162,17 @@ public class VueJeu extends JFrame {
 		c.weighty = 0;
 		c.gridx = 0;
 		c.gridy = 2;
+		c.insets = new Insets(5, 10, 5, 10);
 		getContentPane().add(panelMain, c);
-		
-		//Affichage du panel d'actions
+
+		// Affichage du panel d'actions
 		panelAction = new JPanel();
-		panelAction.setBackground(Color.black);
+		panelAction.setBackground(Color.BLACK);
 		JButton boutonJouer = new JButton("Jouer le tour");
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
-		System.out.println("src/main/resources/fr_votremise"+Character.toLowerCase(joueur.getCouleur().toString().charAt(0))+".gif");
-		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"+Character.toLowerCase(joueur.getCouleur().toString().charAt(0))+".gif"));
+		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
+				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
@@ -136,13 +181,14 @@ public class VueJeu extends JFrame {
 		c.gridx = 0;
 		c.gridy = 3;
 		getContentPane().add(panelAction, c);
-		
+
 		// Affichage du mana
 		barreMana = new JProgressBar();
 		barreMana.setStringPainted(true);
-		barreMana.setForeground(Color.magenta);
-		barreMana.setBackground(Color.black);
-		barreMana.setString(String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM) + " mana");
+		barreMana.setForeground(Color.MAGENTA);
+		barreMana.setBackground(Color.BLACK);
+		barreMana
+				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
 		c.weightx = 1;
 		c.weighty = 0;
@@ -155,13 +201,21 @@ public class VueJeu extends JFrame {
 	 * Pose les images du pont sur l'interface graphique
 	 */
 	private void initPont() {
+		panelPont.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.weightx = 1;
+
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
 			JLabel tmp = new JLabel();
 			String source = this.getImageCasePont(i);
 			tmp.setIcon(new ImageIcon(source));
 			imagesPont.add(tmp);
-			panelPont.add(tmp);
+			panelPont.add(tmp, c.gridx);
+			c.gridx++;
 
+			// Empêche les pièces du pont de se séparer les unes des autres
 			panelPont.addComponentListener(new ComponentAdapter() {
 				@Override
 				public void componentResized(ComponentEvent e) {
@@ -229,31 +283,33 @@ public class VueJeu extends JFrame {
 			ImageIcon image = new ImageIcon(c.getPath());
 			tmp.setIcon(VueJeu.redimensionnerImage(image, 140, 250));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
-			tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1)); // passer les borders en constantes ?
+			tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les borders en constantes ?
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 
 			tmp.addMouseListener(new MouseListener() {
+				@Override
 				public void mouseClicked(MouseEvent e) {
-
 				}
 
+				@Override
 				public void mouseEntered(MouseEvent e) {
-					tmp.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+					tmp.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 				}
 
+				@Override
 				public void mouseExited(MouseEvent e) {
-					Integer index = panelMain.getComponentZOrder(tmp);
+					Integer index = (Integer) panelMain.getComponentZOrder(tmp);
 					if (cartesJouees.contains(index)) {
-						tmp.setBorder(BorderFactory.createLineBorder(Color.red, 1));
+						tmp.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 					} else {
-						tmp.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+						tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 					}
 				}
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					Integer index = panelMain.getComponentZOrder(tmp);
+					Integer index = (Integer) panelMain.getComponentZOrder(tmp);
 					if (!cartesJouees.contains(index)) {
 						cartesJouees.add(index);
 					} else {
@@ -264,8 +320,6 @@ public class VueJeu extends JFrame {
 
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					// TODO Auto-generated method stub
-
 				}
 			});
 		}
@@ -273,12 +327,54 @@ public class VueJeu extends JFrame {
 
 	private void displayCartesJouees() {
 		for (int i = 0; i < this.imagesCartesJoueur.size(); i++) {
-			if (this.cartesJouees.contains(i)) {
-				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.red, 1));
+			if (this.cartesJouees.contains((Integer) i)) {
+				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			} else {
-				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 			}
 		}
+	}
+
+	// TODO Mettre dans le modèle
+
+	/**
+	 * ---------------------------------------- --- (TEST) À déplacer dans le modèle
+	 * --- ----------------------------------------
+	 * 
+	 * Déplace le sorcier vert à la position spécifiée (entre <code>0</code> et
+	 * <code>Pont.TAILLE_PONT - 1</code>).
+	 * 
+	 * @param nvPosition La nouvelle position du sorcier
+	 * @throws PositionInaccessibleException Exception levée si
+	 *                                       <code>nvPosition</code> n'est pas
+	 *                                       compris entre <code>0</code> et
+	 *                                       <code>Pont.TAILLE_PONT - 1</code>.
+	 * @see Pont
+	 */
+	private void deplacerSorcierVert(int nvPosition) {
+		try {
+			if (nvPosition < 0 || nvPosition >= Pont.TAILLE_PONT) {
+				throw new PositionInaccessibleException();
+			}
+
+			try {
+				panelSorciers.remove(panelSorciers.getComponent(0));
+				;
+			} catch (ArrayIndexOutOfBoundsException ex) {
+
+			}
+
+			JLabel labelSorcier = new JLabel(new ImageIcon("src/main/resources/perso/vert.gif"));
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = nvPosition;
+
+			panelSorciers.add(labelSorcier, c);
+			panelSorciers.repaint();
+			panelSorciers.revalidate();
+		} catch (PositionInaccessibleException e) {
+			return;
+		}
+
 	}
 
 	/**
