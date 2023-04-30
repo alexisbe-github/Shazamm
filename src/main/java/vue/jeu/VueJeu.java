@@ -10,6 +10,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 import main.java.exceptions.PositionInaccessibleException;
 import main.java.model.jeu.Joueur;
@@ -74,39 +77,26 @@ public class VueJeu extends JFrame {
 		panelLogo = new JPanel(new GridBagLayout());
 		panelLogo.setBackground(Color.BLACK);
 
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 0;
+		setConstraints(1, 0, 0, 0, c);
 		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à droite
 
-		c.weightx = 0;
-		c.weighty = 0;
-		c.gridx = 1;
-		c.gridy = 0;
+		setConstraints(0, 0, 1, 0, c);
 		panelLogo.add(logo, c); // Logo centré
 
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridx = 2;
-		c.gridy = 0;
+		setConstraints(1, 0, 2, 0, c);
 		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 
 		logo.setIcon(VueJeu.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 
-		c.weightx = 1;
-		c.gridx = 0;
-		c.gridy = 0;
+		setConstraints(1, 0, 0, 0, c);
 		getContentPane().add(panelLogo, c);
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
-		c.weightx = 1;
-		c.weighty = 0.5;
-		c.gridx = 0;
-		c.gridy = 1;
+
+		setConstraints(1, 0.5, 0, 1, c);
 		getContentPane().add(panelJeu, c);
 
 		// Affichage des sorciers et du mur de feu
@@ -171,15 +161,38 @@ public class VueJeu extends JFrame {
 		JButton boutonJouer = new JButton("Jouer le tour");
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
+
+		JTextField saisieMana = new JTextField("0", 3);
+		saisieMana.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if ((e.getKeyChar() >= '0' && e.getKeyChar() <= '9') || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					saisieMana.setEditable(true);
+				} else {
+					saisieMana.setEditable(false);
+				}
+			}
+		});
+
+		/*
+		 * Tentative JSlider mais j'avais pas envie de rajouter trop d'attributs sachant
+		 * que je textfield est déja sympa Je laisse au cas ou vous préférez (ajouter
+		 * attribut JTextField("0",2) valeurMise -> onkeytype on maj le slider etc..)
+		 * 
+		 * JSlider saisieMana = new JSlider(1,joueur.getManaActuel());
+		 * saisieMana.setMajorTickSpacing(joueur.getManaActuel()-1);
+		 * saisieMana.setMinorTickSpacing(1); saisieMana.setPaintTicks(true);
+		 * saisieMana.setPaintLabels(true); saisieMana.addChangeListener(new
+		 * ChangeListener() { public void stateChanged(ChangeEvent e) { JSlider source =
+		 * (JSlider)e.getSource(); if (!source.getValueIsAdjusting()) { int val =
+		 * (int)source.getValue(); miseValeur.setText(val+""); } } });
+		 */
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 3;
+		panelAction.add(saisieMana);
+		setConstraints(1, 0, 0, 3, c);
 		getContentPane().add(panelAction, c);
 
 		// Affichage du mana
@@ -190,10 +203,7 @@ public class VueJeu extends JFrame {
 		barreMana
 				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 4;
+		setConstraints(1, 0, 0, 4, c);
 		getContentPane().add(barreMana, c);
 	}
 
@@ -389,5 +399,15 @@ public class VueJeu extends JFrame {
 		Image image = img.getImage(); // Transformation en Image
 		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
 		return new ImageIcon(nvimg); // Transformation en ImageIcon
+	}
+
+	/*
+	 * méthode pour factoriser la modification répétitive des contraintes
+	 */
+	private void setConstraints(double weightx, double weighty, int gridx, int gridy, GridBagConstraints c) {
+		c.weightx = weightx;
+		c.weighty = weighty;
+		c.gridx = gridx;
+		c.gridy = gridy;
 	}
 }
