@@ -21,6 +21,7 @@ public class ControleurJeu implements ActionListener {
 		JButton bouton = (JButton) e.getSource();
 		switch (bouton.getText()) {
 		case "Jouer le tour":
+			bouton.setEnabled(false);
 			Joueur j = this.vj.getJoueur();
 			int mise = vj.getMise();
 			j.depenserMana(mise);

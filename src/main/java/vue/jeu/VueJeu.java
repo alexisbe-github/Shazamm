@@ -18,6 +18,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -155,7 +157,8 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 				try {
 					// On vérifie que la saisie est comprise entre 1 et le mana du joueur
 					boolean saisieCorrecte = ((Character.isDigit(e.getKeyChar())
-							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)
+							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
+							|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT)
 							&& ((Integer.parseInt(saisieMana.getText()
 									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) <= joueur
 											.getManaActuel())
@@ -405,12 +408,12 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	 * @param nv La nouvelle valeur
 	 */
 	public void updateBarreMana(int nv) {
+
 		if (nv < 0 || nv > 50) {
 			return;
 		}
 
-		// Animation de la baisse de la barre
-		// TODO Le thread n'a pas l'air de se pauser
+		// Animation pour faire baisser progressivement les réserves de mana
 		new Thread(new Runnable() {
 
 			@Override
@@ -422,10 +425,11 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 					mana--;
 					barreMana.setValue(anc);
 					barreMana.setString("Mana : " + mana + "/" + Joueur.MANA_MAXIMUM);
-				}
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
+
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+					}
 				}
 			}
 		}).start();
