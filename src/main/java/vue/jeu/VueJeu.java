@@ -54,9 +54,6 @@ public class VueJeu extends JFrame {
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
 	private int positionSorcierVert, positionSorcierRouge, positionMurFeu;
-	private final String CHEMIN_SORCIER_ROUGE = "src/main/resources/perso/rouge.gif",
-			CHEMIN_SORCIER_VERT = "src/main/resources/perso/vert.gif",
-			CHEMIN_MUR_FEU = "src/main/resources/perso/mur.gif";
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -125,13 +122,13 @@ public class VueJeu extends JFrame {
 		// Ajout des images
 		c.gridx++;
 		c.gridx = positionSorcierRouge;
-		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_SORCIER_ROUGE)), c);
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
 		c.gridx++;
 		c.gridx = positionMurFeu;
-		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_MUR_FEU)), c);
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPath())), c);
 		c.gridx++;
 		c.gridx = positionSorcierVert;
-		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_SORCIER_VERT)), c);
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
 		// Ajout du panel
 		c.insets = new Insets(0, 20, 0, 20);
 		c.weightx = 1;
@@ -380,7 +377,7 @@ public class VueJeu extends JFrame {
 			try {
 				JLabel label = (JLabel) c;
 				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == CHEMIN_SORCIER_VERT) {
+				if (image.getDescription() == partie.getJoueurVert().getPath()) {
 					return label;
 				}
 			} catch (NullPointerException e) {
@@ -398,7 +395,7 @@ public class VueJeu extends JFrame {
 			try {
 				JLabel label = (JLabel) c;
 				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == CHEMIN_SORCIER_ROUGE) {
+				if (image.getDescription() == partie.getJoueurRouge().getPath()) {
 					return label;
 				}
 			} catch (NullPointerException e) {
@@ -415,7 +412,7 @@ public class VueJeu extends JFrame {
 			try {
 				JLabel label = (JLabel) c;
 				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == CHEMIN_MUR_FEU) {
+				if (image.getDescription() == partie.getPont().getPath()) {
 					return label;
 				}
 			} catch (NullPointerException e) {

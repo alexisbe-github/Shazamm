@@ -147,4 +147,8 @@ public class Pont {
 		return this.positionJoueurVert;
 	}
 
+	public String getPath() {
+		return "src/main/resources/perso/mur.gif";
+	}
+	
 }

@@ -136,4 +136,15 @@ public class Joueur {
 		this.mainDuJoueur.remove(carteJouee);
 	}
 
+	/*
+	 * Retourne le chemin de l'image correspondant au Joueur
+	 */
+	public String getPath(){
+		if(this.COULEUR.equals(ECouleurJoueur.ROUGE)) {
+			return "src/main/resources/perso/rouge.gif";
+		}else {
+			return "src/main/resources/perso/vert.gif";
+		}
+	}
+	
 }
