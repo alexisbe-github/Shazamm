@@ -2,11 +2,12 @@ package main.java.vue.jeu;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -30,6 +31,7 @@ import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
+import main.java.utils.Utils;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
@@ -62,9 +64,9 @@ public class VueJeu extends JFrame {
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 
-		// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
-		setSize(684, 691); // Affichage en 1368*768 px par défaut
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
+		// setSize(683, 691); // Affichage en 1366*768 px par défaut
 		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
@@ -86,7 +88,7 @@ public class VueJeu extends JFrame {
 		setConstraints(1, 0, 2, 0, c);
 		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 
-		logo.setIcon(VueJeu.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
+		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 
 		setConstraints(1, 0, 0, 0, c);
@@ -163,31 +165,33 @@ public class VueJeu extends JFrame {
 		JButton boutonJouer = new JButton("Jouer le tour");
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
-
-		JTextField saisieMana = new JTextField("0", 3);
+		JTextField saisieMana = new JTextField(3);
+		
 		saisieMana.addKeyListener(new KeyAdapter() {
+
+			@Override
 			public void keyPressed(KeyEvent e) {
-				if ((e.getKeyChar() >= '0' && e.getKeyChar() <= '9') || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-					saisieMana.setEditable(true);
-				} else {
-					saisieMana.setEditable(false);
+				try {
+					// On vérifie que la saisie est comprise entre 1 et le mana du joueur
+					if (((Character.isDigit(e.getKeyChar()) || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+							|| e.getKeyCode() == KeyEvent.VK_DELETE)
+							&& ((Integer.parseInt(saisieMana.getText()
+									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) <= joueur
+											.getManaActuel())
+									&& (Integer.parseInt(
+											saisieMana.getText() + (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? ""
+													: e.getKeyChar())) >= 1)))) {
+						saisieMana.setEditable(true);
+					} else {
+						saisieMana.setEditable(false);
+					}
+
+				} catch (NumberFormatException ex) {
+
 				}
 			}
 		});
-
-		/*
-		 * Tentative JSlider mais j'avais pas envie de rajouter trop d'attributs sachant
-		 * que je textfield est déja sympa Je laisse au cas ou vous préférez (ajouter
-		 * attribut JTextField("0",2) valeurMise -> onkeytype on maj le slider etc..)
-		 * 
-		 * JSlider saisieMana = new JSlider(1,joueur.getManaActuel());
-		 * saisieMana.setMajorTickSpacing(joueur.getManaActuel()-1);
-		 * saisieMana.setMinorTickSpacing(1); saisieMana.setPaintTicks(true);
-		 * saisieMana.setPaintLabels(true); saisieMana.addChangeListener(new
-		 * ChangeListener() { public void stateChanged(ChangeEvent e) { JSlider source =
-		 * (JSlider)e.getSource(); if (!source.getValueIsAdjusting()) { int val =
-		 * (int)source.getValue(); miseValeur.setText(val+""); } } });
-		 */
+		
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		panelAction.add(boutonJouer);
@@ -293,7 +297,7 @@ public class VueJeu extends JFrame {
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(VueJeu.redimensionnerImage(image, 140, 250));
+			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les borders en constantes ?
 			imagesCartesJoueur.add(tmp);
@@ -386,20 +390,6 @@ public class VueJeu extends JFrame {
 			return;
 		}
 
-	}
-
-	/**
-	 * Redimensionne un objet <code>ImageIcon</code> selon les paramètres spécifiés.
-	 * 
-	 * @param img     L'image à redimensionner
-	 * @param largeur La nouvelle largeur
-	 * @param hauteur La nouvelle hauteur
-	 * @return L'image redimensionnée
-	 */
-	public static ImageIcon redimensionnerImage(ImageIcon img, int largeur, int hauteur) {
-		Image image = img.getImage(); // Transformation en Image
-		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
-		return new ImageIcon(nvimg); // Transformation en ImageIcon
 	}
 
 	/**
