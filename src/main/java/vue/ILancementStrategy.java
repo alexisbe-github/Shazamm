@@ -6,8 +6,6 @@ import main.java.model.jeu.partie.Tour;
 
 public interface ILancementStrategy {
 
-	public void lancerJeu();
-
 	public void lancerClone(Partie p, Tour tour, Joueur joueur);
 	
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur);

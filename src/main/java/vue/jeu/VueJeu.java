@@ -529,12 +529,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	}
 
 	@Override
-	public void lancerJeu() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
 		// TODO Auto-generated method stub
 		

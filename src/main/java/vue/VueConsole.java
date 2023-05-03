@@ -20,7 +20,6 @@ public class VueConsole implements ILancementStrategy {
 		this.lancerJeu();
 	}
 
-	@Override
 	public void lancerJeu() {
 		while (!partie.getPartieFinie()) {
 			partie.printMancheEtTour();
