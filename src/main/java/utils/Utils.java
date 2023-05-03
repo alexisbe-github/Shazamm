@@ -75,7 +75,7 @@ public class Utils {
 	                        step++;
 	                        if (step > nb_etapes) {
 	                            timerInverse.stop();
-	                            composant.setBackground(new Color(INITIALE_RGB[0], INITIALE_RGB[1], INITIALE_RGB[2]));
+	                            composant.setBackground(Color.WHITE);
 	                        }
 	                    }
 	                });

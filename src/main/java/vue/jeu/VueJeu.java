@@ -167,6 +167,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 						saisieMana.setEditable(true);
 					} else {
 						saisieMana.setEditable(false);
+						// Fondu vers le rouge pour prévenir l'utilisateur d'une saisie incorrecte
 						Utils.fonduArrierePlan(saisieMana, new Color(255, 43, 28), 8, 15);
 					}
 
