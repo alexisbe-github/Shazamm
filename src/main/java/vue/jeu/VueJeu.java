@@ -100,20 +100,17 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		getContentPane().add(panelLogo, c);
 
 		
-		
-		
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
 
 		setConstraints(1, 0.5, 0, 1, c);
 		getContentPane().add(panelJeu, c);
+		
+		// Affichage des sorciers et du mur de feu
+		panelSorciers = new JPanel(new GridBagLayout());
+		panelSorciers.setBackground(Color.BLACK);
 
-		
-		
-			
-		
-		
 		updateSorciersEtMur();
 		
 		// Ajout du panel
@@ -377,9 +374,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	private void updateSorciersEtMur() {
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
-		// Affichage des sorciers et du mur de feu
-		panelSorciers = new JPanel(new GridBagLayout());
-		panelSorciers.setBackground(Color.BLACK);
 		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
 			c.gridx++;
 			c.gridx = i;
