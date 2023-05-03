@@ -99,25 +99,24 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		setConstraints(1, 0, 0, 0, c);
 		getContentPane().add(panelLogo, c);
 
-		
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
 
 		setConstraints(1, 0.5, 0, 1, c);
 		getContentPane().add(panelJeu, c);
-		
+
 		// Affichage des sorciers et du mur de feu
 		panelSorciers = new JPanel(new GridBagLayout());
 		panelSorciers.setBackground(Color.BLACK);
 
 		updateSorciersEtMur();
-		
+
 		// Ajout du panel
 		c.insets = new Insets(0, 20, 0, 20);
-		setConstraints(1,2,0,0,c);
+		setConstraints(1, 2, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
-		
+
 		// Affichage du pont
 		panelPont = new JPanel();
 		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
@@ -125,7 +124,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		imagesPont = new ArrayList<>();
 		initPont();
 		updatePont();
-		setConstraints(1,0.5,0,1,c);
+		setConstraints(1, 0.5, 0, 1, c);
 		c.insets = new Insets(-10, 10, 5, 10);
 		panelJeu.add(panelPont, c);
 
@@ -134,7 +133,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		panelMain.setBackground(Color.BLACK);
 		imagesCartesJoueur = new ArrayList<>();
 		this.paintMain();
-		setConstraints(1,0,0,2,c);
+		setConstraints(1, 0, 0, 2, c);
 		c.insets = new Insets(5, 10, 5, 10);
 		getContentPane().add(panelMain, c);
 
@@ -170,6 +169,12 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 						// Fondu vers le rouge pour prévenir l'utilisateur d'une saisie incorrecte
 						Utils.fonduArrierePlan(saisieMana, new Color(255, 43, 28), 8, 15);
 					}
+
+					if (saisieMana.getText().length() == 1
+							&& (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
+						boutonJouer.setEnabled(false);
+					} else
+						boutonJouer.setEnabled(true);
 
 				} catch (NumberFormatException ex) {
 
@@ -288,7 +293,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 
-			tmp.addMouseListener(new ControleurCartes(this.panelMain,this.cartesJouees,this));
+			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
 		}
 	}
 
@@ -311,12 +316,15 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			try {
 				JLabel label = (JLabel) c;
 				ImageIcon image = (ImageIcon) label.getIcon();
-					if ((image.getDescription() == partie.getJoueurRouge().getPath() && couleur.equals(ECouleurJoueur.ROUGE)) 
-							|| (image.getDescription() == partie.getJoueurVert().getPath() && couleur.equals(ECouleurJoueur.VERT))) {
-						return label;
-					} else if(image.getDescription() == partie.getJoueurVert().getPath() && couleur.equals(ECouleurJoueur.VERT)) {
-						
-					}
+				if ((image.getDescription() == partie.getJoueurRouge().getPath()
+						&& couleur.equals(ECouleurJoueur.ROUGE))
+						|| (image.getDescription() == partie.getJoueurVert().getPath()
+								&& couleur.equals(ECouleurJoueur.VERT))) {
+					return label;
+				} else if (image.getDescription() == partie.getJoueurVert().getPath()
+						&& couleur.equals(ECouleurJoueur.VERT)) {
+
+				}
 			} catch (NullPointerException e) {
 
 			}
@@ -378,10 +386,10 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			c.gridx = i;
 			panelSorciers.add(new JLabel(), c);
 		}
-		
+
 		// Décalage des images vers le bas
 		c.insets = new Insets(50, -32, 0, 0);
-		
+
 		// Affichage Joueurs / Mur
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
@@ -390,7 +398,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
 	}
-	
+
 	/**
 	 * Met à jour la barre de mana avec la valeur spécifiée
 	 * 
@@ -400,7 +408,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		if (nv < 0 || nv > 50) {
 			return;
 		}
-		
+
 		// Animation de la baisse de la barre
 		// TODO Le thread n'a pas l'air de se pauser
 		new Thread(new Runnable() {
@@ -422,7 +430,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			}
 		}).start();
 	}
-	
+
 	/**
 	 * Réinitialise le champ de saisie de la mise avec la valeur spécifiée
 	 * 
@@ -539,18 +547,18 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	@Override
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
