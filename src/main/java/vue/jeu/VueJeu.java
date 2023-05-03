@@ -10,10 +10,14 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +29,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import main.java.controleur.jeu.ControleurJeu;
 import main.java.exceptions.PositionInaccessibleException;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -43,6 +51,7 @@ public class VueJeu extends JFrame {
 	private Partie partie;
 	private JPanel panelLogo, panelPont, panelSorciers, panelJeu, panelMain, panelAction;
 	private JProgressBar barreMana;
+	private JTextField saisieMana;
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
@@ -165,22 +174,24 @@ public class VueJeu extends JFrame {
 		JButton boutonJouer = new JButton("Jouer le tour");
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
-		JTextField saisieMana = new JTextField(3);
-		
+		saisieMana = new JTextField(10);
+		new TexteFantome(saisieMana, "Entrer la mise…");
+
 		saisieMana.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				try {
 					// On vérifie que la saisie est comprise entre 1 et le mana du joueur
-					if (((Character.isDigit(e.getKeyChar()) || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
-							|| e.getKeyCode() == KeyEvent.VK_DELETE)
+					boolean saisieCorrecte = ((Character.isDigit(e.getKeyChar())
+							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)
 							&& ((Integer.parseInt(saisieMana.getText()
 									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) <= joueur
 											.getManaActuel())
-									&& (Integer.parseInt(
-											saisieMana.getText() + (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? ""
-													: e.getKeyChar())) >= 1)))) {
+									&& (Integer.parseInt(saisieMana.getText()
+											+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) >= 1)));
+
+					if (saisieCorrecte) {
 						saisieMana.setEditable(true);
 					} else {
 						saisieMana.setEditable(false);
@@ -191,13 +202,18 @@ public class VueJeu extends JFrame {
 				}
 			}
 		});
-		
+
+		JButton miser = new JButton("OK");
+		ControleurJeu cj = new ControleurJeu(this);
+		miser.addActionListener(cj);
+
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
+		panelAction.add(miser);
 		setConstraints(1, 0, 0, 3, c);
 		getContentPane().add(panelAction, c);
 
@@ -453,5 +469,159 @@ public class VueJeu extends JFrame {
 		c.weighty = weighty;
 		c.gridx = gridx;
 		c.gridy = gridy;
+	}
+
+	/**
+	 * @return Le joueur associé à la fenêtre
+	 */
+	public Joueur getJoueur() {
+		return this.joueur;
+	}
+
+	/**
+	 * @return La mise du joueur
+	 */
+	public int getMise() {
+		try {
+			return Integer.parseInt(this.saisieMana.getText());
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	/**
+	 * Met à jour la barre de mana avec la valeur spécifiée
+	 * 
+	 * @param nv La nouvelle valeur
+	 */
+	public void updateBarreMana(int nv) {
+		if (nv < 0 || nv > 50) {
+			return;
+		}
+		
+		// Animation de la baisse de la barre
+		// TODO Le thread n'a pas l'air de se pauser
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				int anc = barreMana.getValue();
+				int mana = anc / 2;
+				while (anc > nv * 2) {
+					anc -= 2;
+					mana--;
+					barreMana.setValue(anc);
+					barreMana.setString("Mana : " + mana + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
+				}
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * Permet d'afficher un texte fantôme en arrière-plan d'un champ textuel
+	 * 
+	 * <a href=
+	 * "https://stackoverflow.com/questions/10506789/how-to-display-faint-gray-ghost-text-in-a-jtextfield">Lien
+	 * StackOverflow</a>
+	 */
+	public static class TexteFantome implements FocusListener, DocumentListener, PropertyChangeListener {
+		private final JTextField textField;
+		private boolean isEmpty;
+		private Color ghostColor;
+		private Color foregroundColor;
+		private final String ghostText;
+
+		private TexteFantome(final JTextField textField, String ghostText) {
+			super();
+			this.textField = textField;
+			this.ghostText = ghostText;
+			this.ghostColor = Color.DARK_GRAY;
+			textField.addFocusListener(this);
+			registerListeners();
+			updateState();
+			if (!this.textField.hasFocus()) {
+				focusLost(null);
+			}
+		}
+
+		public void delete() {
+			unregisterListeners();
+			textField.removeFocusListener(this);
+		}
+
+		private void registerListeners() {
+			textField.getDocument().addDocumentListener(this);
+			textField.addPropertyChangeListener("foreground", this);
+		}
+
+		private void unregisterListeners() {
+			textField.getDocument().removeDocumentListener(this);
+			textField.removePropertyChangeListener("foreground", this);
+		}
+
+		public Color getGhostColor() {
+			return ghostColor;
+		}
+
+		public void setGhostColor(Color ghostColor) {
+			this.ghostColor = ghostColor;
+		}
+
+		private void updateState() {
+			isEmpty = textField.getText().length() == 0;
+			foregroundColor = textField.getForeground();
+		}
+
+		@Override
+		public void focusGained(FocusEvent e) {
+			if (isEmpty) {
+				unregisterListeners();
+				try {
+					textField.setText("");
+					textField.setForeground(foregroundColor);
+				} finally {
+					registerListeners();
+				}
+			}
+
+		}
+
+		@Override
+		public void focusLost(FocusEvent e) {
+			if (isEmpty) {
+				unregisterListeners();
+				try {
+					textField.setText(ghostText);
+					textField.setForeground(ghostColor);
+				} finally {
+					registerListeners();
+				}
+			}
+		}
+
+		@Override
+		public void propertyChange(PropertyChangeEvent evt) {
+			updateState();
+		}
+
+		@Override
+		public void changedUpdate(DocumentEvent e) {
+			updateState();
+		}
+
+		@Override
+		public void insertUpdate(DocumentEvent e) {
+			updateState();
+		}
+
+		@Override
+		public void removeUpdate(DocumentEvent e) {
+			updateState();
+		}
+
 	}
 }
