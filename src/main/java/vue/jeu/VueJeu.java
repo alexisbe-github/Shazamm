@@ -1,13 +1,12 @@
 package main.java.vue.jeu;
 
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
@@ -60,8 +59,9 @@ public class VueJeu extends JFrame {
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
+		// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		// setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
+		setSize(684, 691); // Affichage en 1368*768 px par défaut
 		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
@@ -112,23 +112,25 @@ public class VueJeu extends JFrame {
 		// Affichage des sorciers et du mur de feu
 		panelSorciers = new JPanel(new GridBagLayout());
 		panelSorciers.setBackground(Color.BLACK);
-		// TODO Peut-être qu'il faut remplir toutes les cases avec des labels vides et
-		// les remplacer quand on met une vraie image
-		c.gridx = Pont.TAILLE_PONT - 1;
-		panelSorciers.add(new JLabel(), c); // Label vide qui occupe le dernier index
-		c.gridx = 0;
-		panelSorciers.add(new JLabel(), c); // Label vide qui occupe le premier index
+		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
+			c.gridx++;
+			c.gridx = i;
+			panelSorciers.add(new JLabel(), c);
+		}
 		// Positions initiales
 		positionSorcierRouge = 6;
 		positionMurFeu = 9;
 		positionSorcierVert = 12;
 		// Décalage des images vers le bas
-		c.insets = new Insets(50, 0, 0, 0);
+		c.insets = new Insets(50, -32, 0, 0);
 		// Ajout des images
+		c.gridx++;
 		c.gridx = positionSorcierRouge;
 		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_SORCIER_ROUGE)), c);
+		c.gridx++;
 		c.gridx = positionMurFeu;
 		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_MUR_FEU)), c);
+		c.gridx++;
 		c.gridx = positionSorcierVert;
 		panelSorciers.add(new JLabel(new ImageIcon(CHEMIN_SORCIER_VERT)), c);
 		// Ajout du panel
@@ -358,8 +360,7 @@ public class VueJeu extends JFrame {
 			}
 
 			try {
-				panelSorciers.remove(panelSorciers.getComponent(0));
-				;
+				getLabelSorcierVert().setIcon(null);
 			} catch (ArrayIndexOutOfBoundsException ex) {
 
 			}
@@ -389,5 +390,58 @@ public class VueJeu extends JFrame {
 		Image image = img.getImage(); // Transformation en Image
 		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
 		return new ImageIcon(nvimg); // Transformation en ImageIcon
+	}
+
+	/**
+	 * @return Le label contenant le sorcier vert
+	 */
+	private JLabel getLabelSorcierVert() {
+		for (Component c : panelSorciers.getComponents()) {
+			try {
+				JLabel label = (JLabel) c;
+				ImageIcon image = (ImageIcon) label.getIcon();
+				if (image.getDescription() == CHEMIN_SORCIER_VERT) {
+					return label;
+				}
+			} catch (NullPointerException e) {
+
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return Le label contenant le sorcier rouge
+	 */
+	private JLabel getLabelSorcierRouge() {
+		for (Component c : panelSorciers.getComponents()) {
+			try {
+				JLabel label = (JLabel) c;
+				ImageIcon image = (ImageIcon) label.getIcon();
+				if (image.getDescription() == CHEMIN_SORCIER_ROUGE) {
+					return label;
+				}
+			} catch (NullPointerException e) {
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return Le label contenant le mur de feu
+	 */
+	private JLabel getLabelMurFeu() {
+		for (Component c : panelSorciers.getComponents()) {
+			try {
+				JLabel label = (JLabel) c;
+				ImageIcon image = (ImageIcon) label.getIcon();
+				if (image.getDescription() == CHEMIN_MUR_FEU) {
+					return label;
+				}
+			} catch (NullPointerException e) {
+
+			}
+		}
+		return null;
 	}
 }
