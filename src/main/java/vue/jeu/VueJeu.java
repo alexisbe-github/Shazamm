@@ -32,18 +32,20 @@ import javax.swing.event.DocumentListener;
 
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
-import main.java.exceptions.PositionInaccessibleException;
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
+import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
+import main.java.vue.ILancementStrategy;
 
 /**
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
  * une interface graphique.
  */
-public class VueJeu extends JFrame {
+public class VueJeu extends JFrame implements ILancementStrategy {
 
 	private Joueur joueur;
 	private Partie partie;
@@ -53,7 +55,6 @@ public class VueJeu extends JFrame {
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
-	private int positionSorcierVert, positionSorcierRouge, positionMurFeu;
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -98,6 +99,9 @@ public class VueJeu extends JFrame {
 		setConstraints(1, 0, 0, 0, c);
 		getContentPane().add(panelLogo, c);
 
+		
+		
+		
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
@@ -105,6 +109,8 @@ public class VueJeu extends JFrame {
 		setConstraints(1, 0.5, 0, 1, c);
 		getContentPane().add(panelJeu, c);
 
+		
+		
 		// Affichage des sorciers et du mur de feu
 		panelSorciers = new JPanel(new GridBagLayout());
 		panelSorciers.setBackground(Color.BLACK);
@@ -113,27 +119,31 @@ public class VueJeu extends JFrame {
 			c.gridx = i;
 			panelSorciers.add(new JLabel(), c);
 		}
-		// Positions initiales
-		positionSorcierRouge = 6;
-		positionMurFeu = 9;
-		positionSorcierVert = 12;
+		
+		
 		// Décalage des images vers le bas
 		c.insets = new Insets(50, -32, 0, 0);
+		
+		
 		// Ajout des images
 		c.gridx++;
-		c.gridx = positionSorcierRouge;
+		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
 		c.gridx++;
-		c.gridx = positionMurFeu;
+		c.gridx = partie.getPont().getPosMurDeFeu();
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPath())), c);
 		c.gridx++;
-		c.gridx = positionSorcierVert;
+		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
+		
+		
+		
+		
 		// Ajout du panel
 		c.insets = new Insets(0, 20, 0, 20);
 		setConstraints(1,2,0,0,c);
 		panelJeu.add(panelSorciers, c);
-
+		
 		// Affichage du pont
 		panelPont = new JPanel();
 		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
@@ -319,77 +329,23 @@ public class VueJeu extends JFrame {
 		}
 	}
 
-	// TODO Mettre dans le modèle
-
 	/**
-	 * ---------------------------------------- --- (TEST) À déplacer dans le modèle
-	 * --- ----------------------------------------
-	 * 
-	 * Déplace le sorcier vert à la position spécifiée (entre <code>0</code> et
-	 * <code>Pont.TAILLE_PONT - 1</code>).
-	 * 
-	 * @param nvPosition La nouvelle position du sorcier
-	 * @throws PositionInaccessibleException Exception levée si
-	 *                                       <code>nvPosition</code> n'est pas
-	 *                                       compris entre <code>0</code> et
-	 *                                       <code>Pont.TAILLE_PONT - 1</code>.
-	 * @see Pont
+	 * @param couleur : couleur du sorcier
+	 * @return Le label contenant le sorcier en question
 	 */
-	private void deplacerSorcierVert(int nvPosition) {
-		try {
-			if (nvPosition < 0 || nvPosition >= Pont.TAILLE_PONT) {
-				throw new PositionInaccessibleException();
-			}
-
-			try {
-				getLabelSorcierVert().setIcon(null);
-			} catch (ArrayIndexOutOfBoundsException ex) {
-
-			}
-
-			JLabel labelSorcier = new JLabel(new ImageIcon("src/main/resources/perso/vert.gif"));
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = nvPosition;
-
-			panelSorciers.add(labelSorcier, c);
-			panelSorciers.repaint();
-			panelSorciers.revalidate();
-		} catch (PositionInaccessibleException e) {
-			return;
-		}
-
-	}
-
-	/**
-	 * @return Le label contenant le sorcier vert
-	 */
-	private JLabel getLabelSorcierVert() {
+	private JLabel getLabelSorcier(ECouleurJoueur couleur) {
 		for (Component c : panelSorciers.getComponents()) {
 			try {
 				JLabel label = (JLabel) c;
 				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == partie.getJoueurVert().getPath()) {
-					return label;
-				}
+					if ((image.getDescription() == partie.getJoueurRouge().getPath() && couleur.equals(ECouleurJoueur.ROUGE)) 
+							|| (image.getDescription() == partie.getJoueurVert().getPath() && couleur.equals(ECouleurJoueur.VERT))) {
+						return label;
+					} else if(image.getDescription() == partie.getJoueurVert().getPath() && couleur.equals(ECouleurJoueur.VERT)) {
+						
+					}
 			} catch (NullPointerException e) {
 
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @return Le label contenant le sorcier rouge
-	 */
-	private JLabel getLabelSorcierRouge() {
-		for (Component c : panelSorciers.getComponents()) {
-			try {
-				JLabel label = (JLabel) c;
-				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == partie.getJoueurRouge().getPath()) {
-					return label;
-				}
-			} catch (NullPointerException e) {
 			}
 		}
 		return null;
@@ -575,5 +531,29 @@ public class VueJeu extends JFrame {
 			updateState();
 		}
 
+	}
+
+	@Override
+	public void lancerJeu() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
+		// TODO Auto-generated method stub
+		
 	}
 }
