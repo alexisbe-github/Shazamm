@@ -106,9 +106,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		getContentPane().add(panelJeu, c);
 
 		// Affichage des sorciers et du mur de feu
-		panelSorciers = new JPanel(new GridBagLayout());
-		panelSorciers.setBackground(Color.BLACK);
-
 		updateSorciersEtMur();
 
 		// Ajout du panel
@@ -258,6 +255,32 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			tmp.setIcon(new ImageIcon(this.getImageCasePont(i)));
 		}
 	}
+	
+	//Met à jour les images des sorciers et du mur
+	private void updateSorciersEtMur() {
+		panelSorciers = new JPanel(new GridBagLayout());
+		panelSorciers.setBackground(Color.BLACK);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		setConstraints(1, 0.5, 0, 1, c);
+		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
+			c.gridx++;
+			c.gridx = i;
+			panelSorciers.add(new JLabel(), c);
+		}
+
+		// Décalage des images vers le bas
+		c.insets = new Insets(50, -32, 0, 0);
+
+		// Affichage Joueurs / Mur
+		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
+		c.gridx = partie.getPont().getPosMurDeFeu();
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPath())), c);
+		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
+	}
+	
 
 	/**
 	 * Renvoie le chemin vers l'image du pont de la case courante (pont ou lave)
