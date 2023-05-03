@@ -131,10 +131,7 @@ public class VueJeu extends JFrame {
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
 		// Ajout du panel
 		c.insets = new Insets(0, 20, 0, 20);
-		c.weightx = 1;
-		c.weighty = 2;
-		c.gridx = 0;
-		c.gridy = 0;
+		setConstraints(1,2,0,0,c);
 		panelJeu.add(panelSorciers, c);
 
 		// Affichage du pont
@@ -144,10 +141,7 @@ public class VueJeu extends JFrame {
 		imagesPont = new ArrayList<>();
 		initPont();
 		updatePont();
-		c.weightx = 1;
-		c.weighty = 0.5;
-		c.gridx = 0;
-		c.gridy = 1;
+		setConstraints(1,0.5,0,1,c);
 		c.insets = new Insets(-10, 10, 5, 10);
 		panelJeu.add(panelPont, c);
 
@@ -156,10 +150,7 @@ public class VueJeu extends JFrame {
 		panelMain.setBackground(Color.BLACK);
 		imagesCartesJoueur = new ArrayList<>();
 		this.paintMain();
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 2;
+		setConstraints(1,0,0,2,c);
 		c.insets = new Insets(5, 10, 5, 10);
 		getContentPane().add(panelMain, c);
 
