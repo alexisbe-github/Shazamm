@@ -38,6 +38,7 @@ public class ControleurLancement implements ActionListener {
 			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 			Partie p = new Partie(joueur1, joueur2);
 			VueConsole vc = new VueConsole(p);
+			p.setStrategy(vc);
 			break;
 		case "Interface Graphique":
 			vl.dispose();

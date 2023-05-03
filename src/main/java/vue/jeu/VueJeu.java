@@ -14,8 +14,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -29,10 +27,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
 import main.java.exceptions.PositionInaccessibleException;
 import main.java.model.jeu.Joueur;
@@ -319,45 +317,11 @@ public class VueJeu extends JFrame {
 			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 
-			tmp.addMouseListener(new MouseListener() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					tmp.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {
-					Integer index = (Integer) panelMain.getComponentZOrder(tmp);
-					if (cartesJouees.contains(index)) {
-						tmp.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-					} else {
-						tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-					}
-				}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					Integer index = (Integer) panelMain.getComponentZOrder(tmp);
-					if (!cartesJouees.contains(index)) {
-						cartesJouees.add(index);
-					} else {
-						cartesJouees.remove(index);
-					}
-					displayCartesJouees();
-				}
-
-				@Override
-				public void mouseReleased(MouseEvent e) {
-				}
-			});
+			tmp.addMouseListener(new ControleurCartes(this.panelMain,this.cartesJouees,this));
 		}
 	}
 
-	private void displayCartesJouees() {
+	public void displayCartesJouees() {
 		for (int i = 0; i < this.imagesCartesJoueur.size(); i++) {
 			if (this.cartesJouees.contains((Integer) i)) {
 				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
