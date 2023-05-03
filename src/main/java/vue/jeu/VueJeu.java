@@ -453,6 +453,7 @@ public class VueJeu extends JFrame {
 			}
 		}
 		return null;
+	}
 
 	/**
 	 * Factorise la modification répétitive des contraintes
