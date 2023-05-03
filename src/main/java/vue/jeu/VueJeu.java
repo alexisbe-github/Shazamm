@@ -10,16 +10,10 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,8 +23,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
@@ -40,6 +32,7 @@ import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
+import main.java.utils.TexteFantome;
 import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 
@@ -442,110 +435,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	 */
 	public void reinitialiserTextField(String valeur) {
 		saisieMana.setText(valeur);
-	}
-
-	/**
-	 * Permet d'afficher un texte fantôme en arrière-plan d'un champ textuel
-	 * 
-	 * <a href=
-	 * "https://stackoverflow.com/questions/10506789/how-to-display-faint-gray-ghost-text-in-a-jtextfield">Lien
-	 * StackOverflow</a>
-	 */
-	private class TexteFantome implements FocusListener, DocumentListener, PropertyChangeListener {
-		private final JTextField textField;
-		private boolean isEmpty;
-		private Color ghostColor;
-		private Color foregroundColor;
-		private final String ghostText;
-
-		private TexteFantome(final JTextField textField, String ghostText) {
-			super();
-			this.textField = textField;
-			this.ghostText = ghostText;
-			this.ghostColor = Color.DARK_GRAY;
-			textField.addFocusListener(this);
-			registerListeners();
-			updateState();
-			if (!this.textField.hasFocus()) {
-				focusLost(null);
-			}
-		}
-
-		public void delete() {
-			unregisterListeners();
-			textField.removeFocusListener(this);
-		}
-
-		private void registerListeners() {
-			textField.getDocument().addDocumentListener(this);
-			textField.addPropertyChangeListener("foreground", this);
-		}
-
-		private void unregisterListeners() {
-			textField.getDocument().removeDocumentListener(this);
-			textField.removePropertyChangeListener("foreground", this);
-		}
-
-		public Color getGhostColor() {
-			return ghostColor;
-		}
-
-		public void setGhostColor(Color ghostColor) {
-			this.ghostColor = ghostColor;
-		}
-
-		private void updateState() {
-			isEmpty = textField.getText().length() == 0;
-			foregroundColor = textField.getForeground();
-		}
-
-		@Override
-		public void focusGained(FocusEvent e) {
-			if (isEmpty) {
-				unregisterListeners();
-				try {
-					textField.setText("");
-					textField.setForeground(foregroundColor);
-				} finally {
-					registerListeners();
-				}
-			}
-
-		}
-
-		@Override
-		public void focusLost(FocusEvent e) {
-			if (isEmpty) {
-				unregisterListeners();
-				try {
-					textField.setText(ghostText);
-					textField.setForeground(ghostColor);
-				} finally {
-					registerListeners();
-				}
-			}
-		}
-
-		@Override
-		public void propertyChange(PropertyChangeEvent evt) {
-			updateState();
-		}
-
-		@Override
-		public void changedUpdate(DocumentEvent e) {
-			updateState();
-		}
-
-		@Override
-		public void insertUpdate(DocumentEvent e) {
-			updateState();
-		}
-
-		@Override
-		public void removeUpdate(DocumentEvent e) {
-			updateState();
-		}
-
 	}
 
 	@Override
