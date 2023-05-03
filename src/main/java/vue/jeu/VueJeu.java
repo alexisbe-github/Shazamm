@@ -378,27 +378,24 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
 		// Affichage des sorciers et du mur de feu
-				panelSorciers = new JPanel(new GridBagLayout());
-				panelSorciers.setBackground(Color.BLACK);
-				for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
-					c.gridx++;
-					c.gridx = i;
-					panelSorciers.add(new JLabel(), c);
-				}
-				
-				
-				// Décalage des images vers le bas
-				c.insets = new Insets(50, -32, 0, 0);
+		panelSorciers = new JPanel(new GridBagLayout());
+		panelSorciers.setBackground(Color.BLACK);
+		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
+			c.gridx++;
+			c.gridx = i;
+			panelSorciers.add(new JLabel(), c);
+		}
+		
+		// Décalage des images vers le bas
+		c.insets = new Insets(50, -32, 0, 0);
+		
+		// Affichage Joueurs / Mur
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
 		c.gridx = partie.getPont().getPosMurDeFeu();
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPath())), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
-	}
-	
-	private void updateSorciersEtMur() {
-		
 	}
 	
 	/**
