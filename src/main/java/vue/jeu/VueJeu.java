@@ -142,9 +142,11 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		panelAction = new JPanel();
 		panelAction.setBackground(Color.BLACK);
 		JButton boutonJouer = new JButton("Jouer le tour");
+		ControleurJeu cj = new ControleurJeu(this);
+		boutonJouer.addActionListener(cj);
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
-		saisieMana = new JTextField(10);
+		saisieMana = new JTextField("1", 10);
 		new TexteFantome(saisieMana, "Entrer la mise…");
 
 		saisieMana.addKeyListener(new KeyAdapter() {
@@ -165,6 +167,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 						saisieMana.setEditable(true);
 					} else {
 						saisieMana.setEditable(false);
+						Utils.fonduArrierePlan(saisieMana, new Color(255, 43, 28), 8, 15);
 					}
 
 				} catch (NumberFormatException ex) {
@@ -173,17 +176,12 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			}
 		});
 
-		JButton miser = new JButton("OK");
-		ControleurJeu cj = new ControleurJeu(this);
-		miser.addActionListener(cj);
-
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
-		panelAction.add(miser);
 		setConstraints(1, 0, 0, 3, c);
 		getContentPane().add(panelAction, c);
 
@@ -414,7 +412,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 					anc -= 2;
 					mana--;
 					barreMana.setValue(anc);
-					barreMana.setString("Mana : " + mana + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
+					barreMana.setString("Mana : " + mana + "/" + Joueur.MANA_MAXIMUM);
 				}
 				try {
 					Thread.sleep(200);
@@ -422,6 +420,15 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 				}
 			}
 		}).start();
+	}
+	
+	/**
+	 * Réinitialise le champ de saisie de la mise avec la valeur spécifiée
+	 * 
+	 * @param valeur La valeur avec laquelle réinitialiser
+	 */
+	public void reinitialiserTextField(String valeur) {
+		saisieMana.setText(valeur);
 	}
 
 	/**
@@ -431,7 +438,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	 * "https://stackoverflow.com/questions/10506789/how-to-display-faint-gray-ghost-text-in-a-jtextfield">Lien
 	 * StackOverflow</a>
 	 */
-	public static class TexteFantome implements FocusListener, DocumentListener, PropertyChangeListener {
+	private class TexteFantome implements FocusListener, DocumentListener, PropertyChangeListener {
 		private final JTextField textField;
 		private boolean isEmpty;
 		private Color ghostColor;

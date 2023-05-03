@@ -20,11 +20,12 @@ public class ControleurJeu implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
 		switch (bouton.getText()) {
-		case "OK":
+		case "Jouer le tour":
 			Joueur j = this.vj.getJoueur();
 			int mise = vj.getMise();
 			j.depenserMana(mise);
 			this.vj.updateBarreMana(j.getManaActuel());
+			this.vj.reinitialiserTextField("");
 			break;
 		default:
 			return;
