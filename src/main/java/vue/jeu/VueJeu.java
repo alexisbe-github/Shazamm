@@ -67,7 +67,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
 		// setSize(683, 691); // Affichage en 1366*768 px par défaut
-		setResizable(false);
+		setResizable(true); // TODO setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(new GridBagLayout());
@@ -86,7 +86,10 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		panelLogo.add(logo, c); // Logo centré
 
 		setConstraints(1, 0, 2, 0, c);
-		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
+		JLabel labelDroite = new JLabel();
+		labelDroite.setText(getInfos());
+		labelDroite.setForeground(Color.LIGHT_GRAY);
+		panelLogo.add(labelDroite, c); // Contraint le logo à se déplacer à gauche
 
 		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
@@ -98,6 +101,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
 
+		c.insets = new Insets(0, 10, 0, 10);
 		setConstraints(1, 0.5, 0, 1, c);
 		getContentPane().add(panelJeu, c);
 
@@ -151,7 +155,8 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 					// On vérifie que la saisie est comprise entre 1 et le mana du joueur
 					boolean saisieCorrecte = ((Character.isDigit(e.getKeyChar())
 							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
-							|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT)
+							|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
+							|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL)
 							&& ((Integer.parseInt(saisieMana.getText()
 									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) <= joueur
 											.getManaActuel())
@@ -180,10 +185,14 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
+		JLabel labelManaAdversaire = new JLabel();
+		labelManaAdversaire.setForeground(Color.LIGHT_GRAY);
+		labelManaAdversaire.setText(String.format("Mana de l'adversaire : %d", getManaAdversaire()));
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
+		panelAction.add(labelManaAdversaire);
 		setConstraints(1, 0, 0, 3, c);
 		getContentPane().add(panelAction, c);
 
@@ -377,6 +386,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	private void updateSorciersEtMur() {
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
+		c.anchor = GridBagConstraints.ABOVE_BASELINE;
 		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
 			c.gridx++;
 			c.gridx = i;
@@ -426,6 +436,31 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 				}
 			}
 		}).start();
+	}
+
+	/**
+	 * @return Les infos actuelles sur la partie
+	 */
+	private String getInfos() {
+		String str = "<html>";
+		str += "Manche " + this.partie.getNombreManches() + "<br>";
+		str += "Tour " + this.partie.getMancheCourante().getNumeroTourCourant() + "<br>";
+		str += "Joueur " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert");
+		str += "</html>";
+		return str;
+	}
+
+	/**
+	 * @return Le solde de mana de l'adversaire
+	 */
+	private int getManaAdversaire() {
+		switch (this.joueur.getCouleur()) {
+		case ROUGE:
+			return this.partie.getJoueurVert().getManaActuel();
+		case VERT:
+			return this.partie.getJoueurRouge().getManaActuel();
+		default: return 0;
+		}
 	}
 
 	/**
