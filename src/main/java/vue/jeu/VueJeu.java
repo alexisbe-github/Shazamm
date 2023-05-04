@@ -273,6 +273,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	
 	// Met à jour les images des sorciers et du mur
 	private void updateSorciersEtMur() { 
+		panelSorciers.removeAll();
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
 		
@@ -777,6 +778,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.updateInfos();
 		this.paintMain();
 		this.updatePont();
+		this.updateSorciersEtMur();
 		this.reinitialiserTextField("1");
 		this.cartesJouees.clear();
 		boutonJouer.setEnabled(true);
