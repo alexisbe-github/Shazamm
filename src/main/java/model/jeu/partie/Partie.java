@@ -1,5 +1,7 @@
 package main.java.model.jeu.partie;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.vue.ILancementStrategy;
+import main.java.vue.VueConsole;
 
 public class Partie {
 
@@ -15,7 +18,8 @@ public class Partie {
 	private Pont pont;
 	private List<Manche> listeManche;
 	private boolean partieFinie;
-	private ILancementStrategy strategy;
+	private ILancementStrategy strategyVert, strategyRouge;
+	private PropertyChangeSupport pcs;
 
 	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
@@ -28,23 +32,23 @@ public class Partie {
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
+		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
 	}
-
-	public void setStrategy(ILancementStrategy strategy) {
-		this.strategy = strategy;
+	
+	public void addObserver(PropertyChangeListener l) {
+		pcs.addPropertyChangeListener(l);
 	}
 
 	/**
-	 * En fonction de la strategy la méthode va lancer l'effet de la carte 2 au
-	 * scanner ou sur l'interface graphique
+	 * Etabli le pattern strategy en fonction des interfaces utilisateurs
 	 * 
-	 * @param p
-	 * @param tour
-	 * @param joueur
+	 * @param strategyVert
+	 * @param strategyRouge
 	 */
-	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
-		strategy.lancerClone(p, tour, joueur);
+	public void setStrategy(ILancementStrategy strategyVert, ILancementStrategy strategyRouge) {
+		this.strategyVert = strategyVert;
+		this.strategyRouge = strategyRouge;
 	}
 
 	/**
@@ -60,10 +64,25 @@ public class Partie {
 			return tourCourant.getCartesJoueesRouge();
 		return tourCourant.getCartesJoueesVert();
 	}
-	
+
 	public void jouerCarte(Carte carteAJouer, Joueur joueur) {
 		Tour tourCourant = this.getMancheCourante().getTourCourant();
 		tourCourant.jouerCarte(carteAJouer, joueur);
+	}
+
+	/**
+	 * En fonction de la strategy la méthode va lancer l'effet de la carte 2 au
+	 * scanner ou sur l'interface graphique
+	 * 
+	 * @param p
+	 * @param tour
+	 * @param joueur
+	 */
+	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
+			strategyVert.lancerClone(p, tour, joueur);
+		else
+			strategyRouge.lancerClone(p, tour, joueur);
 	}
 
 	/**
@@ -75,7 +94,10 @@ public class Partie {
 	 * @param joueur
 	 */
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
-		strategy.lancerRecyclage(p, tour, joueur);
+		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
+			strategyVert.lancerRecyclage(p, tour, joueur);
+		else
+			strategyRouge.lancerRecyclage(p, tour, joueur);
 	}
 
 	/**
@@ -87,7 +109,10 @@ public class Partie {
 	 * @param joueur
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		strategy.lancerLarcin(p, tour, joueur);
+		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
+			strategyVert.lancerLarcin(p, tour, joueur);
+		else
+			strategyRouge.lancerLarcin(p, tour, joueur);
 	}
 
 	/**
@@ -156,24 +181,37 @@ public class Partie {
 		return this.partieFinie;
 	}
 
-	public void jouerTour(int miseRouge, int miseVert) {
+	public void jouerTour() {
 		Manche mancheCourante = this.getMancheCourante();
-		int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
-		pont.deplacerMurDeFeu(dpMur);
-		if (pont.murDeFeuPousseUnSorcier()) {
-			this.lancerNouvelleManche();
-		} else {
-			this.lancerNouveauTour();
+		Tour tourCourant = mancheCourante.getTourCourant();
+		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
+		int miseJoueurVert = tourCourant.getMiseJoueurVert();
+		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			pont.deplacerMurDeFeu(dpMur);
+			if (pont.murDeFeuPousseUnSorcier()) {
+				this.lancerNouvelleManche();
+			} else {
+				this.lancerNouveauTour();
+			}
+			// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+			// joueur avec 0 de mana
+			if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
+				this.deplacerMurDeFeuVersJoueurAvec0Mana();
+				this.lancerNouvelleManche();
+			}
+			printPossibleGagnant();
+			pcs.firePropertyChange("property","x","y");
 		}
-		// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
-		// joueur avec 0 de mana
-		if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
-			this.deplacerMurDeFeuVersJoueurAvec0Mana();
-			this.lancerNouvelleManche();
-		}
-		if (pont.unSorcierEstTombe()) {
-			System.out.println(pont.getVainqueur());
-			this.partieFinie = true;
+
+	}
+
+	private void printPossibleGagnant() {
+		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
+			if (pont.unSorcierEstTombe()) {
+				System.out.println(pont.getVainqueur());
+				this.partieFinie = true;
+			}
 		}
 	}
 
@@ -219,10 +257,10 @@ public class Partie {
 		Manche mancheCourante = this.getMancheCourante();
 
 		// On calcule le tour précédent
-		if(mancheCourante.getNombreTours() == 1 && mancheCourante.getNumeroTourCourant() == 1) {
+		if (mancheCourante.getNombreTours() == 1 && mancheCourante.getNumeroTourCourant() == 1) {
 			return res;
 		}
-		
+
 		if (mancheCourante.getNombreTours() <= 1) {
 			Manche manchePrecedente = this.listeManche.get(this.listeManche.size() - 2);
 			List<Tour> tours = manchePrecedente.getListeTours();

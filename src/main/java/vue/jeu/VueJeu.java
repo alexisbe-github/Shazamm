@@ -19,6 +19,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +41,6 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
-import main.java.model.jeu.carte.Carte5;
-import main.java.model.jeu.carte.Carte6;
-import main.java.model.jeu.carte.Carte7;
-import main.java.model.jeu.carte.Carte9;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 import main.java.utils.TexteFantome;
@@ -53,14 +51,16 @@ import main.java.vue.ILancementStrategy;
  * La fenêtre qui affiche les éléments du modèle sous forme de composants dans
  * une interface graphique.
  */
-public class VueJeu extends JFrame implements ILancementStrategy {
+public class VueJeu extends JFrame implements ILancementStrategy, PropertyChangeListener {
 
 	private Joueur joueur;
 	private Partie partie;
 	private JPanel panelLogo, panelPont, panelSorciers, panelJeu, panelMain, panelAction;
 	private JProgressBar barreMana;
 	private JTextField saisieMana;
+	private JButton boutonJouer;
 	private JLabel logo = new JLabel();
+	private JLabel labelManaAdversaire;
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
@@ -150,8 +150,8 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		// Affichage du panel d'actions
 		panelAction = new JPanel();
 		panelAction.setBackground(Color.BLACK);
-		JButton boutonJouer = new JButton("Jouer le tour");
-		ControleurJeu cj = new ControleurJeu(this);
+		boutonJouer = new JButton("Jouer le tour");
+		ControleurJeu cj = new ControleurJeu(this, partie);
 		boutonJouer.addActionListener(cj);
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
@@ -196,9 +196,9 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
-		JLabel labelManaAdversaire = new JLabel();
+		labelManaAdversaire = new JLabel();
 		labelManaAdversaire.setForeground(Color.LIGHT_GRAY);
-		labelManaAdversaire.setText(String.format("Mana de l'adversaire : %d", getManaAdversaire()));
+		this.updateManaAdversaire();
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
@@ -217,7 +217,10 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		barreMana.setValue(100);
 		setConstraints(1, 0, 0, 4, c);
 		getContentPane().add(barreMana, c);
+	}
 
+	private void updateManaAdversaire() {
+		labelManaAdversaire.setText(String.format("Mana de l'adversaire : %d", getManaAdversaire()));
 	}
 
 	/**
@@ -259,6 +262,17 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			});
 
 		}
+	}
+
+	public List<Carte> getCartesJouees() {
+		List<Carte> cartes = new ArrayList<>();
+		for (int i = 0; i < joueur.getMainDuJoueur().size(); i++) {
+			Carte c = joueur.getMainDuJoueur().get(i);
+			if (cartesJouees.contains(i)) {
+				cartes.add(c);
+			}
+		}
+		return cartes;
 	}
 
 	/**
@@ -423,34 +437,29 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	/**
 	 * Met à jour la barre de mana avec la valeur spécifiée
 	 * 
-	 * @param nv La nouvelle valeur
 	 */
-	public void updateBarreMana(int nv) {
-
-		if (nv < 0 || nv > 50) {
-			return;
-		}
+	public void updateBarreMana() {
 
 		// Animation pour faire baisser progressivement les réserves de mana
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				int anc = barreMana.getValue();
-				int mana = anc / 2;
-				while (anc > nv * 2) {
-					anc -= 2;
-					mana--;
-					barreMana.setValue(anc);
-					barreMana.setString("Mana : " + mana + "/" + Joueur.MANA_MAXIMUM);
-
-					try {
-						Thread.sleep(10);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		}).start();
+//		new Thread(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				int anc = barreMana.getValue();
+//				int mana = anc / 2;
+//				while (anc > nv * 2) {
+//					anc -= 2;
+//					mana--;
+		barreMana.setValue(joueur.getManaActuel() * 2);
+		barreMana.setString("Mana : " + joueur.getManaActuel() + "/" + Joueur.MANA_MAXIMUM);
+//
+//					try {
+//						Thread.sleep(10);
+//					} catch (InterruptedException e) {
+//					}
+//				}
+//			}
+//		}).start();
 	}
 
 	/**
@@ -484,7 +493,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	 * 
 	 * @param valeur La valeur avec laquelle réinitialiser
 	 */
-	public void reinitialiserTextField(String valeur) {
+	private void reinitialiserTextField(String valeur) {
 		saisieMana.setText(valeur);
 	}
 
@@ -752,5 +761,15 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		jd.setResizable(false);
 		jd.setLocation(this.getLocation());
 		jd.setAlwaysOnTop(true);
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		this.updateBarreMana();
+		this.paintMain();
+		this.updatePont();
+		this.updateSorciersEtMur();
+		this.reinitialiserTextField("1");
+		boutonJouer.setEnabled(true);
 	}
 }

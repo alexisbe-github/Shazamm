@@ -46,6 +46,13 @@ public class ControleurMenu implements ActionListener {
 				int width = Toolkit.getDefaultToolkit().getScreenSize().width;
 				fenetreJ1.setLocation(new Point(0, 0));
 				fenetreJ2.setLocation(new Point(width / 2, 0));
+				if(joueur1.getCouleur().equals(ECouleurJoueur.VERT)) {
+					p.setStrategy(fenetreJ1,fenetreJ2);
+				}else {
+					p.setStrategy(fenetreJ2, fenetreJ1);
+				}
+				p.addObserver(fenetreJ1);
+				p.addObserver(fenetreJ2);
 			}
 			break;
 		}

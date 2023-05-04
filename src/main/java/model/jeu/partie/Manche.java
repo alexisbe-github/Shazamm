@@ -34,9 +34,9 @@ public class Manche {
 		}
 	}
 
-	public int jouerTour(Joueur joueurRouge, Joueur joueurVert, int miseRouge, int miseVert) {
+	public int jouerTour(Joueur joueurRouge, Joueur joueurVert) {
 		Tour tourCourant = this.getTourCourant();
-		return tourCourant.jouerTour(joueurRouge, joueurVert, miseRouge, miseVert);
+		return tourCourant.jouerTour(joueurRouge, joueurVert);
 	}
 
 	public boolean getMutismeCourant() {
