@@ -334,7 +334,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	private void paintMain() {
 		List<Carte> mainJoueur = this.joueur.getMainDuJoueur();
-		
+
 		panelMain.removeAll();
 		panelMain.repaint();
 
@@ -354,9 +354,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public void displayCartesJouees() {
 		for (int i = 0; i < joueur.getMainDuJoueur().size(); i++) {
 			if (this.cartesJouees.contains(i)) {
-				((JLabel)panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			} else {
-				((JLabel)panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 			}
 		}
 	}
@@ -770,6 +770,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.updatePont();
 		this.updateSorciersEtMur();
 		this.reinitialiserTextField("1");
+		this.cartesJouees.clear();
 		boutonJouer.setEnabled(true);
 	}
 }
