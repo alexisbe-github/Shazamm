@@ -329,7 +329,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			ImageIcon image = new ImageIcon(c.getPath());
 			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
-			tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les borders en constantes ?
+			//tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les borders en constantes ?
 			panelMain.add(tmp);
 
 			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
@@ -341,7 +341,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			if (this.cartesJouees.contains(i)) {
 				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			} else {
-				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 			}
 		}
 	}

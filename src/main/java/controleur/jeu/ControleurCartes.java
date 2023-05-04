@@ -41,7 +41,7 @@ public class ControleurCartes implements MouseListener{
 		if (cartesJouees.contains(index)) {
 			tmp.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 		} else {
-			tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+			tmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		}
 	}
 
