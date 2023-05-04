@@ -112,7 +112,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// Label infos
 		labelInfos = new JLabel();
 		labelInfos.setHorizontalAlignment(JLabel.CENTER);
-		labelInfos.setFont(new Font("Serif", Font.PLAIN, 14));
+		labelInfos.setFont(new Font("Verdana", Font.PLAIN, 20));
 		updateInfos();
 		setConstraints(0, 0, 0, 1, c);
 		labelInfos.setForeground(Color.LIGHT_GRAY);
@@ -596,7 +596,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		jd.add(valider, BorderLayout.SOUTH);
 		jd.setVisible(true);
 		jd.setResizable(false);
-		jd.setLocation(this.getLocation());
+		jd.setLocationRelativeTo(this);
 		jd.setAlwaysOnTop(true);
 	}
 
@@ -609,7 +609,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		choix = 0;
 
 		JLabel mise = new JLabel();
-		mise.setText("Entrer la mise à recycler entre +5 et -5 dans la limite de votre mana:");
+		mise.setText("Entrer la mise à recycler entre +5 et -5 dans la limite de votre mise et de votre mana (mise actuelle "+tour.getMiseJoueur(joueur)+"):");
 
 		JTextField saisieManaRecyclage = new JTextField("0", 5);
 
@@ -654,7 +654,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				choix = Integer.parseInt(saisieManaRecyclage.getText());
 				tour.changerMise(joueur, choix);
+				jd.dispose();
 			}
 
 		});
@@ -664,10 +666,10 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		jd.add(saisieManaRecyclage);
 		jd.add(valider);
 		jd.setModalityType(ModalityType.APPLICATION_MODAL);
-		jd.setSize(500, 70);
+		jd.setSize(700, 80);
 		jd.setVisible(true);
 		jd.setResizable(false);
-		jd.setLocation(this.getLocation());
+		jd.setLocationRelativeTo(this);
 		jd.setAlwaysOnTop(true);
 	}
 
@@ -680,7 +682,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		jd.setSize(800, 400);
 
 		JLabel label = new JLabel(
-				"Choisissez les cartes à jouer sous votre contrôle, le reste sera annulé puis défausser:");
+				"Choisissez les cartes à jouer sous votre contrôle, le reste sera annulé puis défaussé:");
 		label.setForeground(Color.WHITE);
 		label.setBackground(Color.BLACK);
 		label.setOpaque(true);
@@ -771,7 +773,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		jd.add(valider, BorderLayout.SOUTH);
 		jd.setVisible(true);
 		jd.setResizable(false);
-		jd.setLocation(this.getLocation());
+		jd.setLocationRelativeTo(this);
 		jd.setAlwaysOnTop(true);
 	}
 
