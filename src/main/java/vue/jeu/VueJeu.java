@@ -127,7 +127,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		c.fill = GridBagConstraints.VERTICAL;
 		setConstraints(1, 0.5, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
-		panelJeu.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 
 		// Affichage du pont
 		panelPont = new JPanel();
@@ -294,7 +293,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPathMur())), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
-		System.out.println("r:"+partie.getPont().getPosMurDeFeu());
 		}
 
 	/**
