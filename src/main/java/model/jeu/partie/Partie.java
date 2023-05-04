@@ -219,6 +219,10 @@ public class Partie {
 		Manche mancheCourante = this.getMancheCourante();
 
 		// On calcule le tour précédent
+		if(mancheCourante.getNombreTours() == 1 && mancheCourante.getNumeroTourCourant() == 1) {
+			return res;
+		}
+		
 		if (mancheCourante.getNombreTours() <= 1) {
 			Manche manchePrecedente = this.listeManche.get(this.listeManche.size() - 2);
 			List<Tour> tours = manchePrecedente.getListeTours();

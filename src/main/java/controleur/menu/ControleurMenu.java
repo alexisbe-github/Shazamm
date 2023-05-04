@@ -45,7 +45,7 @@ public class ControleurMenu implements ActionListener {
 				VueJeu fenetreJ2 = new VueJeu(joueur2, p);
 				int width = Toolkit.getDefaultToolkit().getScreenSize().width;
 				fenetreJ1.setLocation(new Point(0, 0));
-				fenetreJ1.setLocation(new Point(width / 2, 0));
+				fenetreJ2.setLocation(new Point(width / 2, 0));
 			}
 			break;
 		}

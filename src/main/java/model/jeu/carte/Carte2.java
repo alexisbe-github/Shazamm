@@ -25,7 +25,9 @@ public class Carte2 extends Carte {
 
 	@Override
 	public void lancerEffet(Tour tour) {
-		partie.lancerClone(partie, tour, joueur);
+		if (partie.getCartesJoueesParAdversaireTourPrecedent(joueur).size() > 0) {
+			partie.lancerClone(partie, tour, joueur);
+		}
 	}
 
 }

@@ -1,28 +1,37 @@
 package main.java.vue.jeu;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
@@ -30,6 +39,10 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.carte.Carte5;
+import main.java.model.jeu.carte.Carte6;
+import main.java.model.jeu.carte.Carte7;
+import main.java.model.jeu.carte.Carte9;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 import main.java.utils.TexteFantome;
@@ -50,6 +63,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 	private JLabel logo = new JLabel();
 	private List<JLabel> imagesPont, imagesCartesJoueur;
 	private List<Integer> cartesJouees;
+	private int choix; // choix pour les cartes qui nécéssitent une sélection
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -203,6 +217,8 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		barreMana.setValue(100);
 		setConstraints(1, 0, 0, 4, c);
 		getContentPane().add(barreMana, c);
+
+		this.lancerLarcin(partie, partie.getMancheCourante().getTourCourant(), joueur);
 	}
 
 	/**
@@ -255,12 +271,12 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			tmp.setIcon(new ImageIcon(this.getImageCasePont(i)));
 		}
 	}
-	
-	//Met à jour les images des sorciers et du mur
+
+	// Met à jour les images des sorciers et du mur
 	private void updateSorciersEtMur() {
 		panelSorciers = new JPanel(new GridBagLayout());
 		panelSorciers.setBackground(Color.BLACK);
-		
+
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
 		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
@@ -280,7 +296,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
 	}
-	
 
 	/**
 	 * Renvoie le chemin vers l'image du pont de la case courante (pont ou lave)
@@ -327,7 +342,7 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 
 	public void displayCartesJouees() {
 		for (int i = 0; i < this.imagesCartesJoueur.size(); i++) {
-			if (this.cartesJouees.contains((Integer) i)) {
+			if (this.cartesJouees.contains(i)) {
 				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			} else {
 				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
@@ -406,7 +421,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		}
 	}
 
-
 	/**
 	 * Met à jour la barre de mana avec la valeur spécifiée
 	 * 
@@ -461,7 +475,8 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 			return this.partie.getJoueurVert().getManaActuel();
 		case VERT:
 			return this.partie.getJoueurRouge().getManaActuel();
-		default: return 0;
+		default:
+			return 0;
 		}
 	}
 
@@ -476,19 +491,271 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 
 	@Override
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
-		// TODO Auto-generated method stub
+		JFrame fenetreClone = new JFrame();
+		JDialog jd = new JDialog(fenetreClone,
+				"Effet Clone pour Joueur " + joueur.getCouleur().toString().toLowerCase(), true);
+		jd.setModalityType(ModalityType.APPLICATION_MODAL);
+		jd.setSize(800, 400);
 
+		JLabel label = new JLabel("Choisissez la carte à cloner");
+		label.setForeground(Color.WHITE);
+		label.setBackground(Color.BLACK);
+		label.setOpaque(true);
+		label.setHorizontalAlignment(JLabel.CENTER);
+
+		JPanel panelCartes = new JPanel();
+		panelCartes.setBackground(Color.BLACK);
+
+		JButton valider = new JButton("Valider");
+		valider.setEnabled(false);
+
+		choix = 0;
+
+		// On récupère les cartes jouées par l'adversaire au tour précédent
+		List<Carte> cartes = p.getCartesJoueesParAdversaireTourPrecedent(joueur);
+		for (Carte c : cartes) {
+			JLabel tmp = new JLabel();
+			ImageIcon image = new ImageIcon(c.getPath());
+			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
+			tmp.setHorizontalAlignment(JLabel.CENTER);
+			panelCartes.add(tmp);
+			tmp.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						JLabel tmp = (JLabel) e.getComponent();
+						Integer index = panelCartes.getComponentZOrder(tmp);
+						choix = index;
+						valider.setEnabled(true);
+						for (Component c : panelCartes.getComponents()) {
+							JLabel labelCourant = (JLabel) c;
+							if (c.equals(tmp))
+								tmp.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+							else
+								labelCourant.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+						}
+					}
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+
+			});
+		}
+
+		valider.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Carte carteAVoler = cartes.get(choix);
+				carteAVoler.changerDetenteurCarte(joueur);
+				System.out.println(carteAVoler);
+				fenetreClone.dispose();
+			}
+
+		});
+
+		jd.add(label, BorderLayout.NORTH);
+		jd.add(panelCartes, BorderLayout.CENTER);
+		jd.add(valider, BorderLayout.SOUTH);
+		jd.setVisible(true);
+		jd.setResizable(false);
+		jd.setLocation(this.getLocation());
+		jd.setAlwaysOnTop(true);
 	}
 
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
-		// TODO Auto-generated method stub
+		JFrame fenetreClone = new JFrame();
+		JDialog jd = new JDialog(fenetreClone,
+				"Effet Recyclage pour Joueur " + joueur.getCouleur().toString().toLowerCase(), true);
 
+		choix = 0;
+
+		JLabel mise = new JLabel();
+		mise.setText("Entrer la mise à recycler entre +5 et -5 dans la limite de votre mana:");
+
+		JTextField saisieManaRecyclage = new JTextField("0", 5);
+
+		JButton valider = new JButton("Valider");
+
+		saisieManaRecyclage.addKeyListener(new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				try {
+					// On vérifie que la saisie est comprise entre -5 et 5 et que ça ne génère pas
+					// d'erreur sur la réserve de mana
+					boolean saisieCorrecte = (((Character.isDigit(e.getKeyChar())
+							&& Integer.parseInt(String.valueOf(e.getKeyChar())) < 6))
+							|| (e.getKeyChar() == '-' && saisieManaRecyclage.getCaretPosition() == 0)
+							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
+							|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
+							|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL)
+							&& saisieManaRecyclage.getText().length() < 2;
+					if (saisieCorrecte) {
+						saisieManaRecyclage.setEditable(true);
+					} else {
+						saisieManaRecyclage.setEditable(false);
+						// Fondu vers le rouge pour prévenir l'utilisateur d'une saisie incorrecte
+						Utils.fonduArrierePlan(saisieManaRecyclage, new Color(255, 43, 28), 8, 15);
+					}
+
+					if (saisieManaRecyclage.getText().length() == 1
+							&& (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
+						valider.setEnabled(false);
+					} else {
+						valider.setEnabled(true);
+						choix = Integer.parseInt(saisieManaRecyclage.getText());
+					}
+				} catch (NumberFormatException ex) {
+
+				}
+			}
+		});
+
+		valider.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tour.changerMise(joueur, choix);
+			}
+
+		});
+
+		jd.setLayout(new FlowLayout());
+		jd.add(mise);
+		jd.add(saisieManaRecyclage);
+		jd.add(valider);
+		jd.setModalityType(ModalityType.APPLICATION_MODAL);
+		jd.setSize(500, 70);
+		jd.setVisible(true);
+		jd.setResizable(false);
+		jd.setLocation(this.getLocation());
+		jd.setAlwaysOnTop(true);
 	}
 
 	@Override
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		// TODO Auto-generated method stub
+		JFrame fenetreClone = new JFrame();
+		JDialog jd = new JDialog(fenetreClone,
+				"Effet Larcin pour Joueur " + joueur.getCouleur().toString().toLowerCase(), true);
+		jd.setModalityType(ModalityType.APPLICATION_MODAL);
+		jd.setSize(800, 400);
 
+		JLabel label = new JLabel(
+				"Choisissez les cartes à jouer sous votre contrôle, le reste sera annulé puis défausser:");
+		label.setForeground(Color.WHITE);
+		label.setBackground(Color.BLACK);
+		label.setOpaque(true);
+		label.setHorizontalAlignment(JLabel.CENTER);
+
+		JPanel panelCartes = new JPanel();
+		panelCartes.setBackground(Color.BLACK);
+
+		JButton valider = new JButton("Valider");
+
+		List<Integer> listeCartesAPrendre = new ArrayList<Integer>();
+
+		// On récupère les cartes jouées par l'adversaire
+		List<Carte> cartes;
+		List<Carte> cartesCpy = new ArrayList<>();
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurRouge());
+		} else {
+			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurVert());
+		}
+		cartes.add(new Carte5(p, joueur));
+		cartes.add(new Carte6(p, joueur));
+		cartes.add(new Carte7(p, joueur));
+		cartes.add(new Carte9(p, joueur));
+		for (Carte c : cartes) {
+			JLabel tmp = new JLabel();
+			ImageIcon image = new ImageIcon(c.getPath());
+			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
+			tmp.setHorizontalAlignment(JLabel.CENTER);
+			panelCartes.add(tmp);
+			tmp.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					if (SwingUtilities.isLeftMouseButton(e)) {
+						JLabel tmp = (JLabel) e.getComponent();
+						Integer index = panelCartes.getComponentZOrder(tmp);
+						System.out.println(index);
+						if (listeCartesAPrendre.contains(index)) {
+							listeCartesAPrendre.remove(index);
+						} else {
+							listeCartesAPrendre.add(index);
+						}
+
+						for (int i = 0; i < panelCartes.getComponentCount(); i++) {
+							JLabel labelCourant = (JLabel) panelCartes.getComponent(i);
+							if (!listeCartesAPrendre.contains(i)) {
+								labelCourant.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+							} else {
+								labelCourant.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+							}
+						}
+					}
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+				}
+
+			});
+		}
+
+		valider.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (int i = 0; i < cartes.size(); i++) {
+					Carte carte = cartes.get(i);
+					if (listeCartesAPrendre.contains(i)) {
+						carte.changerDetenteurCarte(joueur);
+					} else {
+						carte.defausser();
+					}
+				}
+				fenetreClone.dispose();
+			}
+
+		});
+
+		jd.add(label, BorderLayout.NORTH);
+		jd.add(panelCartes, BorderLayout.CENTER);
+		jd.add(valider, BorderLayout.SOUTH);
+		jd.setVisible(true);
+		jd.setResizable(false);
+		jd.setLocation(this.getLocation());
+		jd.setAlwaysOnTop(true);
 	}
 }
