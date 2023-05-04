@@ -121,7 +121,7 @@ public class Joueur {
 		// On prends les nbCartes premières cartes et on les ajoute à la main et on
 		// les retire du paquet
 		for (int i = 0; i < nbCartes && !this.paquet.isEmpty(); i++) {
-			Carte cartePiochee = this.paquet.get(this.paquet.size()-1);
+			Carte cartePiochee = this.paquet.get(this.paquet.size() - 1);
 			this.mainDuJoueur.add(cartePiochee);
 			this.paquet.remove(cartePiochee);
 		}
@@ -139,12 +139,11 @@ public class Joueur {
 	/*
 	 * Retourne le chemin de l'image correspondant au Joueur
 	 */
-	public String getPath(){
-		if(this.COULEUR.equals(ECouleurJoueur.ROUGE)) {
+	public String getPath() {
+		if (this.COULEUR.equals(ECouleurJoueur.ROUGE)) {
 			return "src/main/resources/perso/rouge.gif";
-		}else {
-			return "src/main/resources/perso/vert.gif";
 		}
+		return "src/main/resources/perso/vert.gif";
 	}
-	
+
 }

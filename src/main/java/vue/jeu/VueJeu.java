@@ -60,8 +60,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JTextField saisieMana;
 	private JButton boutonJouer;
 	private JLabel logo = new JLabel();
-	private JLabel labelManaAdversaire;
-	private List<JLabel> imagesPont, imagesCartesJoueur;
+	private JLabel labelManaAdversaire, labelDroite;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
 
@@ -100,8 +99,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo.add(logo, c); // Logo centré
 
 		setConstraints(1, 0, 2, 0, c);
-		JLabel labelDroite = new JLabel();
-		labelDroite.setText(getInfos());
+		labelDroite = new JLabel();
+		this.updateInfos();
 		labelDroite.setForeground(Color.LIGHT_GRAY);
 		panelLogo.add(labelDroite, c); // Contraint le logo à se déplacer à gauche
 
@@ -131,7 +130,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelPont = new JPanel();
 		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
 		panelPont.setBackground(Color.BLACK);
-		imagesPont = new ArrayList<>();
 		initPont();
 		updatePont();
 		setConstraints(1, 0.5, 0, 1, c);
@@ -141,7 +139,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
 		panelMain.setBackground(Color.BLACK);
-		imagesCartesJoueur = new ArrayList<>();
 		this.paintMain();
 		setConstraints(1, 0, 0, 2, c);
 		c.insets = new Insets(5, 10, 5, 10);
@@ -219,6 +216,10 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		getContentPane().add(barreMana, c);
 	}
 
+	private void updateInfos() {
+		labelDroite.setText(getInfos());
+	}
+
 	private void updateManaAdversaire() {
 		labelManaAdversaire.setText(String.format("Mana de l'adversaire : %d", getManaAdversaire()));
 	}
@@ -237,7 +238,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			JLabel tmp = new JLabel();
 			String source = this.getImageCasePont(i);
 			tmp.setIcon(new ImageIcon(source));
-			imagesPont.add(tmp);
 			panelPont.add(tmp, c.gridx);
 			c.gridx++;
 
@@ -279,8 +279,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	 * Met à jour les images du pont
 	 */
 	private void updatePont() {
-		for (int i = 0; i < this.imagesPont.size(); i++) {
-			JLabel tmp = this.imagesPont.get(i);
+		for (int i = 0; i < panelPont.getComponentCount(); i++) {
+			JLabel tmp = (JLabel) panelPont.getComponent(i);
 			tmp.setIcon(new ImageIcon(this.getImageCasePont(i)));
 		}
 	}
@@ -334,10 +334,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	private void paintMain() {
 		List<Carte> mainJoueur = this.joueur.getMainDuJoueur();
-
-		for (JLabel label : this.imagesCartesJoueur) {
-			panelMain.remove(label);
-		}
+		
+		panelMain.removeAll();
+		panelMain.repaint();
 
 		for (int i = 0; i < mainJoueur.size(); i++) {
 			Carte c = mainJoueur.get(i);
@@ -346,7 +345,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les borders en constantes ?
-			imagesCartesJoueur.add(tmp);
 			panelMain.add(tmp);
 
 			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
@@ -354,11 +352,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	}
 
 	public void displayCartesJouees() {
-		for (int i = 0; i < this.imagesCartesJoueur.size(); i++) {
+		for (int i = 0; i < joueur.getMainDuJoueur().size(); i++) {
 			if (this.cartesJouees.contains(i)) {
-				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+				((JLabel)panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			} else {
-				this.imagesCartesJoueur.get(i).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+				((JLabel)panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 			}
 		}
 	}
@@ -470,7 +468,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		str += "Manche " + this.partie.getNombreManches() + "<br>";
 		str += "Tour " + this.partie.getMancheCourante().getNumeroTourCourant() + "<br>";
 		str += "Joueur " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert");
-		str += "</html>";
+
+		str += " - " + joueur.getNom() + "</html>";
 		return str;
 	}
 
@@ -681,7 +680,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		// On récupère les cartes jouées par l'adversaire
 		List<Carte> cartes;
-		List<Carte> cartesCpy = new ArrayList<>();
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurRouge());
 		} else {
@@ -766,6 +764,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		this.updateBarreMana();
+		this.updateManaAdversaire();
+		this.updateInfos();
 		this.paintMain();
 		this.updatePont();
 		this.updateSorciersEtMur();
