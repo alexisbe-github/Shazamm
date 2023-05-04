@@ -79,8 +79,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
-		// setSize(683, 691); // Affichage en 1366*768 px par défaut
-		setResizable(true); // TODO setResizable(false);
+		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(new GridBagLayout());
@@ -114,16 +113,17 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
 
-		c.insets = new Insets(0, 10, 0, 10);
-		setConstraints(1, 0.5, 0, 1, c);
-		getContentPane().add(panelJeu, c);
-
 		// Affichage des sorciers et du mur de feu
 		updateSorciersEtMur();
 
 		// Ajout du panel
+		Dimension taillePanel = new Dimension();
+		taillePanel.width = Pont.TAILLE_PONT * 32; // 32px est la largeur d'une image
+		taillePanel.height = 54; // Hauteur d'une image
 		c.insets = new Insets(0, 20, 0, 20);
-		setConstraints(1, 2, 0, 0, c);
+		c.anchor = GridBagConstraints.SOUTH;
+		c.fill = GridBagConstraints.VERTICAL;
+		setConstraints(1, 0.5, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
 
 		// Affichage du pont
@@ -133,8 +133,18 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		initPont();
 		updatePont();
 		setConstraints(1, 0.5, 0, 1, c);
-		c.insets = new Insets(-10, 10, 5, 10);
+		c.insets = new Insets(0, 10, 5, 10);
+		c.ipady = 0;
+		c.anchor = GridBagConstraints.CENTER;
+		c.fill = GridBagConstraints.NONE;
 		panelJeu.add(panelPont, c);
+
+		panelJeu.setComponentZOrder(panelSorciers, 0); // On met les sorciers au-dessus
+		panelJeu.setComponentZOrder(panelPont, 1);
+
+		c.insets = new Insets(0, 10, 0, 10);
+		setConstraints(1, 0.5, 0, 1, c);
+		getContentPane().add(panelJeu, c);
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
@@ -142,6 +152,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.paintMain();
 		setConstraints(1, 0, 0, 2, c);
 		c.insets = new Insets(5, 10, 5, 10);
+		c.fill = GridBagConstraints.BOTH;
 		getContentPane().add(panelMain, c);
 
 		// Affichage du panel d'actions
@@ -292,21 +303,23 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
-		for (int i = 0; i < Pont.TAILLE_PONT - 1; i++) {
+		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
 			c.gridx++;
 			c.gridx = i;
-			panelSorciers.add(new JLabel(), c);
+			JLabel l = new JLabel();
+			l.setSize(32, 54);
+			panelSorciers.add(l, c);
 		}
-
-		// Décalage des images vers le bas
-		c.insets = new Insets(50, -32, 0, 0);
 
 		// Affichage Joueurs / Mur
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
+		c.insets = getMargePont(c.gridx);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
 		c.gridx = partie.getPont().getPosMurDeFeu();
+		c.insets = getMargePont(c.gridx);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPath())), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
+		c.insets = getMargePont(c.gridx);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
 	}
 
@@ -485,6 +498,31 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		default:
 			return 0;
 		}
+	}
+
+	/**
+	 * Renvoie une marge permettant de positionner les sorciers et le mur de feu en
+	 * fonction de leur position sur le pont
+	 * 
+	 * @param position La position (entre <code>0</code> et
+	 *                 <code>{@link Pont.TAILLE_PONT} - 1</code>).
+	 * @return La marge correspondante à appliquer. Retourne <code>null</code> si la
+	 *         case n'existe pas.
+	 */
+	private Insets getMargePont(int position) {
+
+		if (position < 0 || position >= Pont.TAILLE_PONT)
+			return null;
+
+		if (this.partie.getPont().estUneCaseLave(position))
+			return new Insets(0, 0, 0, 0);
+
+		String cheminImage = "src/main/resources/pont/pont_";
+		if (position < 9)
+			cheminImage += "0";
+		cheminImage += (position + 1) + ".gif";
+		int hauteurImage = new ImageIcon(cheminImage).getIconHeight();
+		return new Insets(104 - hauteurImage, 0, 0, 0);
 	}
 
 	/**
