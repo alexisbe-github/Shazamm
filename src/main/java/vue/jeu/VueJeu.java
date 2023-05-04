@@ -570,7 +570,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			public void actionPerformed(ActionEvent e) {
 				Carte carteAVoler = cartes.get(choix);
 				carteAVoler.changerDetenteurCarte(joueur);
-				System.out.println(carteAVoler);
 				fenetreClone.dispose();
 			}
 
@@ -681,9 +680,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// On récupère les cartes jouées par l'adversaire
 		List<Carte> cartes;
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurRouge());
-		} else {
 			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurVert());
+		} else {
+			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurRouge());
 		}
 		for (Carte c : cartes) {
 			JLabel tmp = new JLabel();
@@ -702,7 +701,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 					if (SwingUtilities.isLeftMouseButton(e)) {
 						JLabel tmp = (JLabel) e.getComponent();
 						Integer index = panelCartes.getComponentZOrder(tmp);
-						System.out.println(index);
 						if (listeCartesAPrendre.contains(index)) {
 							listeCartesAPrendre.remove(index);
 						} else {
