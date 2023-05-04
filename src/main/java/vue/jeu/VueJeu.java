@@ -450,27 +450,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	 * 
 	 */
 	public void updateBarreMana() {
-
-		// Animation pour faire baisser progressivement les réserves de mana
-//		new Thread(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				int anc = barreMana.getValue();
-//				int mana = anc / 2;
-//				while (anc > nv * 2) {
-//					anc -= 2;
-//					mana--;
 		barreMana.setValue(joueur.getManaActuel() * 2);
 		barreMana.setString("Mana : " + joueur.getManaActuel() + "/" + Joueur.MANA_MAXIMUM);
-//
-//					try {
-//						Thread.sleep(10);
-//					} catch (InterruptedException e) {
-//					}
-//				}
-//			}
-//		}).start();
 	}
 
 	/**
