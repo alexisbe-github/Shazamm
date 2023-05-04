@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -62,7 +63,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JTextField saisieMana;
 	private JButton boutonJouer;
 	private JLabel logo = new JLabel();
-	private JLabel labelManaAdversaire, labelDroite;
+	private JLabel labelManaAdversaire, labelInfos;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
 
@@ -100,16 +101,23 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo.add(logo, c); // Logo centré
 
 		setConstraints(1, 0, 2, 0, c);
-		labelDroite = new JLabel();
-		this.updateInfos();
-		labelDroite.setForeground(Color.LIGHT_GRAY);
-		panelLogo.add(labelDroite, c); // Contraint le logo à se déplacer à gauche
+		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 
 		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
 		logo.setBounds(this.getWidth() / 2 - 201, 0, 402, 100);
 
 		setConstraints(1, 0, 0, 0, c);
 		getContentPane().add(panelLogo, c);
+
+		// Label infos
+		labelInfos = new JLabel();
+		labelInfos.setHorizontalAlignment(JLabel.CENTER);
+		labelInfos.setFont(new Font("Serif", Font.PLAIN, 14));
+		updateInfos();
+		setConstraints(0, 0, 0, 1, c);
+		labelInfos.setForeground(Color.LIGHT_GRAY);
+
+		getContentPane().add(labelInfos, c);
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
@@ -119,9 +127,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		initSorciersEtMur();
 
 		// Ajout du panel
-		Dimension taillePanel = new Dimension();
-		taillePanel.width = Pont.TAILLE_PONT * 32; // 32px est la largeur d'une image
-		taillePanel.height = 54; // Hauteur d'une image
 		c.insets = new Insets(0, 20, 0, 20);
 		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.VERTICAL;
@@ -145,14 +150,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setComponentZOrder(panelPont, 1);
 
 		c.insets = new Insets(0, 10, 0, 10);
-		setConstraints(1, 0.5, 0, 1, c);
+		setConstraints(1, 0.5, 0, 2, c);
 		getContentPane().add(panelJeu, c);
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
 		panelMain.setBackground(Color.BLACK);
 		this.paintMain();
-		setConstraints(1, 0, 0, 2, c);
+		setConstraints(1, 0, 0, 3, c);
 		c.insets = new Insets(5, 10, 5, 10);
 		c.fill = GridBagConstraints.BOTH;
 		getContentPane().add(panelMain, c);
@@ -180,7 +185,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
 		panelAction.add(labelManaAdversaire);
-		setConstraints(1, 0, 0, 3, c);
+		setConstraints(1, 0, 0, 4, c);
 		getContentPane().add(panelAction, c);
 
 		// Affichage du mana
@@ -191,12 +196,12 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		barreMana
 				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
-		setConstraints(1, 0, 0, 4, c);
+		setConstraints(1, 0, 0, 5, c);
 		getContentPane().add(barreMana, c);
 	}
 
 	private void updateInfos() {
-		labelDroite.setText(getInfos());
+		labelInfos.setText(getInfos());
 	}
 
 	private void updateManaAdversaire() {
@@ -269,18 +274,18 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelSorciers.setBackground(Color.BLACK);
 		updateSorciersEtMur();
 	}
-	
+
 	// Met à jour les images des sorciers et du mur
-	private void updateSorciersEtMur() { 
+	private void updateSorciersEtMur() {
 		panelSorciers.removeAll();
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
-		
+
 		ImageIcon temp = new ImageIcon(partie.getJoueurRouge().getPath());
-		BufferedImage bi = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bi = new BufferedImage(temp.getIconWidth(), temp.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 		ImageIcon icon = new ImageIcon(bi);
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
-			c.gridx=i;
+			c.gridx = i;
 			JLabel l = new JLabel();
 			l.setIcon(icon);
 			panelSorciers.add(l, c);
@@ -293,7 +298,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPathMur())), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
-		}
+	}
 
 	/**
 	 * Renvoie le chemin vers l'image du pont de la case courante (pont ou lave)
@@ -329,7 +334,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			ImageIcon image = new ImageIcon(c.getPath());
 			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
-			//tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les borders en constantes ?
+			// tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les
+			// borders en constantes ?
 			panelMain.add(tmp);
 
 			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
@@ -450,11 +456,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	 */
 	private String getInfos() {
 		String str = "<html>";
-		str += "Manche " + this.partie.getNombreManches() + "<br>";
+		str += "      <b>Manche " + this.partie.getNombreManches() + " - ";
 		str += "Tour " + this.partie.getMancheCourante().getNumeroTourCourant() + "<br>";
 		str += "Joueur " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert");
 
-		str += " - " + joueur.getNom() + "</html>";
+		str += " - " + joueur.getNom() + "</b></html>";
 		return str;
 	}
 
