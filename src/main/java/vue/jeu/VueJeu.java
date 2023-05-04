@@ -218,7 +218,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		setConstraints(1, 0, 0, 4, c);
 		getContentPane().add(barreMana, c);
 
-		this.lancerLarcin(partie, partie.getMancheCourante().getTourCourant(), joueur);
 	}
 
 	/**
@@ -679,10 +678,6 @@ public class VueJeu extends JFrame implements ILancementStrategy {
 		} else {
 			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurVert());
 		}
-		cartes.add(new Carte5(p, joueur));
-		cartes.add(new Carte6(p, joueur));
-		cartes.add(new Carte7(p, joueur));
-		cartes.add(new Carte9(p, joueur));
 		for (Carte c : cartes) {
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
