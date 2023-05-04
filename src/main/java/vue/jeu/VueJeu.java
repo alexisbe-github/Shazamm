@@ -19,6 +19,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import javax.swing.SwingUtilities;
 
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
+import main.java.controleur.jeu.ControleurMana;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -114,7 +116,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setBackground(Color.BLACK);
 
 		// Affichage des sorciers et du mur de feu
-		updateSorciersEtMur();
+		initSorciersEtMur();
 
 		// Ajout du panel
 		Dimension taillePanel = new Dimension();
@@ -125,6 +127,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		c.fill = GridBagConstraints.VERTICAL;
 		setConstraints(1, 0.5, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
+		panelJeu.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 
 		// Affichage du pont
 		panelPont = new JPanel();
@@ -166,41 +169,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		saisieMana = new JTextField("1", 10);
 		new TexteFantome(saisieMana, "Entrer la mise…");
 
-		saisieMana.addKeyListener(new KeyAdapter() {
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				try {
-					// On vérifie que la saisie est comprise entre 1 et le mana du joueur
-					boolean saisieCorrecte = ((Character.isDigit(e.getKeyChar())
-							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
-							|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
-							|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL)
-							&& ((Integer.parseInt(saisieMana.getText()
-									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) <= joueur
-											.getManaActuel())
-									&& (Integer.parseInt(saisieMana.getText()
-											+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) >= 1)));
-
-					if (saisieCorrecte) {
-						saisieMana.setEditable(true);
-					} else {
-						saisieMana.setEditable(false);
-						// Fondu vers le rouge pour prévenir l'utilisateur d'une saisie incorrecte
-						Utils.fonduArrierePlan(saisieMana, new Color(255, 43, 28), 8, 15);
-					}
-
-					if (saisieMana.getText().length() == 1
-							&& (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
-						boutonJouer.setEnabled(false);
-					} else
-						boutonJouer.setEnabled(true);
-
-				} catch (NumberFormatException ex) {
-
-				}
-			}
-		});
+		saisieMana.addKeyListener(new ControleurMana(saisieMana, boutonJouer, this));
 
 		mise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
@@ -296,32 +265,36 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		}
 	}
 
-	// Met à jour les images des sorciers et du mur
-	private void updateSorciersEtMur() {
+	private void initSorciersEtMur() {
 		panelSorciers = new JPanel(new GridBagLayout());
 		panelSorciers.setBackground(Color.BLACK);
-
+		updateSorciersEtMur();
+	}
+	
+	// Met à jour les images des sorciers et du mur
+	private void updateSorciersEtMur() { 
 		GridBagConstraints c = new GridBagConstraints();
 		setConstraints(1, 0.5, 0, 1, c);
+		
+		ImageIcon temp = new ImageIcon(partie.getJoueurRouge().getPath());
+		BufferedImage bi = new BufferedImage(temp.getIconWidth(),temp.getIconHeight(),BufferedImage.TYPE_INT_ARGB);
+		ImageIcon icon = new ImageIcon(bi);
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
-			c.gridx++;
-			c.gridx = i;
+			c.gridx=i;
 			JLabel l = new JLabel();
-			l.setSize(32, 54);
+			l.setIcon(icon);
 			panelSorciers.add(l, c);
 		}
 
 		// Affichage Joueurs / Mur
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
-		c.insets = getMargePont(c.gridx);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
 		c.gridx = partie.getPont().getPosMurDeFeu();
-		c.insets = getMargePont(c.gridx);
-		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPath())), c);
+		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPathMur())), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
-		c.insets = getMargePont(c.gridx);
 		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
-	}
+		System.out.println("r:"+partie.getPont().getPosMurDeFeu());
+		}
 
 	/**
 	 * Renvoie le chemin vers l'image du pont de la case courante (pont ou lave)
@@ -407,7 +380,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			try {
 				JLabel label = (JLabel) c;
 				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == partie.getPont().getPath()) {
+				if (image.getDescription() == partie.getPont().getPathMur()) {
 					return label;
 				}
 			} catch (NullPointerException e) {
@@ -804,7 +777,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.updateInfos();
 		this.paintMain();
 		this.updatePont();
-		this.updateSorciersEtMur();
 		this.reinitialiserTextField("1");
 		this.cartesJouees.clear();
 		boutonJouer.setEnabled(true);
