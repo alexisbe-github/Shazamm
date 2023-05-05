@@ -6,8 +6,10 @@ import java.util.List;
 
 import javax.swing.JButton;
 
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 import main.java.vue.jeu.VueJeu;
@@ -29,6 +31,19 @@ public class ControleurJeu implements ActionListener {
 		case "Jouer le tour":
 			bouton.setEnabled(false);
 			Joueur j = this.vj.getJoueur();
+
+			//On vérifie si l'adversaire est un ordinateur, si oui on le fait jouer avant le joueur
+			Joueur joueurAdverse;
+			if (j.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+				joueurAdverse = this.partie.getJoueurVert();
+			} else {
+				joueurAdverse = this.partie.getJoueurRouge();
+			}
+			boolean adversaireEstUnOrdinateur = joueurAdverse instanceof IA;
+			if (adversaireEstUnOrdinateur)
+				((IA) joueurAdverse).jouerTour(partie);
+
+			
 			int mise = vj.getMise();
 			Tour tourCourant = partie.getMancheCourante().getTourCourant();
 			tourCourant.setMiseJoueur(j, mise);
@@ -36,6 +51,7 @@ public class ControleurJeu implements ActionListener {
 			for (Carte c : cartes) {
 				partie.jouerCarte(c, j);
 			}
+
 			partie.jouerTour();
 			break;
 		default:

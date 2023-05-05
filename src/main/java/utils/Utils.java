@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
 import javax.swing.ImageIcon;
@@ -87,5 +89,40 @@ public class Utils {
 			}
 		});
 		timer.start();
+	}
+
+	/**
+	 * Permet de générer un entier entre a et b strictement inférieur
+	 * 
+	 * @param a
+	 * @param b
+	 * @return entier généré
+	 */
+	public static int genererEntier(int a, int b) {
+		Random random = new Random();
+		int res;
+		res = a + random.nextInt(b - a);
+		return res;
+	}
+
+	/**
+	 * Permet de générer un entier entre a et b strictement inférieur avec a+n qui a
+	 * 50%^n de chance de moins d'être généré
+	 * 
+	 * @param a
+	 * @param b
+	 * @return entier généré
+	 */
+	public static int genererEntierAvecPoids(int a, int b) {
+		int res = 0;
+		boolean stop = false;
+		while(!stop && res < b) {
+			if(genererEntier(0,2) == 1) {
+				stop = true;
+			}else {
+				res++;
+			}	
+		}
+		return res;
 	}
 }

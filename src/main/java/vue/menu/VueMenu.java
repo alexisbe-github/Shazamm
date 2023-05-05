@@ -101,6 +101,7 @@ public class VueMenu extends JFrame {
 		
 		ControleurMenu cm = new ControleurMenu(this);
 		boutonJouer.addActionListener(cm);
+		boutonJouerIA.addActionListener(cm);
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 		

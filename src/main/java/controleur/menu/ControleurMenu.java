@@ -1,6 +1,5 @@
 package main.java.controleur.menu;
 
-import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -13,6 +12,8 @@ import javax.swing.JButton;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
+import main.java.model.jeu.ia.IA;
+import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.partie.Partie;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
@@ -49,6 +50,22 @@ public class ControleurMenu implements ActionListener {
 			}
 			p.addObserver(fenetreJ1);
 			p.addObserver(fenetreJ2);
+			break;
+		case "Jouer contre l'ordinateur":
+			vm.dispose();
+			List<ECouleurJoueur> couleurs = tirerCouleurs();
+			ECouleurJoueur couleur = couleurs.get(0);
+			ECouleurJoueur couleurIA = couleurs.get(1);
+			Joueur joueur = new Joueur(couleur, "Pop", "Simoké", "blabla");
+			IAFacile ia = new IAFacile(couleurIA, "Sorcier", "ledeux", "blabla");
+			Partie partie = new Partie(joueur, ia);
+			VueJeu fenetreJoueur = new VueJeu(joueur, partie);
+			if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
+				partie.setStrategy(fenetreJoueur, ia);
+			} else {
+				partie.setStrategy(ia, fenetreJoueur);
+			}
+			partie.addObserver(fenetreJoueur);
 			break;
 		}
 	}
