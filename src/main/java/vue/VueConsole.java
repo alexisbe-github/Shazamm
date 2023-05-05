@@ -16,11 +16,10 @@ public class VueConsole implements ILancementStrategy {
 
 	public VueConsole(Partie p) {
 		this.partie = p;
-		this.partie.setStrategy(this);
+		this.partie.setStrategy(this,this);
 		this.lancerJeu();
 	}
 
-	@Override
 	public void lancerJeu() {
 		while (!partie.getPartieFinie()) {
 			partie.printMancheEtTour();
@@ -31,14 +30,16 @@ public class VueConsole implements ILancementStrategy {
 
 			// Choix mise et carte(s) du joueur rouge
 			int miseRouge = choixMise(joueurRouge);
+			partie.getMancheCourante().getTourCourant().setMiseJoueurRouge(miseRouge);
 			choixCarte(joueurRouge);
 
 			// Choix mise et carte(s) du joueur vert
 			int miseVert = choixMise(joueurVert);
+			partie.getMancheCourante().getTourCourant().setMiseJoueurVert(miseVert);
 			choixCarte(joueurVert);
 
 			// lancement du tour
-			this.partie.jouerTour(miseRouge, miseVert);
+			this.partie.jouerTour();
 		}
 		new VueLancement();
 	}

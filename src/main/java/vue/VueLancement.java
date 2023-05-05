@@ -22,7 +22,7 @@ public class VueLancement extends JFrame {
 	private JButton boutonConsole = new JButton("Console");
 	private JButton boutonIG = new JButton("Interface Graphique");
 
-	/*
+	/**
 	 * Constructeur initialisant le titre et les différentes propriétés de la
 	 * fenêtre.
 	 */

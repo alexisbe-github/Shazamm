@@ -1,5 +1,6 @@
 package main.java.controleur.lancement;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -37,12 +38,11 @@ public class ControleurLancement implements ActionListener {
 			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 			Partie p = new Partie(joueur1, joueur2);
 			VueConsole vc = new VueConsole(p);
+			p.setStrategy(vc,vc);
 			break;
 		case "Interface Graphique":
 			vl.dispose();
-			JFrame fenetre = new JFrame("Menu de Shazamm");
-			fenetre.add(new VueMenu());
-			fenetre.setVisible(true);
+			new VueMenu();
 			break;
 		}
 	}

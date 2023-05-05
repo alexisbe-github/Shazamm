@@ -1,5 +1,6 @@
 package main.java.vue.menu;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,13 +8,16 @@ import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import main.java.controleur.menu.ControleurMenu;
 
 /**
  * Le panneau correspondant au menu du joueur.
  */
-public class VueMenu extends JPanel {
+public class VueMenu extends JFrame {
 
 	/**
 	 * L'icône permettant d'accéder au profil du joueur
@@ -35,12 +39,11 @@ public class VueMenu extends JPanel {
 	 * Le bouton qui permet de sélectionner les options du jeu
 	 */
 	private final JButton boutonOptions = new JButton("Options");
+	
+	private JPanel panel = new JPanel(new GridBagLayout());
 
-	/**
-	 * Construit le panel.
-	 */
 	public VueMenu() {
-		super(new GridBagLayout());
+		this.setTitle("Menu de Shazamm");
 		init();
 	}
 
@@ -58,13 +61,13 @@ public class VueMenu extends JPanel {
 	    c.gridy = 0; // Position en Y
 	    c.anchor = GridBagConstraints.LINE_START; // Ancre à gauche
 	    c.insets = new Insets(0, 0, 20, 20);
-	    this.add(new JPanel(), c);
+	    panel.add(new JPanel(), c);
 		
 		iconeProfil.setIcon(new ImageIcon("src/resources/images/icone-profil-joueur.png"));
 		c.weightx = 0;
 		c.gridx = 1;
 		c.gridy = 0;
-		this.add(iconeProfil, c); // Ajout du composant avec les contraintes
+		panel.add(iconeProfil, c); // Ajout du composant avec les contraintes
 		
 		c.gridwidth = 2; // Fait s'étendre tous les composants suivants sur 2 cellules
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des boutons en pixels
@@ -72,23 +75,34 @@ public class VueMenu extends JPanel {
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		this.add(boutonJouer, c);
+		panel.add(boutonJouer, c);
 		
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 2;
-		this.add(boutonClassement, c);
+		panel.add(boutonClassement, c);
 		
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 3;
-		this.add(boutonHistorique, c);
+		panel.add(boutonHistorique, c);
 		
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 4;
-		this.add(boutonOptions, c);
+		panel.add(boutonOptions, c);
 		
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
+		ControleurMenu cm = new ControleurMenu(this);
+		boutonJouer.addActionListener(cm);
+		
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
+		
+		this.add(panel);
+		this.setPreferredSize(new Dimension(600, 600));
+		this.pack();
+		this.setResizable(false);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 }

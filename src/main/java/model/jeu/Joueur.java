@@ -12,7 +12,7 @@ public class Joueur {
 
 	private final ECouleurJoueur COULEUR;
 	private final String NOM, PRENOM, AVATAR;
-	private final int MANA_MAXIMUM = 50;
+	public static final int MANA_MAXIMUM = 50;
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
 	private List<Carte> paquet, mainDuJoueur;
@@ -118,22 +118,32 @@ public class Joueur {
 	 * @param nbCartes, int
 	 */
 	public void piocherCartes(int nbCartes) {
-		// On prends les nbCartes premières cartes et on les ajoutes on à la main et on
+		// On prends les nbCartes premières cartes et on les ajoute à la main et on
 		// les retire du paquet
-		for (int i = 0; i < nbCartes && i < this.paquet.size(); i++) {
-			Carte cartePiochee = this.paquet.get(i);
+		for (int i = 0; i < nbCartes && !this.paquet.isEmpty(); i++) {
+			Carte cartePiochee = this.paquet.get(this.paquet.size() - 1);
 			this.mainDuJoueur.add(cartePiochee);
 			this.paquet.remove(cartePiochee);
 		}
 	}
 
 	/**
-	 * Defausse une carte en la supprimant dans la main
+	 * Defausse une carte en la supprimant de la main
 	 * 
 	 * @param carteJouee Carte
 	 */
 	public void defausser(Carte carteJouee) {
 		this.mainDuJoueur.remove(carteJouee);
+	}
+
+	/**
+	 * Retourne le chemin de l'image correspondant au Joueur
+	 */
+ public String getPath(){
+		if (this.COULEUR.equals(ECouleurJoueur.ROUGE))
+			return "src/main/resources/perso/rouge.png";
+		
+		return "src/main/resources/perso/vert.png";
 	}
 
 }
