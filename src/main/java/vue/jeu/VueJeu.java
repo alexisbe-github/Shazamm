@@ -588,6 +588,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			public void actionPerformed(ActionEvent e) {
 				Carte carteAVoler = cartes.get(choix);
 				carteAVoler.changerDetenteurCarte(joueur);
+				tour.activerClone(carteAVoler);
 				fenetreClone.dispose();
 			}
 
