@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -66,6 +67,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JLabel labelManaAdversaire, labelInfos;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
+	private Chrono timer = new Chrono();
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -90,7 +92,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.BOTH;
-
+		
 		panelLogo = new JPanel(new GridBagLayout());
 		panelLogo.setBackground(Color.BLACK);
 
@@ -116,8 +118,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		updateInfos();
 		setConstraints(0, 0, 0, 1, c);
 		labelInfos.setForeground(Color.LIGHT_GRAY);
-
-		getContentPane().add(labelInfos, c);
+		getContentPane().add(labelInfos,c);
+		
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
@@ -180,6 +182,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelManaAdversaire = new JLabel();
 		labelManaAdversaire.setForeground(Color.LIGHT_GRAY);
 		this.updateManaAdversaire();
+		panelAction.add(timer);
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
@@ -789,4 +792,5 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.cartesJouees.clear();
 		boutonJouer.setEnabled(true);
 	}
+	
 }
