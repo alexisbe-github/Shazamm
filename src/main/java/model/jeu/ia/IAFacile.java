@@ -27,14 +27,13 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 		int mise = Utils.genererEntier(1, getManaActuel() + 1);
 
 		// on joue entre 0 et le nombre de cartes dans la main
-		int nbCartesAJouer = Utils.genererEntierAvecPoids(0, getMainDuJoueur().size() + 1);
+		int nbCartesAJouer = Utils.genererEntierAvecPoids(0, getMainDuJoueur().size());
 
 		for (int i = 0; i < nbCartesAJouer; i++) {
 			int index = Utils.genererEntier(0, getMainDuJoueur().size());
 			Carte carte = getMainDuJoueur().get(index);
 			p.jouerCarte(carte, this);
 		}
-
 		p.getMancheCourante().getTourCourant().setMiseJoueur(this, mise);
 	}
 
@@ -62,7 +61,7 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 		}
 		
 		// on joue entre 0 et le nombre de cartes jouees par l'adversaire
-		int nbCartesAVoler = Utils.genererEntierAvecPoids(0, cartes.size() + 1);
+		int nbCartesAVoler = Utils.genererEntierAvecPoids(0, cartes.size());
 
 		for (int i = 0; i < nbCartesAVoler; i++) {
 			int index = Utils.genererEntier(0, cartes.size());

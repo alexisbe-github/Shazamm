@@ -99,6 +99,7 @@ public class Utils {
 	 * @return entier généré
 	 */
 	public static int genererEntier(int a, int b) {
+		if(a==b) return a;
 		Random random = new Random();
 		int res;
 		res = a + random.nextInt(b - a);
