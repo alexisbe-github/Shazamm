@@ -20,11 +20,9 @@ import main.java.vue.menu.VueMenu;
 public class ControleurMenu implements ActionListener {
 
 	private VueMenu vm;
-	private boolean partieLancee; //empêche de lancer deux parties
 
 	public ControleurMenu(VueMenu vm) {
 		this.vm = vm;
-		this.partieLancee = false;
 	}
 
 	@Override
@@ -32,28 +30,25 @@ public class ControleurMenu implements ActionListener {
 		JButton bouton = (JButton) e.getSource();
 		switch (bouton.getText()) {
 		case "Jouer":
-			if (!this.partieLancee) {
-				this.partieLancee = true;
-				vm.dispose();
-				List<ECouleurJoueur> couleursTirees = tirerCouleurs();
-				ECouleurJoueur couleurJ1 = couleursTirees.get(0);
-				ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-				Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
-				Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
-				Partie p = new Partie(joueur1, joueur2);
-				VueJeu fenetreJ1 = new VueJeu(joueur1, p);
-				VueJeu fenetreJ2 = new VueJeu(joueur2, p);
-				int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-				fenetreJ1.setLocation(new Point(0, 0));
-				fenetreJ2.setLocation(new Point(width / 2, 0));
-				if(joueur1.getCouleur().equals(ECouleurJoueur.VERT)) {
-					p.setStrategy(fenetreJ1,fenetreJ2);
-				}else {
-					p.setStrategy(fenetreJ2, fenetreJ1);
-				}
-				p.addObserver(fenetreJ1);
-				p.addObserver(fenetreJ2);
+			vm.dispose();
+			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
+			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
+			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
+			Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
+			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
+			Partie p = new Partie(joueur1, joueur2);
+			VueJeu fenetreJ1 = new VueJeu(joueur1, p);
+			VueJeu fenetreJ2 = new VueJeu(joueur2, p);
+			int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+			fenetreJ1.setLocation(new Point(0, 0));
+			fenetreJ2.setLocation(new Point(width / 2, 0));
+			if (joueur1.getCouleur().equals(ECouleurJoueur.VERT)) {
+				p.setStrategy(fenetreJ1, fenetreJ2);
+			} else {
+				p.setStrategy(fenetreJ2, fenetreJ1);
 			}
+			p.addObserver(fenetreJ1);
+			p.addObserver(fenetreJ2);
 			break;
 		}
 	}
