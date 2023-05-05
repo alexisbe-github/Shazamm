@@ -92,7 +92,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.BOTH;
-		
+
 		panelLogo = new JPanel(new GridBagLayout());
 		panelLogo.setBackground(Color.BLACK);
 
@@ -118,8 +118,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		updateInfos();
 		setConstraints(0, 0, 0, 1, c);
 		labelInfos.setForeground(Color.LIGHT_GRAY);
-		getContentPane().add(labelInfos,c);
-		
+		getContentPane().add(labelInfos, c);
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
@@ -612,7 +611,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		choix = 0;
 
 		JLabel mise = new JLabel();
-		mise.setText("Entrer la mise à recycler entre +5 et -5 dans la limite de votre mise et de votre mana (mise actuelle "+tour.getMiseJoueur(joueur)+"):");
+		mise.setText(
+				"Entrer la mise à recycler entre +5 et -5 dans la limite de votre mise et de votre mana (mise actuelle "
+						+ tour.getMiseJoueur(joueur) + "):");
 
 		JTextField saisieManaRecyclage = new JTextField("0", 5);
 
@@ -625,13 +626,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 				try {
 					// On vérifie que la saisie est comprise entre -5 et 5 et que ça ne génère pas
 					// d'erreur sur la réserve de mana
-					boolean saisieCorrecte = (((Character.isDigit(e.getKeyChar())
-							&& Integer.parseInt(String.valueOf(e.getKeyChar())) < 6))
+					boolean saisieCorrecte = (Character.isDigit(e.getKeyChar())
 							|| (e.getKeyChar() == '-' && saisieManaRecyclage.getCaretPosition() == 0)
-							|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
-							|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
-							|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL)
-							&& saisieManaRecyclage.getText().length() < 2;
+							|| (e.getKeyChar() == '+' && saisieManaRecyclage.getCaretPosition() == 0)
+									&& ((Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) >= -5)
+											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) <= 5)))
+							|| (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
+									|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
+									|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL);
 					if (saisieCorrecte) {
 						saisieManaRecyclage.setEditable(true);
 					} else {
@@ -640,15 +642,13 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 						Utils.fonduArrierePlan(saisieManaRecyclage, new Color(255, 43, 28), 8, 15);
 					}
 
-					if (saisieManaRecyclage.getText().length() == 1
-							&& (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
+					int saisie = Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar());
+					
+					if (saisie < -5 || saisie > 5) {
 						valider.setEnabled(false);
-					} else {
-						valider.setEnabled(true);
-						choix = Integer.parseInt(saisieManaRecyclage.getText());
-					}
+					} else valider.setEnabled(true);
 				} catch (NumberFormatException ex) {
-
+					valider.setEnabled(false);
 				}
 			}
 		});
@@ -792,5 +792,5 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.cartesJouees.clear();
 		boutonJouer.setEnabled(true);
 	}
-	
+
 }
