@@ -165,6 +165,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
         c.insets = new Insets(5, 10, 5, 10);
         c.fill = GridBagConstraints.BOTH;
         scrollPaneCartes.setPreferredSize(new Dimension(200,280));
+        scrollPaneCartes.setBorder(BorderFactory.createEmptyBorder());
         getContentPane().add(scrollPaneCartes, c);
 
 		// Affichage du panel d'actions
