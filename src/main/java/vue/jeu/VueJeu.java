@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -35,6 +34,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -156,12 +156,16 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
-		panelMain.setBackground(Color.BLACK);
-		this.paintMain();
-		setConstraints(1, 0, 0, 3, c);
-		c.insets = new Insets(5, 10, 5, 10);
-		c.fill = GridBagConstraints.BOTH;
-		getContentPane().add(panelMain, c);
+		JScrollPane scrollPaneCartes = new JScrollPane(panelMain);
+        panelMain.setBackground(Color.BLACK);
+        scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        this.paintMain();
+        setConstraints(1, 0, 0, 3, c);
+        c.insets = new Insets(5, 10, 5, 10);
+        c.fill = GridBagConstraints.BOTH;
+        scrollPaneCartes.setPreferredSize(new Dimension(200,280));
+        getContentPane().add(scrollPaneCartes, c);
 
 		// Affichage du panel d'actions
 		panelAction = new JPanel();
