@@ -17,7 +17,7 @@ public class Partie {
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
 	private List<Manche> listeManche;
-	private boolean partieFinie, joueurPousse;
+	private boolean partieFinie, joueurPousse, cartesJouees;
 
 	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
@@ -34,6 +34,7 @@ public class Partie {
 		listeManche = new ArrayList<>();
 		partieFinie = false;
 		this.joueurPousse = false;
+		this.cartesJouees = false;
 		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
 	}
@@ -189,8 +190,10 @@ public class Partie {
 		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			this.cartesJouees = false;
 			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			this.cartesJouees = true;
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
@@ -327,6 +330,10 @@ public class Partie {
 
 	public boolean isJoueurPousse() {
 		return joueurPousse;
+	}
+	
+	public boolean isCartesJouees() {
+		return this.cartesJouees;
 	}
 
 }

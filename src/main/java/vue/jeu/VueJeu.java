@@ -290,7 +290,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			text += "Fin de manche, les sorciers sont remis à 3 cases du mur, les autres cartes jouées sont défaussées.";
 		} else {
 			if ((tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0)
-					&& !partie.isJoueurPousse()) {
+					&& !partie.isJoueurPousse() && partie.isCartesJouees()) {
 				if (tourCourant.getManaRestantRouge() == 0 && tourCourant.getManaRestantVert() == 0) {
 					text += "Les deux sorciers n'ont plus de mana, le mur de feu se replace donc au milieu des deux joueurs";
 				} else {
