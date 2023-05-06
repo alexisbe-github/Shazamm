@@ -84,7 +84,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize.width / 2, (screenSize.height * 9) / 10);
+		setSize(screenSize.width / 2, screenSize.height);
 		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
@@ -188,7 +188,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		this.paintMain();
-		setConstraints(1, 0, 0, 5, c);
+		setConstraints(1, 5, 0, 5, c);
 		c.fill = GridBagConstraints.BOTH;
 
 		// Configuration du scrollPane permettant de scroller pour parcourir les cartes
