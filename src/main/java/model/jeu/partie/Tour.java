@@ -233,6 +233,14 @@ public class Tour {
 		}
 	}
 
+	public void recyclerMise(Joueur joueur, int montant) {
+		if (montant > 5)
+			montant = 5;
+		if (montant < -5)
+			montant = -5;
+		this.changerMise(joueur, montant);
+	}
+
 	/**
 	 * Ajoute atq au joueur
 	 * 
@@ -315,7 +323,7 @@ public class Tour {
 	public List<Carte> getCartesJouees() {
 		return cartesJouees;
 	}
-	
+
 	public boolean isFinDeManche() {
 		return finDeManche;
 	}

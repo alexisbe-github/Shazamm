@@ -146,7 +146,7 @@ public class VueConsole implements ILancementStrategy {
 			if (mana + tour.getMiseJoueur(joueur) > joueur.getManaActuel())
 				System.out.println("Vous n'avez pas assez de mana");
 		} while (mana > 5 || mana < -5 || (mana + tour.getMiseJoueur(joueur) > joueur.getManaActuel()));
-		tour.changerMise(joueur, mana);
+		tour.recyclerMise(joueur, mana);
 	}
 
 	@Override

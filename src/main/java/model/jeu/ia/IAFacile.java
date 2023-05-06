@@ -48,7 +48,7 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		int miseRecyclage = Utils.genererEntier(-5, 6);
-		tour.changerMise(joueur, miseRecyclage);
+		tour.recyclerMise(joueur, miseRecyclage);
 	}
 
 	@Override

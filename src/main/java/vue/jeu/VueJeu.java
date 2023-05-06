@@ -260,6 +260,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		barreMana.setValue(100);
 		setConstraints(1, 0, 0, 7, c);
 		getContentPane().add(barreMana, c);
+		this.setResizable(true);
 	}
 
 	private void updateCartesJouees() {
@@ -761,7 +762,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				choix = Integer.parseInt(saisieManaRecyclage.getText());
-				tour.changerMise(joueur, choix);
+				tour.recyclerMise(joueur, choix);
 				jd.dispose();
 			}
 
