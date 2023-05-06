@@ -233,7 +233,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
 		saisieMana = new JTextField("1", 10);
-		new TexteFantome(saisieMana, "Entrer la mise…");
 
 		saisieMana.addKeyListener(new ControleurMana(saisieMana, boutonJouer, this));
 
@@ -260,7 +259,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		barreMana.setValue(100);
 		setConstraints(1, 0, 0, 7, c);
 		getContentPane().add(barreMana, c);
-		this.setResizable(true);
 	}
 
 	private void updateCartesJouees() {
@@ -287,14 +285,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		if (tourCourant.isFinDeManche()) {
 			text += "Fin de manche, les sorciers sont remis à 3 cases du mur, les autres cartes jouées sont défaussées.";
 		} else {
-			if (tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0) {
+			if ((tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0)) {
 				if(tourCourant.getManaRestantRouge() == 0 && tourCourant.getManaRestantVert() == 0) {
 					text += "Les deux sorciers n'ont plus de mana, le mur de feu se replace donc au milieu des deux joueurs";
 				}else {
 					if(tourCourant.getManaRestantRouge()==0) {
-						text += "Le sorcier rouge n'a plus de mana, le mur de feu s'est donc dirigé vers lui la nouvelle manche est lancée!";
+						text += "Le sorcier rouge n'a plus de mana, le mur de feu s'est donc dirigé vers lui et la nouvelle manche est lancée!";
 					}else {
-						text += "Le sorcier vert n'a plus de mana, le mur de feu s'est donc dirigé vers lui la nouvelle manche est lancée!";
+						text += "Le sorcier vert n'a plus de mana, le mur de feu s'est donc dirigé vers lui et la nouvelle manche est lancée!";
 					}
 				}
 			} else {
