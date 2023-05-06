@@ -187,7 +187,9 @@ public class Partie {
 		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			pcs.firePropertyChange("property","x","y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			pcs.firePropertyChange("property","x","y");
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
@@ -201,7 +203,6 @@ public class Partie {
 				this.lancerNouvelleManche();
 			}
 			printPossibleGagnant();
-			pcs.firePropertyChange("property","x","y");
 		}
 
 	}

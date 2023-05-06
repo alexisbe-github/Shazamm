@@ -58,6 +58,8 @@ public class Tour {
 			this.cartesJoueesVert.add(carteAJouer);
 			joueur.retirerCarteDeLaMain(carteAJouer);
 		}
+		this.cartesJouees.add(carteAJouer);
+		this.trierCartesJouees();
 	}
 
 	/**
@@ -118,10 +120,6 @@ public class Tour {
 	 * Joue les cartes en jeu en fonction de leur numéro de carte
 	 */
 	private void jouerTourDesCartes() {
-		cartesJouees.addAll(this.cartesJoueesRouge);
-		cartesJouees.addAll(this.cartesJoueesVert);
-		this.trierCartesJouees();
-
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
 		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
@@ -193,16 +191,16 @@ public class Tour {
 	}
 
 	/**
-	 * Effet carte 10
-	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
+	 * Effet carte 10 Double le déplacement du mur dans le sens dans lequel il doit
+	 * avancer
 	 */
 	public void doubleDeplacementMur() {
 		deplacementMur *= 2;
 	}
 
 	/**
-	 * Effet carte 9
-	 * Inverse le déplacement du mur dans le sens opposé où il devait avancer
+	 * Effet carte 9 Inverse le déplacement du mur dans le sens opposé où il devait
+	 * avancer
 	 */
 	public void inverserDeplacementMur() {
 		deplacementMur *= -1;
@@ -271,7 +269,7 @@ public class Tour {
 	public void setMiseJoueurVert(int mise) {
 		this.miseJoueurVert = mise;
 	}
-	
+
 	public void setMiseJoueurRouge(int mise) {
 		this.miseJoueurRouge = mise;
 	}
@@ -307,10 +305,9 @@ public class Tour {
 	public List<Carte> getCartesJoueesRouge() {
 		return cartesJoueesRouge;
 	}
-	
+
 	public List<Carte> getCartesJouees() {
 		return cartesJouees;
 	}
-
 
 }
