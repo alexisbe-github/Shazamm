@@ -155,9 +155,7 @@ public class Tour {
 			// déplacement
 			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1)
 				this.calculDeplacementMur();
-
 		}
-		cartesJouees.clear();
 	}
 
 	private void trierCartesJouees() {
@@ -309,5 +307,10 @@ public class Tour {
 	public List<Carte> getCartesJoueesRouge() {
 		return cartesJoueesRouge;
 	}
+	
+	public List<Carte> getCartesJouees() {
+		return cartesJouees;
+	}
+
 
 }

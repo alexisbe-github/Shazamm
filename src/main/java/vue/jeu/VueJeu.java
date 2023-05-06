@@ -60,7 +60,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	private Joueur joueur;
 	private Partie partie;
-	private JPanel panelLogo, panelPont, panelSorciers, panelJeu, panelMain, panelAction;
+	private JPanel panelLogo, panelPont, panelSorciers, panelJeu, panelMain, panelAction, panelCartesJouees;
 	private JProgressBar barreMana;
 	private JTextField saisieMana;
 	private JButton boutonJouer;
@@ -98,12 +98,17 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo.setBackground(Color.BLACK);
 
 		setConstraints(1, 0, 0, 0, c);
-		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à droite
+		JLabel labelSorcier = new JLabel(
+				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + " - "
+						+ joueur.getNom() + "</b></html>");
+		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, 20));
+		labelSorcier.setForeground(Color.LIGHT_GRAY);
+		panelLogo.add(labelSorcier, c); // Contraint le logo à se déplacer à droite
 
 		setConstraints(0, 0, 1, 0, c);
 		panelLogo.add(logo, c); // Logo centré
 
-		setConstraints(1, 0, 2, 0, c);
+		setConstraints(1, 0, 1, 0, c);
 		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
 
 		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), 290, 85));
@@ -120,11 +125,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setConstraints(0, 0, 0, 1, c);
 		labelInfos.setForeground(Color.LIGHT_GRAY);
 		getContentPane().add(labelInfos, c);
-		
-		//Label Timer
+
+		// Label Timer
 		setConstraints(0, 0, 0, 2, c);
 		timer.setHorizontalAlignment(JLabel.CENTER);
-		getContentPane().add(timer,c);
+		getContentPane().add(timer, c);
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
@@ -160,44 +165,57 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setConstraints(1, 0.5, 0, 3, c);
 		getContentPane().add(panelJeu, c);
 
+		// Affichage des cartes jouées
+		panelCartesJouees = new JPanel();
+		JScrollPane scrollPaneCartesJouees = new JScrollPane(panelCartesJouees);
+		panelCartesJouees.setBackground(Color.BLACK);
+		scrollPaneCartesJouees.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneCartesJouees.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		setConstraints(1, 0, 0, 4, c);
+		getContentPane().add(panelCartesJouees);
+
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
 		JScrollPane scrollPaneCartes = new JScrollPane(panelMain);
-        panelMain.setBackground(Color.BLACK);
-        scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        this.paintMain();
-        setConstraints(1, 0, 0, 4, c);
-        c.fill = GridBagConstraints.BOTH;
-        
-        //Configuration du scrollPane permettant de scroller pour parcourir les cartes lorsqu'il y en a trop
-        scrollPaneCartes.setPreferredSize(new Dimension(200,280));
-        scrollPaneCartes.setBorder(BorderFactory.createEmptyBorder());
-        scrollPaneCartes.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
-        	@Override
-        	protected void configureScrollBarColors() {
-        		this.thumbColor=Color.GRAY;
-        		this.trackColor=Color.BLACK;
-        	}
-        	protected JButton createEmptyButton() {
-        		JButton zero = new JButton("zero button");
-        		Dimension dim = new Dimension(0,0);
-        		zero.setPreferredSize(dim);
-        		zero.setMinimumSize(dim);
-        		zero.setMaximumSize(dim);
-        		return zero;
-        	}
-        	@Override
-        	protected JButton createDecreaseButton(int orientation) {
-        		return createEmptyButton();
-        	}
-        	@Override
-        	protected JButton createIncreaseButton(int orientation) {
-        		return createEmptyButton();
-        	}
-        });
-        scrollPaneCartes.getHorizontalScrollBar().setPreferredSize(new Dimension(0,10));
-        getContentPane().add(scrollPaneCartes, c);
+		panelMain.setBackground(Color.BLACK);
+		scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		this.paintMain();
+		setConstraints(1, 0, 0, 5, c);
+		c.fill = GridBagConstraints.BOTH;
+
+		// Configuration du scrollPane permettant de scroller pour parcourir les cartes
+		// lorsqu'il y en a trop
+		scrollPaneCartes.setPreferredSize(new Dimension(200, 280));
+		scrollPaneCartes.setBorder(BorderFactory.createEmptyBorder());
+		scrollPaneCartes.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+			@Override
+			protected void configureScrollBarColors() {
+				this.thumbColor = Color.GRAY;
+				this.trackColor = Color.BLACK;
+			}
+
+			protected JButton createEmptyButton() {
+				JButton zero = new JButton("zero button");
+				Dimension dim = new Dimension(0, 0);
+				zero.setPreferredSize(dim);
+				zero.setMinimumSize(dim);
+				zero.setMaximumSize(dim);
+				return zero;
+			}
+
+			@Override
+			protected JButton createDecreaseButton(int orientation) {
+				return createEmptyButton();
+			}
+
+			@Override
+			protected JButton createIncreaseButton(int orientation) {
+				return createEmptyButton();
+			}
+		});
+		scrollPaneCartes.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+		getContentPane().add(scrollPaneCartes, c);
 
 		// Affichage du panel d'actions
 		panelAction = new JPanel();
@@ -222,7 +240,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
 		panelAction.add(labelManaAdversaire);
-		setConstraints(1, 0, 0, 5, c);
+		setConstraints(1, 0, 0, 6, c);
 		getContentPane().add(panelAction, c);
 
 		// Affichage du mana
@@ -233,8 +251,25 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		barreMana
 				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
-		setConstraints(1, 0, 0, 6, c);
+		setConstraints(1, 0, 0, 7, c);
 		getContentPane().add(barreMana, c);
+	}
+
+	private void updateCartesJouees() {
+		if(partie.getMancheCourante().getNombreTours()>1) {
+		List<Carte> cartesJoueesDuTour = partie.getMancheCourante().getTourPrecedent().getCartesJouees();
+		this.panelCartesJouees.removeAll();
+		this.panelCartesJouees.repaint();
+
+		for (int i = 0; i < cartesJoueesDuTour.size(); i++) {
+			Carte c = cartesJoueesDuTour.get(i);
+			JLabel tmp = new JLabel();
+			ImageIcon image = new ImageIcon(c.getPath());
+			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
+			tmp.setHorizontalAlignment(JLabel.CENTER);
+			panelCartesJouees.add(tmp);
+		}
+		}
 	}
 
 	private void updateInfos() {
@@ -493,11 +528,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	 */
 	private String getInfos() {
 		String str = "<html>";
-		str += "      <b>Manche " + this.partie.getNombreManches() + " - ";
-		str += "Tour " + this.partie.getMancheCourante().getNumeroTourCourant() + "<br>";
-		str += "Joueur " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert");
-
-		str += " - " + joueur.getNom() + "</b></html>";
+		str += "<b>Manche " + this.partie.getNombreManches() + " - ";
+		str += "Tour " + this.partie.getMancheCourante().getNumeroTourCourant() + "<br></html>";
 		return str;
 	}
 
@@ -679,10 +711,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 					}
 
 					int saisie = Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar());
-					
+
 					if (saisie < -5 || saisie > 5) {
 						valider.setEnabled(false);
-					} else valider.setEnabled(true);
+					} else
+						valider.setEnabled(true);
 				} catch (NumberFormatException ex) {
 					valider.setEnabled(false);
 				}
@@ -825,6 +858,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.updatePont();
 		this.updateSorciersEtMur();
 		this.reinitialiserTextField("1");
+		this.updateCartesJouees();
 		this.cartesJouees.clear();
 		boutonJouer.setEnabled(true);
 	}
