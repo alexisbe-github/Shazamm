@@ -37,6 +37,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
@@ -162,10 +163,35 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
         scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.paintMain();
         setConstraints(1, 0, 0, 3, c);
-        c.insets = new Insets(5, 10, 5, 10);
         c.fill = GridBagConstraints.BOTH;
+        
+        //Configuration du scrollPane permettant de scroller pour parcourir les cartes lorsqu'il y en a trop
         scrollPaneCartes.setPreferredSize(new Dimension(200,280));
         scrollPaneCartes.setBorder(BorderFactory.createEmptyBorder());
+        scrollPaneCartes.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+        	@Override
+        	protected void configureScrollBarColors() {
+        		this.thumbColor=Color.GRAY;
+        		this.trackColor=Color.BLACK;
+        	}
+        	protected JButton createEmptyButton() {
+        		JButton zero = new JButton("zero button");
+        		Dimension dim = new Dimension(0,0);
+        		zero.setPreferredSize(dim);
+        		zero.setMinimumSize(dim);
+        		zero.setMaximumSize(dim);
+        		return zero;
+        	}
+        	@Override
+        	protected JButton createDecreaseButton(int orientation) {
+        		return createEmptyButton();
+        	}
+        	@Override
+        	protected JButton createIncreaseButton(int orientation) {
+        		return createEmptyButton();
+        	}
+        });
+        scrollPaneCartes.getHorizontalScrollBar().setPreferredSize(new Dimension(0,10));
         getContentPane().add(scrollPaneCartes, c);
 
 		// Affichage du panel d'actions
