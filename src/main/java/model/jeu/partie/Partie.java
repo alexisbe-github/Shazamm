@@ -1,12 +1,9 @@
 package main.java.model.jeu.partie;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -20,7 +17,8 @@ public class Partie {
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
 	private List<Manche> listeManche;
-	private boolean partieFinie;
+	private boolean partieFinie, joueurPousse;
+
 	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
@@ -35,6 +33,7 @@ public class Partie {
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
+		this.joueurPousse = false;
 		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
 	}
@@ -196,7 +195,9 @@ public class Partie {
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
+				this.joueurPousse = true;
 			} else {
+				this.joueurPousse = false;
 				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
 				// joueur avec 0 de mana
 				if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
@@ -323,6 +324,10 @@ public class Partie {
 
 	public int getNombreManches() {
 		return this.listeManche.size();
+	}
+
+	public boolean isJoueurPousse() {
+		return joueurPousse;
 	}
 
 }

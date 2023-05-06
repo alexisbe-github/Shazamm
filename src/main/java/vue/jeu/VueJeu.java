@@ -173,7 +173,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelInfosTour.setOpaque(true);
 		labelInfosTour.setBackground(Color.BLACK);
 		labelInfosTour.setHorizontalAlignment(JLabel.CENTER);
-		labelInfosTour.setFont(new Font("Verdana", Font.PLAIN, 15));
+		labelInfosTour.setFont(new Font("Verdana", Font.PLAIN, 13));
 		labelInfosTour.setForeground(Color.WHITE);
 		panelTour.add(labelInfosTour, BorderLayout.NORTH);
 		panelTour.add(panelCartesJouees, BorderLayout.CENTER);
@@ -285,13 +285,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		if (tourCourant.isFinDeManche()) {
 			text += "Fin de manche, les sorciers sont remis à 3 cases du mur, les autres cartes jouées sont défaussées.";
 		} else {
-			if ((tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0)) {
-				if(tourCourant.getManaRestantRouge() == 0 && tourCourant.getManaRestantVert() == 0) {
+			if ((tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0)
+					&& !partie.isJoueurPousse()) {
+				if (tourCourant.getManaRestantRouge() == 0 && tourCourant.getManaRestantVert() == 0) {
 					text += "Les deux sorciers n'ont plus de mana, le mur de feu se replace donc au milieu des deux joueurs";
-				}else {
-					if(tourCourant.getManaRestantRouge()==0) {
+				} else {
+					if (tourCourant.getManaRestantRouge() == 0) {
 						text += "Le sorcier rouge n'a plus de mana, le mur de feu s'est donc dirigé vers lui et la nouvelle manche est lancée!";
-					}else {
+					} else {
 						text += "Le sorcier vert n'a plus de mana, le mur de feu s'est donc dirigé vers lui et la nouvelle manche est lancée!";
 					}
 				}
@@ -309,6 +310,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 					} else {
 						text += tourCourant.getDeplacementMur();
 					}
+				}
+				if (partie.isJoueurPousse()) {
+					text += " et un joueur est poussé par le mur, la nouvelle manche est lancée!";
 				}
 			}
 		}
