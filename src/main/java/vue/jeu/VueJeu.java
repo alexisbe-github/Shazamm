@@ -48,7 +48,6 @@ import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
-import main.java.utils.TexteFantome;
 import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 
@@ -84,7 +83,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize.width / 2, screenSize.height);
+		setSize(screenSize.width / 2, screenSize.height*9/10);
 		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
