@@ -1,7 +1,7 @@
 package main.java.vue.jeu;
 
 import java.awt.Color;
-import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,7 +13,8 @@ public class Chrono extends JLabel{
     private int tempsRestant;
 
     public Chrono(int sec) {
-    	Chrono.this.setText(String.format("%02d:%02d", tempsRestant/60, tempsRestant%60));
+    	this.setFont(new Font("Verdana", Font.PLAIN, 20));
+    	this.setText(String.format("%02d:%02d", tempsRestant/60, tempsRestant%60));
     	tempsRestant=sec;
         this.setVisible(true);
         this.init();

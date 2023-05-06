@@ -120,6 +120,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setConstraints(0, 0, 0, 1, c);
 		labelInfos.setForeground(Color.LIGHT_GRAY);
 		getContentPane().add(labelInfos, c);
+		
+		//Label Timer
+		setConstraints(0, 0, 0, 2, c);
+		timer.setHorizontalAlignment(JLabel.CENTER);
+		getContentPane().add(timer,c);
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
@@ -152,7 +157,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setComponentZOrder(panelPont, 1);
 
 		c.insets = new Insets(0, 10, 0, 10);
-		setConstraints(1, 0.5, 0, 2, c);
+		setConstraints(1, 0.5, 0, 3, c);
 		getContentPane().add(panelJeu, c);
 
 		// Affichage des cartes de la main du joueur
@@ -162,7 +167,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
         scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         this.paintMain();
-        setConstraints(1, 0, 0, 3, c);
+        setConstraints(1, 0, 0, 4, c);
         c.fill = GridBagConstraints.BOTH;
         
         //Configuration du scrollPane permettant de scroller pour parcourir les cartes lorsqu'il y en a trop
@@ -212,13 +217,12 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelManaAdversaire = new JLabel();
 		labelManaAdversaire.setForeground(Color.LIGHT_GRAY);
 		this.updateManaAdversaire();
-		panelAction.add(timer);
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
 		panelAction.add(labelManaAdversaire);
-		setConstraints(1, 0, 0, 4, c);
+		setConstraints(1, 0, 0, 5, c);
 		getContentPane().add(panelAction, c);
 
 		// Affichage du mana
@@ -229,7 +233,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		barreMana
 				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
-		setConstraints(1, 0, 0, 5, c);
+		setConstraints(1, 0, 0, 6, c);
 		getContentPane().add(barreMana, c);
 	}
 
