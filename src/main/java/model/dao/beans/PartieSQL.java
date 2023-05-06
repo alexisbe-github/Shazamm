@@ -44,7 +44,7 @@ public class PartieSQL implements Serializable {
 	 * 
 	 * @param id_joueur_1 L'identifiant du joueur 1
 	 */
-	public void setIdPartie(long id_joueur_1) {
+	public void setIdJoueur1(long id_joueur_1) {
 		this.id_joueur_1 = id_joueur_1;
 	}
 	

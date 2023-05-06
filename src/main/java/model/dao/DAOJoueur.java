@@ -162,7 +162,7 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public void supprimer(JoueurSQL joueur) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + JOUEUR + " WHERE id = ?;")) {
+				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + JOUEUR + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, joueur.getId());
 			pstmt.execute();
 		} catch (SQLException e) {
