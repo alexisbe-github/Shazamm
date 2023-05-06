@@ -97,13 +97,14 @@ public class Tour {
 
 		if (!this.harpagonRouge) {
 			joueurRouge.depenserMana(this.miseJoueurRouge);
-			joueurRouge.verifierMana();
 		}
 
 		if (!this.harpagonVert) {
 			joueurVert.depenserMana(this.miseJoueurVert);
-			joueurVert.verifierMana();
 		}
+		
+		joueurRouge.verifierMana();
+		joueurVert.verifierMana();
 
 		if (this.finDeManche)
 			this.deplacementMur = 0;

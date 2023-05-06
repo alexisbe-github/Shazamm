@@ -77,7 +77,6 @@ public class Joueur {
 	 */
 	public void ajouterMana(int ajout) {
 		manaActuel += ajout;
-
 	}
 
 	/**
