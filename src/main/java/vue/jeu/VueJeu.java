@@ -345,29 +345,31 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
 			JLabel tmp = new JLabel();
 			String source = this.getImageCasePont(i);
-			tmp.setIcon(new ImageIcon(source));
+			ImageIcon image = new ImageIcon(source);
+			
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/25, this.getHeight()/15));
 			panelPont.add(tmp, c.gridx);
 			c.gridx++;
 
 			// Empêche les pièces du pont de se séparer les unes des autres
-			panelPont.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					int panelWidth = panelPont.getWidth();
-					int panelHeight = panelPont.getHeight();
-					int imageWidth = tmp.getIcon().getIconWidth();
-					int imageHeight = tmp.getIcon().getIconHeight();
-					int imageCount = panelPont.getComponentCount();
-
-					int marginWidth = (panelWidth - imageCount * imageWidth) / 2;
-					int marginHeight = (panelHeight - imageHeight) / 2;
-
-					for (int i = 0; i < imageCount; i++) {
-						JLabel imageLabel = (JLabel) panelPont.getComponent(i);
-						imageLabel.setBounds(marginWidth + i * imageWidth, marginHeight, imageWidth, imageHeight);
-					}
-				}
-			});
+//			panelPont.addComponentListener(new ComponentAdapter() {
+//				@Override
+//				public void componentResized(ComponentEvent e) {
+//					int panelWidth = panelPont.getWidth();
+//					int panelHeight = panelPont.getHeight();
+//					int imageWidth = tmp.getIcon().getIconWidth();
+//					int imageHeight = tmp.getIcon().getIconHeight();
+//					int imageCount = panelPont.getComponentCount();
+//
+//					int marginWidth = (panelWidth - imageCount * imageWidth) / 2;
+//					int marginHeight = (panelHeight - imageHeight) / 2;
+//
+//					for (int i = 0; i < imageCount; i++) {
+//						JLabel imageLabel = (JLabel) panelPont.getComponent(i);
+//						imageLabel.setBounds(marginWidth + i * imageWidth, marginHeight, imageWidth, imageHeight);
+//					}
+//				}
+//			});
 
 		}
 	}
@@ -389,7 +391,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private void updatePont() {
 		for (int i = 0; i < panelPont.getComponentCount(); i++) {
 			JLabel tmp = (JLabel) panelPont.getComponent(i);
-			tmp.setIcon(new ImageIcon(this.getImageCasePont(i)));
+			ImageIcon image = new ImageIcon(this.getImageCasePont(i));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/25, this.getHeight()/15));
+			
 		}
 	}
 
@@ -406,7 +410,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setConstraints(1, 0.5, 0, 1, c);
 
 		ImageIcon temp = new ImageIcon(partie.getJoueurRouge().getPath());
-		BufferedImage bi = new BufferedImage(temp.getIconWidth(), temp.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bi = new BufferedImage(this.getWidth()/25, this.getHeight()/15, BufferedImage.TYPE_INT_ARGB);
 		ImageIcon icon = new ImageIcon(bi);
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
 			c.gridx = i;
