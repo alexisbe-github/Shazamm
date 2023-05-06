@@ -10,31 +10,28 @@ import javax.swing.Timer;
 
 public class Chrono extends JLabel{
     private Timer timer;
-    private String content = "00:00:00";
-    private int heures, minutes, secondes;
+    private int tempsRestant;
 
-    public Chrono() {
+    public Chrono(int sec) {
+    	Chrono.this.setText(String.format("%02d:%02d", tempsRestant/60, tempsRestant%60));
+    	tempsRestant=sec;
         this.setVisible(true);
         this.init();
-        this.setText(content);
         this.setForeground(Color.WHITE);
     }
 
     private void init() {
         this.timer = new Timer(1000, new ActionListener() {
-        	
             @Override
             public void actionPerformed(ActionEvent e) {
-                secondes++;
-                if (secondes >= 60) {
-                    secondes = 0;
-                    minutes++;
+                tempsRestant--;
+                if (tempsRestant==0) {
+                    timer.stop();
+                }else {
+                	int minutes = tempsRestant/60;
+                	int secondes = tempsRestant%60;
+                	Chrono.this.setText(String.format("%02d:%02d", minutes, secondes));
                 }
-                if (minutes >= 60) {
-                    minutes = 0;
-                    heures++;
-                }
-                Chrono.this.setText(String.format("%02d:%02d:%02d", heures, minutes, secondes));
             }
         });
         

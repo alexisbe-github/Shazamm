@@ -68,7 +68,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JLabel labelManaAdversaire, labelInfos;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
-	private Chrono timer = new Chrono();
+	private Chrono timer = new Chrono(10);
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
