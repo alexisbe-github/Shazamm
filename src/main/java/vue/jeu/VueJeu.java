@@ -460,7 +460,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/6, this.getHeight()/4));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/6, this.getHeight()/5));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			// tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les
 			// borders en constantes ?
