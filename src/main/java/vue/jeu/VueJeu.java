@@ -168,7 +168,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JPanel panelTour = new JPanel(new BorderLayout());
 		panelCartesJouees = new JPanel();
 		JLabel invisible = new JLabel();
-		invisible.setSize(130,170);
+		invisible.setSize(this.getWidth()/8, this.getWidth()/6);
 		BufferedImage bi = new BufferedImage(this.getWidth()/9, this.getWidth()/7, BufferedImage.TYPE_INT_ARGB);
 		invisible.setIcon(new ImageIcon(bi));
 		panelCartesJouees.add(invisible);
@@ -277,7 +277,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = cartesJoueesDuTour.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/9, this.getWidth()/7));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/9, this.getHeight()/7));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
@@ -460,7 +460,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/6, this.getWidth()/4));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/6, this.getHeight()/4));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			// tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les
 			// borders en constantes ?
