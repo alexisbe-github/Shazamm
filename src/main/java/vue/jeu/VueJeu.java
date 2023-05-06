@@ -172,7 +172,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		scrollPaneCartesJouees.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCartesJouees.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		setConstraints(1, 0, 0, 4, c);
-		getContentPane().add(panelCartesJouees);
+		getContentPane().add(panelCartesJouees,c);
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
