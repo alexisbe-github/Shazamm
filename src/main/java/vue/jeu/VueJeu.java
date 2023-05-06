@@ -285,21 +285,32 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private void updateLabelInfosTour(Tour tourCourant) {
 		String text = "<html>";
 		if (tourCourant.isFinDeManche()) {
-			text += "Fin de manche, les sorciers sont remis à 3 cases du mur";
+			text += "Fin de manche, les sorciers sont remis à 3 cases du mur, les autres cartes jouées sont défaussées.";
 		} else {
-
-			text += "Mises:<font color=red>" + tourCourant.getMiseJoueurRouge() + "</font> - <font color=green>"
-					+ tourCourant.getMiseJoueurVert() + "</font>";
-			text += " / Attaques:<font color=red>" + tourCourant.getAttaqueJoueurRouge()
-					+ "</font> - <font color=green>" + tourCourant.getAttaqueJoueurVert() + "</font>";
-			text += " / Déplacement du mur: ";
-			if (tourCourant.getDeplacementMur() > 0) {
-				text += "<font color=red>" + tourCourant.getDeplacementMur() + "</font>";
+			if (tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0) {
+				if(tourCourant.getManaRestantRouge() == 0 && tourCourant.getManaRestantVert() == 0) {
+					text += "Les deux sorciers n'ont plus de mana, le mur de feu se replace donc au milieu des deux joueurs";
+				}else {
+					if(tourCourant.getManaRestantRouge()==0) {
+						text += "Le sorcier rouge n'a plus de mana, le mur de feu s'est donc dirigé vers lui la nouvelle manche est lancée!";
+					}else {
+						text += "Le sorcier vert n'a plus de mana, le mur de feu s'est donc dirigé vers lui la nouvelle manche est lancée!";
+					}
+				}
 			} else {
-				if (tourCourant.getDeplacementMur() < 0) {
-					text += "<font color=green>" + tourCourant.getDeplacementMur() + "</font>";
+				text += "Mises:<font color=red>" + tourCourant.getMiseJoueurRouge() + "</font> - <font color=green>"
+						+ tourCourant.getMiseJoueurVert() + "</font>";
+				text += " / Attaques:<font color=red>" + tourCourant.getAttaqueJoueurRouge()
+						+ "</font> - <font color=green>" + tourCourant.getAttaqueJoueurVert() + "</font>";
+				text += " / Déplacement du mur: ";
+				if (tourCourant.getDeplacementMur() > 0) {
+					text += "<font color=red>" + tourCourant.getDeplacementMur() + "</font>";
 				} else {
-					text += tourCourant.getDeplacementMur();
+					if (tourCourant.getDeplacementMur() < 0) {
+						text += "<font color=green>" + tourCourant.getDeplacementMur() + "</font>";
+					} else {
+						text += tourCourant.getDeplacementMur();
+					}
 				}
 			}
 		}

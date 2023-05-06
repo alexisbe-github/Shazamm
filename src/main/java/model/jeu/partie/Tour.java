@@ -14,6 +14,8 @@ public class Tour {
 
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
+	private int manaRestantRouge, manaRestantVert;
+
 	private int deplacementMur;
 	private boolean mutisme, finDeManche;
 
@@ -106,6 +108,10 @@ public class Tour {
 		if (this.finDeManche)
 			this.deplacementMur = 0;
 
+		
+		this.manaRestantRouge = joueurRouge.getManaActuel();
+		this.manaRestantVert = joueurVert.getManaActuel();
+		
 		return this.deplacementMur;
 	}
 
@@ -326,6 +332,14 @@ public class Tour {
 
 	public boolean isFinDeManche() {
 		return finDeManche;
+	}
+	
+	public int getManaRestantRouge() {
+		return manaRestantRouge;
+	}
+
+	public int getManaRestantVert() {
+		return manaRestantVert;
 	}
 
 }
