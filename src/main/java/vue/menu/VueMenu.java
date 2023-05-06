@@ -27,6 +27,8 @@ public class VueMenu extends JFrame {
 	 * Le bouton qui permet de lancer une partie
 	 */
 	private final JButton boutonJouer = new JButton("Jouer");
+	
+	private final JButton boutonJouerIA = new JButton("Jouer contre l'ordinateur");
 	/**
 	 * Le bouton qui permet d'afficher le classement des meilleurs joueurs
 	 */
@@ -80,20 +82,26 @@ public class VueMenu extends JFrame {
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 2;
-		panel.add(boutonClassement, c);
+		panel.add(boutonJouerIA, c);
 		
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 3;
-		panel.add(boutonHistorique, c);
+		panel.add(boutonClassement, c);
 		
 		c.weightx = 1;
 		c.gridx = 0;
 		c.gridy = 4;
+		panel.add(boutonHistorique, c);
+		
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 5;
 		panel.add(boutonOptions, c);
 		
 		ControleurMenu cm = new ControleurMenu(this);
 		boutonJouer.addActionListener(cm);
+		boutonJouerIA.addActionListener(cm);
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 		

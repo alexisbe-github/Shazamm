@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -35,8 +34,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
@@ -67,7 +68,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JLabel labelManaAdversaire, labelInfos;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
-	private Chrono timer = new Chrono();
+	private Chrono timer = new Chrono(10);
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -119,6 +120,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setConstraints(0, 0, 0, 1, c);
 		labelInfos.setForeground(Color.LIGHT_GRAY);
 		getContentPane().add(labelInfos, c);
+		
+		//Label Timer
+		setConstraints(0, 0, 0, 2, c);
+		timer.setHorizontalAlignment(JLabel.CENTER);
+		getContentPane().add(timer,c);
 
 		// Affichage du panneau contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
@@ -151,17 +157,47 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setComponentZOrder(panelPont, 1);
 
 		c.insets = new Insets(0, 10, 0, 10);
-		setConstraints(1, 0.5, 0, 2, c);
+		setConstraints(1, 0.5, 0, 3, c);
 		getContentPane().add(panelJeu, c);
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
-		panelMain.setBackground(Color.BLACK);
-		this.paintMain();
-		setConstraints(1, 0, 0, 3, c);
-		c.insets = new Insets(5, 10, 5, 10);
-		c.fill = GridBagConstraints.BOTH;
-		getContentPane().add(panelMain, c);
+		JScrollPane scrollPaneCartes = new JScrollPane(panelMain);
+        panelMain.setBackground(Color.BLACK);
+        scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        this.paintMain();
+        setConstraints(1, 0, 0, 4, c);
+        c.fill = GridBagConstraints.BOTH;
+        
+        //Configuration du scrollPane permettant de scroller pour parcourir les cartes lorsqu'il y en a trop
+        scrollPaneCartes.setPreferredSize(new Dimension(200,280));
+        scrollPaneCartes.setBorder(BorderFactory.createEmptyBorder());
+        scrollPaneCartes.getHorizontalScrollBar().setUI(new BasicScrollBarUI() {
+        	@Override
+        	protected void configureScrollBarColors() {
+        		this.thumbColor=Color.GRAY;
+        		this.trackColor=Color.BLACK;
+        	}
+        	protected JButton createEmptyButton() {
+        		JButton zero = new JButton("zero button");
+        		Dimension dim = new Dimension(0,0);
+        		zero.setPreferredSize(dim);
+        		zero.setMinimumSize(dim);
+        		zero.setMaximumSize(dim);
+        		return zero;
+        	}
+        	@Override
+        	protected JButton createDecreaseButton(int orientation) {
+        		return createEmptyButton();
+        	}
+        	@Override
+        	protected JButton createIncreaseButton(int orientation) {
+        		return createEmptyButton();
+        	}
+        });
+        scrollPaneCartes.getHorizontalScrollBar().setPreferredSize(new Dimension(0,10));
+        getContentPane().add(scrollPaneCartes, c);
 
 		// Affichage du panel d'actions
 		panelAction = new JPanel();
@@ -181,13 +217,12 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelManaAdversaire = new JLabel();
 		labelManaAdversaire.setForeground(Color.LIGHT_GRAY);
 		this.updateManaAdversaire();
-		panelAction.add(timer);
 		panelAction.add(boutonJouer);
 		panelAction.add(historique);
 		panelAction.add(mise);
 		panelAction.add(saisieMana);
 		panelAction.add(labelManaAdversaire);
-		setConstraints(1, 0, 0, 4, c);
+		setConstraints(1, 0, 0, 5, c);
 		getContentPane().add(panelAction, c);
 
 		// Affichage du mana
@@ -198,7 +233,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		barreMana
 				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
-		setConstraints(1, 0, 0, 5, c);
+		setConstraints(1, 0, 0, 6, c);
 		getContentPane().add(barreMana, c);
 	}
 
@@ -588,6 +623,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			public void actionPerformed(ActionEvent e) {
 				Carte carteAVoler = cartes.get(choix);
 				carteAVoler.changerDetenteurCarte(joueur);
+				tour.activerClone(carteAVoler);
 				fenetreClone.dispose();
 			}
 
