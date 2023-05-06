@@ -33,7 +33,8 @@ public class DAOManche extends DAO<MancheSQL> {
 	 */
 	private final String ID = "id";
 	/**
-	 * Colonne <code><i>id_partie</i></code>, correspondant à l'identifiant de la partie.
+	 * Colonne <code><i>id_partie</i></code>, correspondant à l'identifiant de la
+	 * partie.
 	 */
 	private final String ID_PARTIE = "id_partie";
 
@@ -75,32 +76,33 @@ public class DAOManche extends DAO<MancheSQL> {
 	 */
 	@Override
 	public MancheSQL creer(MancheSQL manche) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt1 = connexion
-						.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES "
-								+ "WHERE table_name = '" + MANCHE + "'")) {
-			pstmt1.execute();
+		try (Connection connexion = this.connexion.getConnexion()) {
+			try (PreparedStatement pstmt1 = connexion
+					.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '"
+							+ MANCHE + "'")) {
+				pstmt1.execute();
 
-			try (ResultSet rsid = pstmt1.getResultSet()) {
-				if (rsid.next()) {
-					long id = rsid.getLong(1);
-					manche.setId(id);
+				try (ResultSet rsid = pstmt1.getResultSet()) {
+					if (rsid.next()) {
+						long id = rsid.getLong(1);
+						manche.setId(id);
+					}
 				}
+				pstmt1.close();
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
 			}
-			pstmt1.close();
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt2 = connexion
-						.prepareStatement("INSERT INTO " + MANCHE + " VALUES (?, ?);")) {
-			pstmt2.setLong(1, manche.getId());
-			pstmt2.setLong(2, manche.getIdPartie());
-			pstmt2.execute();
+			try (PreparedStatement pstmt2 = connexion.prepareStatement("INSERT INTO " + MANCHE + " VALUES (?, ?);")) {
+				pstmt2.setLong(1, manche.getId());
+				pstmt2.setLong(2, manche.getIdPartie());
+				pstmt2.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		} finally {
 			this.connexion.fermerConnexion();
 		}
@@ -116,7 +118,8 @@ public class DAOManche extends DAO<MancheSQL> {
 	@Override
 	public MancheSQL maj(MancheSQL manche) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + MANCHE + " SET " + ID_PARTIE + " = ? WHERE " + ID + " = ?")) {
+				PreparedStatement pstmt = connexion
+						.prepareStatement("UPDATE " + MANCHE + " SET " + ID_PARTIE + " = ? WHERE " + ID + " = ?")) {
 			pstmt.setLong(1, manche.getIdPartie());
 			pstmt.setLong(2, manche.getId());
 			pstmt.execute();
@@ -136,7 +139,8 @@ public class DAOManche extends DAO<MancheSQL> {
 	@Override
 	public void supprimer(MancheSQL manche) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + MANCHE + " WHERE " + ID + " = ?;")) {
+				PreparedStatement pstmt = connexion
+						.prepareStatement("DELETE FROM " + MANCHE + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, manche.getId());
 			pstmt.execute();
 		} catch (SQLException e) {
