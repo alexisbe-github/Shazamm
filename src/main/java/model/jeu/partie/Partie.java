@@ -191,7 +191,6 @@ public class Partie {
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
 			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
-
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
