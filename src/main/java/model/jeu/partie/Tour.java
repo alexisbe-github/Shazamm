@@ -16,6 +16,7 @@ public class Tour {
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int deplacementMur;
 	private boolean mutisme, finDeManche;
+
 	private boolean harpagonRouge, harpagonVert;
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
 	private List<Carte> cartesJouees;
@@ -260,6 +261,11 @@ public class Tour {
 	}
 
 	public void setMiseJoueur(Joueur joueur, int mise) {
+		if (mise > joueur.getManaActuel()) {
+			mise = joueur.getManaActuel();
+		}
+		if (mise < 1)
+			mise = 1;
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
 			this.miseJoueurVert = mise;
 		else
@@ -308,6 +314,10 @@ public class Tour {
 
 	public List<Carte> getCartesJouees() {
 		return cartesJouees;
+	}
+	
+	public boolean isFinDeManche() {
+		return finDeManche;
 	}
 
 }

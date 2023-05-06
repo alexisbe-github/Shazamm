@@ -197,14 +197,16 @@ public class Partie {
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
 			} else {
-				this.lancerNouveauTour();
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
+				if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
+					this.deplacerMurDeFeuVersJoueurAvec0Mana();
+					this.lancerNouvelleManche();
+				} else {
+					this.lancerNouveauTour();
+				}
 			}
-			// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
-			// joueur avec 0 de mana
-			if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
-				this.deplacerMurDeFeuVersJoueurAvec0Mana();
-				this.lancerNouvelleManche();
-			}
+
 			pcs.firePropertyChange("property", "x", "y");
 			printPossibleGagnant();
 		}
@@ -284,10 +286,9 @@ public class Partie {
 		if (this.getNombreManches() > 1 && this.getMancheCourante().getNombreTours() == 1) {
 			Manche manchePrecedente = this.listeManche.get(this.getNombreManches() - 2);
 			return manchePrecedente.getTourCourant();
-		} else {
-			if (this.getMancheCourante().getNombreTours() > 1) {
-				return this.getMancheCourante().getTourPrecedent();
-			}
+		}
+		if (this.getMancheCourante().getNombreTours() > 1) {
+			return this.getMancheCourante().getTourPrecedent();
 		}
 		return null;
 

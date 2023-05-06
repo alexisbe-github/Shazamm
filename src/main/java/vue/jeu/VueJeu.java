@@ -264,7 +264,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	private void updateCartesJouees() {
 		Tour tourCourant = partie.getMancheCourante().getTourCourant();
-		if(tourCourant.getMiseJoueurRouge() == 0 && tourCourant.getMiseJoueurVert() == 0) tourCourant = partie.getTourPrecedent();
+		if (tourCourant.getMiseJoueurRouge() == 0 && tourCourant.getMiseJoueurVert() == 0)
+			tourCourant = partie.getTourPrecedent();
 		List<Carte> cartesJoueesDuTour = tourCourant.getCartesJouees();
 		panelCartesJouees.removeAll();
 		panelCartesJouees.repaint();
@@ -282,18 +283,23 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	private void updateLabelInfosTour(Tour tourCourant) {
 		String text = "<html>";
-		text += "Mises:<font color=red>" + tourCourant.getMiseJoueurRouge() + "</font> - <font color=green>"
-				+ tourCourant.getMiseJoueurVert() + "</font>";
-		text += " / Attaques:<font color=red>" + tourCourant.getAttaqueJoueurRouge() + "</font> - <font color=green>"
-				+ tourCourant.getAttaqueJoueurVert() + "</font>";
-		text += " / Déplacement du mur: ";
-		if (tourCourant.getDeplacementMur() > 0) {
-			text += "<font color=red>" + tourCourant.getDeplacementMur() + "</font>";
+		if (tourCourant.isFinDeManche()) {
+			text += "Fin de manche, les sorciers sont remis à 3 cases du mur";
 		} else {
-			if (tourCourant.getDeplacementMur() < 0) {
-				text += "<font color=green>" + tourCourant.getDeplacementMur() + "</font>";
+
+			text += "Mises:<font color=red>" + tourCourant.getMiseJoueurRouge() + "</font> - <font color=green>"
+					+ tourCourant.getMiseJoueurVert() + "</font>";
+			text += " / Attaques:<font color=red>" + tourCourant.getAttaqueJoueurRouge()
+					+ "</font> - <font color=green>" + tourCourant.getAttaqueJoueurVert() + "</font>";
+			text += " / Déplacement du mur: ";
+			if (tourCourant.getDeplacementMur() > 0) {
+				text += "<font color=red>" + tourCourant.getDeplacementMur() + "</font>";
 			} else {
-				text += tourCourant.getDeplacementMur();
+				if (tourCourant.getDeplacementMur() < 0) {
+					text += "<font color=green>" + tourCourant.getDeplacementMur() + "</font>";
+				} else {
+					text += tourCourant.getDeplacementMur();
+				}
 			}
 		}
 		text += "</html>";
