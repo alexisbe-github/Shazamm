@@ -161,7 +161,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setComponentZOrder(panelSorciers, 0); // On met les sorciers au-dessus
 		panelJeu.setComponentZOrder(panelPont, 1);
 
-		//c.insets = new Insets(0, 10, 0, 10);
+		c.insets = new Insets(0, 10, 0, 10);
 		setConstraints(1, 0.5, 0, 3, c);
 		getContentPane().add(panelJeu, c);
 
