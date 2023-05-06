@@ -33,10 +33,10 @@ public class Manche {
 			this.listeTours.add(new Tour(false));
 		}
 	}
-
+	
 	public Tour getTourPrecedent() {
-		if (this.listeTours.size() > 0) {
-			return this.listeTours.get(this.listeTours.size() - 2);
+		if(this.getNombreTours() > 1) {
+			return this.listeTours.get(this.getNombreTours() - 2);
 		}
 		return null;
 	}

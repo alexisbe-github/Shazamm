@@ -65,7 +65,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JTextField saisieMana;
 	private JButton boutonJouer;
 	private JLabel logo = new JLabel();
-	private JLabel labelManaAdversaire, labelInfos;
+	private JLabel labelManaAdversaire, labelInfos, labelInfosTour;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
 	private Chrono timer = new Chrono(10);
@@ -166,13 +166,20 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		getContentPane().add(panelJeu, c);
 
 		// Affichage des cartes jouées
+		JPanel panelTour = new JPanel(new BorderLayout());
 		panelCartesJouees = new JPanel();
-		JScrollPane scrollPaneCartesJouees = new JScrollPane(panelCartesJouees);
 		panelCartesJouees.setBackground(Color.BLACK);
-		scrollPaneCartesJouees.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneCartesJouees.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		labelInfosTour = new JLabel();
+		labelInfosTour.setOpaque(true);
+		labelInfosTour.setBackground(Color.BLACK);
+		labelInfosTour.setHorizontalAlignment(JLabel.CENTER);
+		labelInfosTour.setFont(new Font("Verdana", Font.PLAIN, 13));
+		labelInfosTour.setForeground(Color.WHITE);
+		panelTour.add(labelInfosTour, BorderLayout.NORTH);
+		panelTour.add(panelCartesJouees, BorderLayout.CENTER);
 		setConstraints(1, 0, 0, 4, c);
-		getContentPane().add(panelCartesJouees);
+		c.fill = GridBagConstraints.BOTH;
+		getContentPane().add(panelTour, c);
 
 		// Affichage des cartes de la main du joueur
 		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
@@ -226,7 +233,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JButton historique = new JButton("Historique de la partie");
 		JLabel mise = new JLabel();
 		saisieMana = new JTextField("1", 10);
-		new TexteFantome(saisieMana, "Entrer la mise…");
 
 		saisieMana.addKeyListener(new ControleurMana(saisieMana, boutonJouer, this));
 
@@ -256,10 +262,12 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	}
 
 	private void updateCartesJouees() {
-		if(partie.getMancheCourante().getNombreTours()>1) {
-		List<Carte> cartesJoueesDuTour = partie.getMancheCourante().getTourPrecedent().getCartesJouees();
-		this.panelCartesJouees.removeAll();
-		this.panelCartesJouees.repaint();
+		Tour tourCourant = partie.getMancheCourante().getTourCourant();
+		if (tourCourant.getMiseJoueurRouge() == 0 && tourCourant.getMiseJoueurVert() == 0)
+			tourCourant = partie.getTourPrecedent();
+		List<Carte> cartesJoueesDuTour = tourCourant.getCartesJouees();
+		panelCartesJouees.removeAll();
+		panelCartesJouees.repaint();
 
 		for (int i = 0; i < cartesJoueesDuTour.size(); i++) {
 			Carte c = cartesJoueesDuTour.get(i);
@@ -269,7 +277,47 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
+		this.updateLabelInfosTour(tourCourant);
+	}
+
+	private void updateLabelInfosTour(Tour tourCourant) {
+		String text = "<html>";
+		if (tourCourant.isFinDeManche()) {
+			text += "Fin de manche, les sorciers sont remis à 3 cases du mur, les autres cartes jouées sont défaussées.";
+		} else {
+			if ((tourCourant.getManaRestantRouge() == 0 || tourCourant.getManaRestantVert() == 0)
+					&& !partie.isJoueurPousse()) {
+				if (tourCourant.getManaRestantRouge() == 0 && tourCourant.getManaRestantVert() == 0) {
+					text += "Les deux sorciers n'ont plus de mana, le mur de feu se replace donc au milieu des deux joueurs";
+				} else {
+					if (tourCourant.getManaRestantRouge() == 0) {
+						text += "Le sorcier rouge n'a plus de mana, le mur de feu s'est donc dirigé vers lui et la nouvelle manche est lancée!";
+					} else {
+						text += "Le sorcier vert n'a plus de mana, le mur de feu s'est donc dirigé vers lui et la nouvelle manche est lancée!";
+					}
+				}
+			} else {
+				text += "Mises:<font color=red>" + tourCourant.getMiseJoueurRouge() + "</font> - <font color=green>"
+						+ tourCourant.getMiseJoueurVert() + "</font>";
+				text += " / Attaques:<font color=red>" + tourCourant.getAttaqueJoueurRouge()
+						+ "</font> - <font color=green>" + tourCourant.getAttaqueJoueurVert() + "</font>";
+				text += " / Déplacement du mur: ";
+				if (tourCourant.getDeplacementMur() > 0) {
+					text += "<font color=red>" + tourCourant.getDeplacementMur() + "</font>";
+				} else {
+					if (tourCourant.getDeplacementMur() < 0) {
+						text += "<font color=green>" + tourCourant.getDeplacementMur() + "</font>";
+					} else {
+						text += tourCourant.getDeplacementMur();
+					}
+				}
+				if (partie.isJoueurPousse()) {
+					text += " et un joueur est poussé par le mur, la nouvelle manche est lancée!";
+				}
+			}
 		}
+		text += "</html>";
+		labelInfosTour.setText(text);
 	}
 
 	private void updateInfos() {
@@ -727,7 +775,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				choix = Integer.parseInt(saisieManaRecyclage.getText());
-				tour.changerMise(joueur, choix);
+				tour.recyclerMise(joueur, choix);
 				jd.dispose();
 			}
 

@@ -29,6 +29,9 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 		// on joue entre 0 et le nombre de cartes dans la main
 		int nbCartesAJouer = Utils.genererEntierAvecPoids(0, getMainDuJoueur().size());
 
+		// si mutisme est activé, l'IA ne jouera plus de cartes pendant la manche
+		if(p.getMancheCourante().getMutismeCourant()) nbCartesAJouer = 0;
+		
 		for (int i = 0; i < nbCartesAJouer; i++) {
 			int index = Utils.genererEntier(0, getMainDuJoueur().size());
 			Carte carte = getMainDuJoueur().get(index);
@@ -48,7 +51,7 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		int miseRecyclage = Utils.genererEntier(-5, 6);
-		tour.changerMise(joueur, miseRecyclage);
+		tour.recyclerMise(joueur, miseRecyclage);
 	}
 
 	@Override

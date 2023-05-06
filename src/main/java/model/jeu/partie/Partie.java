@@ -17,7 +17,8 @@ public class Partie {
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
 	private List<Manche> listeManche;
-	private boolean partieFinie;
+	private boolean partieFinie, joueurPousse;
+
 	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
@@ -32,10 +33,11 @@ public class Partie {
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
+		this.joueurPousse = false;
 		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
 	}
-	
+
 	public void addObserver(PropertyChangeListener l) {
 		pcs.addPropertyChangeListener(l);
 	}
@@ -187,23 +189,28 @@ public class Partie {
 		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
+				this.joueurPousse = true;
 			} else {
-				this.lancerNouveauTour();
+				this.joueurPousse = false;
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
+				if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
+					this.deplacerMurDeFeuVersJoueurAvec0Mana();
+					this.lancerNouvelleManche();
+				} else {
+					this.lancerNouveauTour();
+				}
 			}
-			// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
-			// joueur avec 0 de mana
-			if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
-				this.deplacerMurDeFeuVersJoueurAvec0Mana();
-				this.lancerNouvelleManche();
-			}
-			printPossibleGagnant();
-			pcs.firePropertyChange("property","x","y");
-		}
 
+			pcs.firePropertyChange("property", "x", "y");
+			printPossibleGagnant();
+		}
 	}
 
 	private void printPossibleGagnant() {
@@ -274,6 +281,17 @@ public class Partie {
 			return tourPrecedent.getCartesJoueesVert();
 		else
 			return tourPrecedent.getCartesJoueesRouge();
+	}
+
+	public Tour getTourPrecedent() {
+		if (this.getNombreManches() > 1 && this.getMancheCourante().getNombreTours() == 1) {
+			Manche manchePrecedente = this.listeManche.get(this.getNombreManches() - 2);
+			return manchePrecedente.getTourCourant();
+		}
+		if (this.getMancheCourante().getNombreTours() > 1) {
+			return this.getMancheCourante().getTourPrecedent();
+		}
+		return null;
 
 	}
 
@@ -306,6 +324,10 @@ public class Partie {
 
 	public int getNombreManches() {
 		return this.listeManche.size();
+	}
+
+	public boolean isJoueurPousse() {
+		return joueurPousse;
 	}
 
 }
