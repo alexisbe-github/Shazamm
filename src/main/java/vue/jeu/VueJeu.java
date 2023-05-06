@@ -161,7 +161,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setComponentZOrder(panelSorciers, 0); // On met les sorciers au-dessus
 		panelJeu.setComponentZOrder(panelPont, 1);
 
-		c.insets = new Insets(0, 10, 0, 10);
+		//c.insets = new Insets(0, 10, 0, 10);
 		setConstraints(1, 0.5, 0, 3, c);
 		getContentPane().add(panelJeu, c);
 
@@ -263,8 +263,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	}
 
 	private void updateCartesJouees() {
-
-		List<Carte> cartesJoueesDuTour = partie.getMancheCourante().getTourCourant().getCartesJouees();
+		Tour tourCourant = partie.getMancheCourante().getTourCourant();
+		if(tourCourant.getMiseJoueurRouge() == 0 && tourCourant.getMiseJoueurVert() == 0) tourCourant = partie.getTourPrecedent();
+		List<Carte> cartesJoueesDuTour = tourCourant.getCartesJouees();
 		panelCartesJouees.removeAll();
 		panelCartesJouees.repaint();
 
@@ -276,11 +277,10 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
-		this.updateLabelInfosTour();
+		this.updateLabelInfosTour(tourCourant);
 	}
 
-	private void updateLabelInfosTour() {
-		Tour tourCourant = partie.getMancheCourante().getTourCourant();
+	private void updateLabelInfosTour(Tour tourCourant) {
 		String text = "<html>";
 		text += "Mises:<font color=red>" + tourCourant.getMiseJoueurRouge() + "</font> - <font color=green>"
 				+ tourCourant.getMiseJoueurVert() + "</font>";

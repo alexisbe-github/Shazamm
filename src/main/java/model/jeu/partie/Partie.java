@@ -1,9 +1,12 @@
 package main.java.model.jeu.partie;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -35,7 +38,7 @@ public class Partie {
 		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
 	}
-	
+
 	public void addObserver(PropertyChangeListener l) {
 		pcs.addPropertyChangeListener(l);
 	}
@@ -187,9 +190,9 @@ public class Partie {
 		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
-			pcs.firePropertyChange("property","x","y");
+			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
-			pcs.firePropertyChange("property","x","y");
+
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier()) {
 				this.lancerNouvelleManche();
@@ -202,9 +205,9 @@ public class Partie {
 				this.deplacerMurDeFeuVersJoueurAvec0Mana();
 				this.lancerNouvelleManche();
 			}
+			pcs.firePropertyChange("property", "x", "y");
 			printPossibleGagnant();
 		}
-
 	}
 
 	private void printPossibleGagnant() {
@@ -275,6 +278,18 @@ public class Partie {
 			return tourPrecedent.getCartesJoueesVert();
 		else
 			return tourPrecedent.getCartesJoueesRouge();
+	}
+
+	public Tour getTourPrecedent() {
+		if (this.getNombreManches() > 1 && this.getMancheCourante().getNombreTours() == 1) {
+			Manche manchePrecedente = this.listeManche.get(this.getNombreManches() - 2);
+			return manchePrecedente.getTourCourant();
+		} else {
+			if (this.getMancheCourante().getNombreTours() > 1) {
+				return this.getMancheCourante().getTourPrecedent();
+			}
+		}
+		return null;
 
 	}
 

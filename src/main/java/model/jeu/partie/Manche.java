@@ -33,6 +33,13 @@ public class Manche {
 			this.listeTours.add(new Tour(false));
 		}
 	}
+	
+	public Tour getTourPrecedent() {
+		if(this.getNombreTours() > 1) {
+			return this.listeTours.get(this.getNombreTours() - 2);
+		}
+		return null;
+	}
 
 	public int jouerTour(Joueur joueurRouge, Joueur joueurVert) {
 		Tour tourCourant = this.getTourCourant();
