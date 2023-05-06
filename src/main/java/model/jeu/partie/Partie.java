@@ -195,14 +195,23 @@ public class Partie {
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
 			this.cartesJouees = true;
 			pont.deplacerMurDeFeu(dpMur);
-			if (pont.murDeFeuPousseUnSorcier()) {
+			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
 				this.lancerNouvelleManche();
 				this.joueurPousse = true;
 			} else {
 				this.joueurPousse = false;
 				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
 				// joueur avec 0 de mana
-				if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
+				if (this.getMancheCourante().getNombreTours() == 0) {
+					joueurRouge.melangerPaquet();
+					joueurVert.melangerPaquet();
+					joueurRouge.piocherCartes(3);
+					joueurVert.piocherCartes(3);
+					joueurRouge.remplirReserveDeMana();
+					joueurVert.remplirReserveDeMana();
+				}
+				if ((joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0)
+						&& this.getMancheCourante().getNombreTours() != 0) {
 					this.deplacerMurDeFeuVersJoueurAvec0Mana();
 					this.lancerNouvelleManche();
 				} else {
@@ -211,19 +220,23 @@ public class Partie {
 			}
 
 			pcs.firePropertyChange("property", "x", "y");
+			if (pont.unSorcierEstTombe()) {
+				this.partieFinie = true;
+			}
 			printPossibleGagnant();
 		}
 	}
 
 	private void printPossibleGagnant() {
 		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
-			if (pont.unSorcierEstTombe()) {
-				System.out.println(pont.getVainqueur());
-				this.partieFinie = true;
-			}
+			System.out.println(pont.getVainqueur());
 		}
 	}
 
+	public String getGagnant() {
+		return this.pont.getVainqueur();
+	}
+	
 	/**
 	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana. S'arrête
 	 * lorsqu'il croise le perdant où lorsque le gagnant a moins de mana que la
@@ -331,7 +344,7 @@ public class Partie {
 	public boolean isJoueurPousse() {
 		return joueurPousse;
 	}
-	
+
 	public boolean isCartesJouees() {
 		return this.cartesJouees;
 	}

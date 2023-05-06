@@ -32,6 +32,7 @@ public class ControleurCartes implements MouseListener{
 	public void mouseEntered(MouseEvent e) {
 		JLabel tmp = (JLabel) e.getComponent();
 		tmp.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		
 	}
 
 	@Override

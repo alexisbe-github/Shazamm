@@ -83,7 +83,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setSize(screenSize.width / 2, screenSize.height*9/10);
+		setSize(screenSize.width / 2, screenSize.height * 9 / 10);
 		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
@@ -168,8 +168,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JPanel panelTour = new JPanel(new BorderLayout());
 		panelCartesJouees = new JPanel();
 		JLabel invisible = new JLabel();
-		invisible.setSize(this.getWidth()/8, this.getWidth()/6);
-		BufferedImage bi = new BufferedImage(this.getWidth()/9, this.getWidth()/7, BufferedImage.TYPE_INT_ARGB);
+		invisible.setSize(this.getWidth() / 8, this.getWidth() / 6);
+		BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
 		invisible.setIcon(new ImageIcon(bi));
 		panelCartesJouees.add(invisible);
 		panelCartesJouees.setBackground(Color.BLACK);
@@ -226,6 +226,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			}
 		});
 		scrollPaneCartes.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 10));
+		scrollPaneCartes.getHorizontalScrollBar().setUnitIncrement(20);
 		getContentPane().add(scrollPaneCartes, c);
 
 		// Affichage du panel d'actions
@@ -277,7 +278,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = cartesJoueesDuTour.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/9, this.getHeight()/7));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 9, this.getHeight() / 7));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
@@ -320,7 +321,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 				}
 			}
 		}
-		text += "</html>";
+		if (partie.getPont().unSorcierEstTombe()) {
+			text = partie.getGagnant();
+		} else {
+			text += "</html>";
+		}
 		labelInfosTour.setText(text);
 	}
 
@@ -346,8 +351,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			JLabel tmp = new JLabel();
 			String source = this.getImageCasePont(i);
 			ImageIcon image = new ImageIcon(source);
-			
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/25, this.getHeight()/15));
+
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 25, this.getHeight() / 15));
 			panelPont.add(tmp, c.gridx);
 			c.gridx++;
 
@@ -392,8 +397,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		for (int i = 0; i < panelPont.getComponentCount(); i++) {
 			JLabel tmp = (JLabel) panelPont.getComponent(i);
 			ImageIcon image = new ImageIcon(this.getImageCasePont(i));
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/25, this.getHeight()/15));
-			
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 25, this.getHeight() / 15));
+
 		}
 	}
 
@@ -410,7 +415,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setConstraints(1, 0.5, 0, 1, c);
 
 		ImageIcon temp = new ImageIcon(partie.getJoueurRouge().getPath());
-		BufferedImage bi = new BufferedImage(this.getWidth()/25, this.getHeight()/15, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bi = new BufferedImage(this.getWidth() / 25, this.getHeight() / 15, BufferedImage.TYPE_INT_ARGB);
 		ImageIcon icon = new ImageIcon(bi);
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
 			c.gridx = i;
@@ -460,7 +465,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/6, this.getHeight()/5));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 6, this.getHeight() / 5));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			// tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les
 			// borders en constantes ?
@@ -664,7 +669,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		for (Carte c : cartes) {
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth()/6, this.getWidth()/4));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 6, this.getWidth() / 4));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartes.add(tmp);
 			tmp.addMouseListener(new MouseListener() {
@@ -916,7 +921,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.reinitialiserTextField("1");
 		this.updateCartesJouees();
 		this.cartesJouees.clear();
-		boutonJouer.setEnabled(true);
+		if (partie.getPont().unSorcierEstTombe()) {
+			boutonJouer.setEnabled(false);
+		} else {
+			boutonJouer.setEnabled(true);
+		}
 	}
 
 }
