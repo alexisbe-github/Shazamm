@@ -33,15 +33,18 @@ public class DAOPartie extends DAO<PartieSQL> {
 	 */
 	private final String ID = "id";
 	/**
-	 * Colonne <code><i>id_joueur1</i></code>, correspondant à l'identifiant du joueur 1.
+	 * Colonne <code><i>id_joueur1</i></code>, correspondant à l'identifiant du
+	 * joueur 1.
 	 */
 	private final String ID_JOUEUR1 = "id_joueur1";
 	/**
-	 * Colonne <code><i>id_joueur2</i></code>, correspondant à l'identifiant du joueur 2.
+	 * Colonne <code><i>id_joueur2</i></code>, correspondant à l'identifiant du
+	 * joueur 2.
 	 */
 	private final String ID_JOUEUR2 = "id_joueur2";
 	/**
-	 * Colonne <code><i>id_vainqueur</i></code>, correspondant à l'identifiant du vainqueur.
+	 * Colonne <code><i>id_vainqueur</i></code>, correspondant à l'identifiant du
+	 * vainqueur.
 	 */
 	private final String ID_VAINQUEUR = "id_vainqueur";
 
@@ -55,22 +58,25 @@ public class DAOPartie extends DAO<PartieSQL> {
 	@Override
 	public PartieSQL trouver(long id) {
 		PartieSQL partie = new PartieSQL();
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement(
-						"SELECT * FROM " + PARTIE + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-			pstmt.setLong(1, id);
-			pstmt.execute();
-			try (ResultSet rs = pstmt.getResultSet()) {
-				if (rs.first()) {
-					partie.setId(id);
-					partie.setIdJoueur1(rs.getLong(ID_JOUEUR1));
-					partie.setIdJoueur2(rs.getLong(ID_JOUEUR2));
-					partie.setIdVainqueur(rs.getLong(ID_VAINQUEUR));
+		try (Connection connexion = this.connexion.getConnexion()) {
+			try (PreparedStatement pstmt = connexion.prepareStatement(
+					"SELECT * FROM " + PARTIE + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
+					ResultSet.CONCUR_READ_ONLY)) {
+				pstmt.setLong(1, id);
+				pstmt.execute();
+				try (ResultSet rs = pstmt.getResultSet()) {
+					if (rs.first()) {
+						partie.setId(id);
+						partie.setIdJoueur1(rs.getLong(ID_JOUEUR1));
+						partie.setIdJoueur2(rs.getLong(ID_JOUEUR2));
+						partie.setIdVainqueur(rs.getLong(ID_VAINQUEUR));
+					}
 				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		} finally {
 			this.connexion.fermerConnexion();
 		}
@@ -85,34 +91,36 @@ public class DAOPartie extends DAO<PartieSQL> {
 	 */
 	@Override
 	public PartieSQL creer(PartieSQL partie) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt1 = connexion
-						.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES "
-								+ "WHERE table_name = '" + PARTIE + "'")) {
-			pstmt1.execute();
+		try (Connection connexion = this.connexion.getConnexion()) {
+			try (PreparedStatement pstmt1 = connexion
+					.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '"
+							+ PARTIE + "'")) {
+				pstmt1.execute();
 
-			try (ResultSet rsid = pstmt1.getResultSet()) {
-				if (rsid.next()) {
-					long id = rsid.getLong(1);
-					partie.setId(id);
+				try (ResultSet rsid = pstmt1.getResultSet()) {
+					if (rsid.next()) {
+						long id = rsid.getLong(1);
+						partie.setId(id);
+					}
 				}
+				pstmt1.close();
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
 			}
-			pstmt1.close();
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt2 = connexion
-						.prepareStatement("INSERT INTO " + PARTIE + " VALUES (?, ?, ?, ?);")) {
-			pstmt2.setLong(1, partie.getId());
-			pstmt2.setLong(2, partie.getIdJoueur1());
-			pstmt2.setLong(3, partie.getIdJoueur2());
-			pstmt2.setLong(4, partie.getIdVainqueur());
-			pstmt2.execute();
+			try (PreparedStatement pstmt2 = connexion
+					.prepareStatement("INSERT INTO " + PARTIE + " VALUES (?, ?, ?, ?);")) {
+				pstmt2.setLong(1, partie.getId());
+				pstmt2.setLong(2, partie.getIdJoueur1());
+				pstmt2.setLong(3, partie.getIdJoueur2());
+				pstmt2.setLong(4, partie.getIdVainqueur());
+				pstmt2.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+
 		} finally {
 			this.connexion.fermerConnexion();
 		}
@@ -128,8 +136,8 @@ public class DAOPartie extends DAO<PartieSQL> {
 	@Override
 	public PartieSQL maj(PartieSQL partie) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + PARTIE + " SET " + ID_JOUEUR1 + " = ?, "
-						+ ID_JOUEUR2 + " = ?, " + ID_VAINQUEUR + " = ? WHERE " + ID + " = ?")) {
+				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + PARTIE + " SET " + ID_JOUEUR1
+						+ " = ?, " + ID_JOUEUR2 + " = ?, " + ID_VAINQUEUR + " = ? WHERE " + ID + " = ?")) {
 			pstmt.setLong(1, partie.getIdJoueur1());
 			pstmt.setLong(2, partie.getIdJoueur2());
 			pstmt.setLong(3, partie.getIdVainqueur());
@@ -151,7 +159,8 @@ public class DAOPartie extends DAO<PartieSQL> {
 	@Override
 	public void supprimer(PartieSQL partie) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + PARTIE + " WHERE " + ID + " = ?;")) {
+				PreparedStatement pstmt = connexion
+						.prepareStatement("DELETE FROM " + PARTIE + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, partie.getId());
 			pstmt.execute();
 		} catch (SQLException e) {

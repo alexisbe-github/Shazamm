@@ -9,14 +9,13 @@ import main.java.model.dao.beans.CarteSQL;
 
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
- * données et le <code>JavaBean</code>
- * {@link main.java.model.dao.beans.CarteSQL CarteSQL}, spécifiquement pour la
- * table <code><i>carte</i></code> de la base de données, qui enregistre les
- * informations relatives aux cartes du jeu.
+ * données et le <code>JavaBean</code> {@link main.java.model.dao.beans.CarteSQL
+ * CarteSQL}, spécifiquement pour la table <code><i>carte</i></code> de la base
+ * de données, qui enregistre les informations relatives aux cartes du jeu.
  * 
  * 
- * @see CarteSQL <code>CarteSQL</code><a role="link" aria-disabled="true"> -
- *      Le <code>JavaBean</code> géré par la classe</a>
+ * @see CarteSQL <code>CarteSQL</code><a role="link" aria-disabled="true"> - Le
+ *      <code>JavaBean</code> géré par la classe</a>
  * @see DAO <code>DAO</code><a role="link" aria-disabled="true"> - La couche
  *      abstraite principale dont hérite cette classe</a>
  *
@@ -24,7 +23,8 @@ import main.java.model.dao.beans.CarteSQL;
 public class DAOCarte extends DAO<CarteSQL> {
 
 	/**
-	 * Table <code><i>carte</i></code>, contenant différentes informations sur les cartes.
+	 * Table <code><i>carte</i></code>, contenant différentes informations sur les
+	 * cartes.
 	 */
 	private final String CARTE = "carte";
 	/**
@@ -36,7 +36,8 @@ public class DAOCarte extends DAO<CarteSQL> {
 	 */
 	private final String ID_TOUR = "id_tour";
 	/**
-	 * Colonne <code><i>id_joueur</i></code>, correspondant à l'identifiant des joueurs.
+	 * Colonne <code><i>id_joueur</i></code>, correspondant à l'identifiant des
+	 * joueurs.
 	 */
 	private final String ID_JOUEUR = "id_joueur";
 	/**
@@ -84,32 +85,33 @@ public class DAOCarte extends DAO<CarteSQL> {
 	 */
 	@Override
 	public CarteSQL creer(CarteSQL carte) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt1 = connexion
-						.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES "
-								+ "WHERE table_name = '" + CARTE + "'")) {
-			pstmt1.execute();
+		try (Connection connexion = this.connexion.getConnexion()) {
+			try (PreparedStatement pstmt1 = connexion.prepareStatement(
+					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '" + CARTE + "'")) {
+				pstmt1.execute();
 
-			try (ResultSet rsid = pstmt1.getResultSet()) {
-				if (rsid.next()) {
-					long id = rsid.getLong(1);
-					carte.setId(id);
+				try (ResultSet rsid = pstmt1.getResultSet()) {
+					if (rsid.next()) {
+						long id = rsid.getLong(1);
+						carte.setId(id);
+					}
 				}
+				pstmt1.close();
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
 			}
-			pstmt1.close();
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt2 = connexion
-						.prepareStatement("INSERT INTO " + CARTE + " VALUES (?, ?, ?, ?);")) {
-			pstmt2.setLong(1, carte.getId());
-			pstmt2.setLong(2, carte.getIdTour());
-			pstmt2.setLong(3, carte.getIdJoueur());
-			pstmt2.setInt(4, carte.getNumeroCarte());
-			pstmt2.execute();
+			try (PreparedStatement pstmt2 = connexion
+					.prepareStatement("INSERT INTO " + CARTE + " VALUES (?, ?, ?, ?);")) {
+				pstmt2.setLong(1, carte.getId());
+				pstmt2.setLong(2, carte.getIdTour());
+				pstmt2.setLong(3, carte.getIdJoueur());
+				pstmt2.setInt(4, carte.getNumeroCarte());
+				pstmt2.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -150,7 +152,8 @@ public class DAOCarte extends DAO<CarteSQL> {
 	@Override
 	public void supprimer(CarteSQL carte) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + CARTE + " WHERE " + ID + " = ?;")) {
+				PreparedStatement pstmt = connexion
+						.prepareStatement("DELETE FROM " + CARTE + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, carte.getId());
 			pstmt.execute();
 		} catch (SQLException e) {

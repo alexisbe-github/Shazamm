@@ -31,7 +31,7 @@ public class Connexion {
 					EnvironmentVariablesUtils.getBDDUSER(), EnvironmentVariablesUtils.getBDDMDP());
 
 		} catch (SQLException | ClassNotFoundException e) {
-
+			System.err.println("Erreur lors de la connexion : " + e.getMessage());
 		}
 
 	}
