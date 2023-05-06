@@ -187,7 +187,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		this.paintMain();
-		setConstraints(1, 5, 0, 5, c);
+		setConstraints(1, 2, 0, 5, c);
 		c.fill = GridBagConstraints.BOTH;
 
 		// Configuration du scrollPane permettant de scroller pour parcourir les cartes
@@ -272,7 +272,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = cartesJoueesDuTour.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
+			tmp.setIcon(Utils.redimensionnerImage(image, 130, 170));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
@@ -451,7 +451,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, 140, 250));
+			tmp.setIcon(Utils.redimensionnerImage(image, 175, 220));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			// tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les
 			// borders en constantes ?
