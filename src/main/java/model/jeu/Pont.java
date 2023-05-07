@@ -150,5 +150,39 @@ public class Pont {
 	public String getPathMur() {
 		return "src/main/resources/perso/mur.gif";
 	}
-	
+
+	/**
+	 * Méthode utilisée par l'IA pour évaluer la partie
+	 * 
+	 * @param joueur
+	 * @return
+	 */
+	public int getDistanceEntreMurDeFeuEtJoueur(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			return Math.abs(positionMurFeu - positionJoueurRouge) - 1;
+		}
+		return Math.abs(positionMurFeu - positionJoueurVert) - 1;
+	}
+
+	/**
+	 * Méthode utilisée par l'IA pour évaluer la partie
+	 *
+	 * @return
+	 */
+	public int getDistanceEntreMurDeFeuEtMilieu() {
+		return Math.abs((positionJoueurRouge + 3) - positionMurFeu);
+	}
+
+	/**
+	 * Méthode utilisée par l'IA pour évaluer la partie
+	 *
+	 * @return
+	 */
+	public int getDistanceEntreJoueurEtLave(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			return positionJoueurRouge+1;
+		}
+		return TAILLE_PONT - positionJoueurVert;
+	}
+
 }

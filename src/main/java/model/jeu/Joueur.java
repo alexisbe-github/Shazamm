@@ -139,11 +139,15 @@ public class Joueur {
 	/**
 	 * Retourne le chemin de l'image correspondant au Joueur
 	 */
- public String getPath(){
+	public String getPath() {
 		if (this.COULEUR.equals(ECouleurJoueur.ROUGE))
 			return "src/main/resources/perso/rouge.png";
-		
+
 		return "src/main/resources/perso/vert.png";
+	}
+
+	public List<Carte> getPaquet() {
+		return paquet;
 	}
 
 }

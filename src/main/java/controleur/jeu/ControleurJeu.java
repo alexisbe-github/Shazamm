@@ -10,6 +10,7 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.ia.IA;
+import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 import main.java.vue.jeu.VueJeu;
@@ -32,7 +33,8 @@ public class ControleurJeu implements ActionListener {
 			bouton.setEnabled(false);
 			Joueur j = this.vj.getJoueur();
 
-			//On vérifie si l'adversaire est un ordinateur, si oui on le fait jouer avant le joueur
+			// On vérifie si l'adversaire est un ordinateur, si oui on le fait jouer avant
+			// le joueur
 			Joueur joueurAdverse;
 			if (j.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 				joueurAdverse = this.partie.getJoueurVert();
@@ -40,10 +42,13 @@ public class ControleurJeu implements ActionListener {
 				joueurAdverse = this.partie.getJoueurRouge();
 			}
 			boolean adversaireEstUnOrdinateur = joueurAdverse instanceof IA;
-			if (adversaireEstUnOrdinateur)
+			if (adversaireEstUnOrdinateur) {
 				((IA) joueurAdverse).jouerTour(partie);
+				if (joueurAdverse instanceof IAIntermediaire) {
+					((IAIntermediaire) joueurAdverse).setPartieSimulee(partie);
+				}
+			}
 
-			
 			int mise = vj.getMise();
 			Tour tourCourant = partie.getMancheCourante().getTourCourant();
 			tourCourant.setMiseJoueur(j, mise);

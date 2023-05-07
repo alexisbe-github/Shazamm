@@ -1,7 +1,5 @@
 package main.java.model.jeu.ia;
 
-import java.util.List;
-
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
@@ -10,19 +8,15 @@ import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 
-public class IAFacile extends IAEtatJeu implements IA, ILancementStrategy {
+public class IAIntermediaire extends IAEtatJeu implements IA, ILancementStrategy {
 
-	public IAFacile(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
+	public IAIntermediaire(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		super(couleur, nom, prenom, avatar);
 	}
 
-	/**
-	 * IA de type facile qui joue aléatoirement chaque tour
-	 * 
-	 * @param p Partie
-	 */
 	@Override
 	public void jouerTour(Partie p) {
+		System.out.println(this.evaluationTour());
 		// on génère une mise aléatoirement entre 1 et le mana de l'ordinateur
 		int mise = Utils.genererEntier(1, getManaActuel() + 1);
 
@@ -39,34 +33,20 @@ public class IAFacile extends IAEtatJeu implements IA, ILancementStrategy {
 
 	@Override
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
-		List<Carte> cartesJoueesTourPrec = p.getCartesJoueesParAdversaireTourPrecedent(joueur);
-		int i = Utils.genererEntier(0, cartesJoueesTourPrec.size());
-		Carte carteAVoler = cartesJoueesTourPrec.get(i);
-		tour.activerClone(carteAVoler);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
-		int miseRecyclage = Utils.genererEntier(-5, 6);
-		tour.changerMise(joueur, miseRecyclage);
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		List<Carte> cartes;
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurVert());
-		} else {
-			cartes = p.getListeCartesJoueesParJoueur(p.getJoueurRouge());
-		}
-		
-		// on joue entre 0 et le nombre de cartes jouees par l'adversaire
-		int nbCartesAVoler = Utils.genererEntierAvecPoids(0, cartes.size());
+		// TODO Auto-generated method stub
 
-		for (int i = 0; i < nbCartesAVoler; i++) {
-			int index = Utils.genererEntier(0, cartes.size());
-			Carte carte = cartes.get(index);
-			carte.changerDetenteurCarte(joueur);
-		}
 	}
+
 }
