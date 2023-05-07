@@ -84,7 +84,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, screenSize.height * 9 / 10);
-		setResizable(true);
+		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
 		
