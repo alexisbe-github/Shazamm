@@ -14,8 +14,11 @@ public class Tour {
 
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
+	private int manaRestantRouge, manaRestantVert;
+
 	private int deplacementMur;
 	private boolean mutisme, finDeManche;
+
 	private boolean harpagonRouge, harpagonVert;
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
 	private List<Carte> cartesJouees;
@@ -58,6 +61,8 @@ public class Tour {
 			this.cartesJoueesVert.add(carteAJouer);
 			joueur.retirerCarteDeLaMain(carteAJouer);
 		}
+		this.cartesJouees.add(carteAJouer);
+		this.trierCartesJouees();
 	}
 
 	/**
@@ -92,17 +97,22 @@ public class Tour {
 
 		if (!this.harpagonRouge) {
 			joueurRouge.depenserMana(this.miseJoueurRouge);
-			joueurRouge.verifierMana();
 		}
 
 		if (!this.harpagonVert) {
 			joueurVert.depenserMana(this.miseJoueurVert);
-			joueurVert.verifierMana();
 		}
+		
+		joueurRouge.verifierMana();
+		joueurVert.verifierMana();
 
 		if (this.finDeManche)
 			this.deplacementMur = 0;
 
+		
+		this.manaRestantRouge = joueurRouge.getManaActuel();
+		this.manaRestantVert = joueurVert.getManaActuel();
+		
 		return this.deplacementMur;
 	}
 
@@ -118,10 +128,6 @@ public class Tour {
 	 * Joue les cartes en jeu en fonction de leur numéro de carte
 	 */
 	private void jouerTourDesCartes() {
-		cartesJouees.addAll(this.cartesJoueesRouge);
-		cartesJouees.addAll(this.cartesJoueesVert);
-		this.trierCartesJouees();
-
 		// Pour chaque carte jouée on regarde si la suivante est le même numéro de carte
 		// et on active l'effet
 		for (int i = 0; i < cartesJouees.size() && !this.finDeManche && !this.mutisme; i++) {
@@ -155,9 +161,7 @@ public class Tour {
 			// déplacement
 			if (carteCourante.getNumeroCarte() < 9 && carteCourante.getNumeroCarte() != 1)
 				this.calculDeplacementMur();
-
 		}
-		cartesJouees.clear();
 	}
 
 	private void trierCartesJouees() {
@@ -195,16 +199,16 @@ public class Tour {
 	}
 
 	/**
-	 * Effet carte 10
-	 * Double le déplacement du mur dans le sens dans lequel il doit avancer
+	 * Effet carte 10 Double le déplacement du mur dans le sens dans lequel il doit
+	 * avancer
 	 */
 	public void doubleDeplacementMur() {
 		deplacementMur *= 2;
 	}
 
 	/**
-	 * Effet carte 9
-	 * Inverse le déplacement du mur dans le sens opposé où il devait avancer
+	 * Effet carte 9 Inverse le déplacement du mur dans le sens opposé où il devait
+	 * avancer
 	 */
 	public void inverserDeplacementMur() {
 		deplacementMur *= -1;
@@ -236,6 +240,14 @@ public class Tour {
 		}
 	}
 
+	public void recyclerMise(Joueur joueur, int montant) {
+		if (montant > 5)
+			montant = 5;
+		if (montant < -5)
+			montant = -5;
+		this.changerMise(joueur, montant);
+	}
+
 	/**
 	 * Ajoute atq au joueur
 	 * 
@@ -264,6 +276,11 @@ public class Tour {
 	}
 
 	public void setMiseJoueur(Joueur joueur, int mise) {
+		if (mise > joueur.getManaActuel()) {
+			mise = joueur.getManaActuel();
+		}
+		if (mise < 1)
+			mise = 1;
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
 			this.miseJoueurVert = mise;
 		else
@@ -273,7 +290,7 @@ public class Tour {
 	public void setMiseJoueurVert(int mise) {
 		this.miseJoueurVert = mise;
 	}
-	
+
 	public void setMiseJoueurRouge(int mise) {
 		this.miseJoueurRouge = mise;
 	}
@@ -308,6 +325,22 @@ public class Tour {
 
 	public List<Carte> getCartesJoueesRouge() {
 		return cartesJoueesRouge;
+	}
+
+	public List<Carte> getCartesJouees() {
+		return cartesJouees;
+	}
+
+	public boolean isFinDeManche() {
+		return finDeManche;
+	}
+	
+	public int getManaRestantRouge() {
+		return manaRestantRouge;
+	}
+
+	public int getManaRestantVert() {
+		return manaRestantVert;
 	}
 
 }

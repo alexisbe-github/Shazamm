@@ -17,7 +17,8 @@ public class Partie {
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
 	private List<Manche> listeManche;
-	private boolean partieFinie;
+	private boolean partieFinie, joueurPousse, cartesJouees;
+
 	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
@@ -32,10 +33,12 @@ public class Partie {
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
+		this.joueurPousse = false;
+		this.cartesJouees = false;
 		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
 	}
-	
+
 	public void addObserver(PropertyChangeListener l) {
 		pcs.addPropertyChangeListener(l);
 	}
@@ -187,34 +190,53 @@ public class Partie {
 		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			this.cartesJouees = false;
+			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			this.cartesJouees = true;
 			pont.deplacerMurDeFeu(dpMur);
-			if (pont.murDeFeuPousseUnSorcier()) {
+			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
 				this.lancerNouvelleManche();
+				this.joueurPousse = true;
 			} else {
-				this.lancerNouveauTour();
+				this.joueurPousse = false;
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
+				if (this.getMancheCourante().getNombreTours() == 0) {
+					joueurRouge.melangerPaquet();
+					joueurVert.melangerPaquet();
+					joueurRouge.piocherCartes(3);
+					joueurVert.piocherCartes(3);
+					joueurRouge.remplirReserveDeMana();
+					joueurVert.remplirReserveDeMana();
+				}
+				if ((joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0)
+						&& this.getMancheCourante().getNombreTours() != 0) {
+					this.deplacerMurDeFeuVersJoueurAvec0Mana();
+					this.lancerNouvelleManche();
+				} else {
+					this.lancerNouveauTour();
+				}
 			}
-			// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
-			// joueur avec 0 de mana
-			if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
-				this.deplacerMurDeFeuVersJoueurAvec0Mana();
-				this.lancerNouvelleManche();
+
+			pcs.firePropertyChange("property", "x", "y");
+			if (pont.unSorcierEstTombe()) {
+				this.partieFinie = true;
 			}
 			printPossibleGagnant();
-			pcs.firePropertyChange("property","x","y");
 		}
-
 	}
 
 	private void printPossibleGagnant() {
 		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
-			if (pont.unSorcierEstTombe()) {
-				System.out.println(pont.getVainqueur());
-				this.partieFinie = true;
-			}
+			System.out.println(pont.getVainqueur());
 		}
 	}
 
+	public String getGagnant() {
+		return this.pont.getVainqueur();
+	}
+	
 	/**
 	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana. S'arrête
 	 * lorsqu'il croise le perdant où lorsque le gagnant a moins de mana que la
@@ -274,6 +296,17 @@ public class Partie {
 			return tourPrecedent.getCartesJoueesVert();
 		else
 			return tourPrecedent.getCartesJoueesRouge();
+	}
+
+	public Tour getTourPrecedent() {
+		if (this.getNombreManches() > 1 && this.getMancheCourante().getNombreTours() == 1) {
+			Manche manchePrecedente = this.listeManche.get(this.getNombreManches() - 2);
+			return manchePrecedente.getTourCourant();
+		}
+		if (this.getMancheCourante().getNombreTours() > 1) {
+			return this.getMancheCourante().getTourPrecedent();
+		}
+		return null;
 
 	}
 
@@ -306,6 +339,14 @@ public class Partie {
 
 	public int getNombreManches() {
 		return this.listeManche.size();
+	}
+
+	public boolean isJoueurPousse() {
+		return joueurPousse;
+	}
+
+	public boolean isCartesJouees() {
+		return this.cartesJouees;
 	}
 
 }

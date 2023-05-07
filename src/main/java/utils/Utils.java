@@ -35,6 +35,20 @@ public class Utils {
 		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
 		return new ImageIcon(nvimg); // Transformation en ImageIcon
 	}
+	
+	/**
+	 * Redimensionne un objet <code>ImageIcon</code> à l'échelle selon la hauteur spécifiée.
+	 * 
+	 * @param img     L'image à redimensionner
+	 * @param hauteur La nouvelle hauteur
+	 * @return L'image redimensionnée
+	 */
+	public static ImageIcon redimensionnerImage(ImageIcon img, int hauteur) {
+		Image image = img.getImage();
+		int width = Math.round(hauteur*((float) img.getIconWidth() / (float) img.getIconHeight()));
+		Image nvImg = image.getScaledInstance(width, hauteur, Image.SCALE_SMOOTH);
+		return new ImageIcon(nvImg);
+	}
 
 	/**
 	 * Réalise un fondu d'arrière-plan sur un composant Swing

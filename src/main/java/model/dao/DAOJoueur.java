@@ -94,35 +94,37 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public JoueurSQL creer(JoueurSQL joueur) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt1 = connexion
-						.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES "
-								+ "WHERE table_name = '" + JOUEUR + "'")) {
-			pstmt1.execute();
+		try (Connection connexion = this.connexion.getConnexion()) {
+			try (PreparedStatement pstmt1 = connexion
+					.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '"
+							+ JOUEUR + "'")) {
+				pstmt1.execute();
 
-			try (ResultSet rsid = pstmt1.getResultSet()) {
-				if (rsid.next()) {
-					long id = rsid.getLong(1);
-					joueur.setId(id);
+				try (ResultSet rsid = pstmt1.getResultSet()) {
+					if (rsid.next()) {
+						long id = rsid.getLong(1);
+						joueur.setId(id);
+					}
 				}
+				pstmt1.close();
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
 			}
-			pstmt1.close();
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt2 = connexion
-						.prepareStatement("INSERT INTO " + JOUEUR + " VALUES (?, ?, ?, ?, ?);")) {
-			pstmt2.setLong(1, joueur.getId());
-			pstmt2.setString(2, joueur.getNom());
-			pstmt2.setString(3, joueur.getPrenom());
-			pstmt2.setString(4, joueur.getAvatar().getDescription()); // Chemin de l'image
-			pstmt2.setInt(5, joueur.getNbPartiesGagnees());
-			pstmt2.execute();
+			try (PreparedStatement pstmt2 = connexion
+					.prepareStatement("INSERT INTO " + JOUEUR + " VALUES (?, ?, ?, ?, ?);")) {
+				pstmt2.setLong(1, joueur.getId());
+				pstmt2.setString(2, joueur.getNom());
+				pstmt2.setString(3, joueur.getPrenom());
+				pstmt2.setString(4, joueur.getAvatar().getDescription()); // Chemin de l'image
+				pstmt2.setInt(5, joueur.getNbPartiesGagnees());
+				pstmt2.execute();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			
 		} finally {
 			this.connexion.fermerConnexion();
 		}
@@ -162,7 +164,8 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public void supprimer(JoueurSQL joueur) {
 		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + JOUEUR + " WHERE id = ?;")) {
+				PreparedStatement pstmt = connexion
+						.prepareStatement("DELETE FROM " + JOUEUR + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, joueur.getId());
 			pstmt.execute();
 		} catch (SQLException e) {
