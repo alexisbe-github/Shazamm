@@ -87,6 +87,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		setResizable(false);
 
 		getContentPane().setBackground(Color.BLACK);
+		
 		getContentPane().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
@@ -168,8 +169,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JPanel panelTour = new JPanel(new BorderLayout());
 		panelCartesJouees = new JPanel();
 		JLabel invisible = new JLabel();
-		invisible.setSize(this.getWidth() / 8, this.getWidth() / 6);
-		BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
+		int height = this.getHeight()/5+20; // height de la carte + 20 pour la place prise par le texte
+		BufferedImage bi = new BufferedImage(Math.round(height*(872f/1356f)), height, BufferedImage.TYPE_INT_ARGB);
 		invisible.setIcon(new ImageIcon(bi));
 		panelCartesJouees.add(invisible);
 		panelCartesJouees.setBackground(Color.BLACK);
@@ -181,18 +182,18 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelInfosTour.setForeground(Color.WHITE);
 		panelTour.add(labelInfosTour, BorderLayout.NORTH);
 		panelTour.add(panelCartesJouees, BorderLayout.CENTER);
-		setConstraints(1, 0, 0, 4, c);
+		setConstraints(0, 0, 0, 4, c);
 		c.fill = GridBagConstraints.BOTH;
 		getContentPane().add(panelTour, c);
 
 		// Affichage des cartes de la main du joueur
-		panelMain = new JPanel(new GridLayout(1, 0, 10, 10));
+		panelMain = new JPanel(new GridLayout(1, 0, 0, 0));
 		JScrollPane scrollPaneCartes = new JScrollPane(panelMain);
 		panelMain.setBackground(Color.BLACK);
 		scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		this.paintMain();
-		setConstraints(1, 1, 0, 5, c);
+		setConstraints(0, 0, 0, 5, c);
 		c.fill = GridBagConstraints.BOTH;
 
 		// Configuration du scrollPane permettant de scroller pour parcourir les cartes
@@ -278,7 +279,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = cartesJoueesDuTour.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 9, this.getHeight() / 7));
+			int height = this.getHeight()/5;
+			tmp.setIcon(Utils.redimensionnerImage(image, Math.round(height*(872f/1356f)), height));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
@@ -465,13 +467,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			tmp.setIcon(image);
 			int height = this.getHeight()/4;
 			int width = Math.round(height*(872f/1356f));
 			tmp.setIcon(Utils.redimensionnerImage(image, width, height));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
-			// tmp.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1)); // passer les
-			// borders en constantes ?
+			tmp.setBackground(Color.BLUE);
 			panelMain.add(tmp);
 
 			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
