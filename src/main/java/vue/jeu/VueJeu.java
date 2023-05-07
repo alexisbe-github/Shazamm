@@ -91,7 +91,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		getContentPane().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
-		//c.insets = new Insets(2, 2, 2, 2); // Marge autour des éléments en pixels
+		c.insets = new Insets(2, 2, 2, 2); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.BOTH;
 
 		panelLogo = new JPanel(new GridBagLayout());
@@ -141,6 +141,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// Ajout du panel
 		c.insets = new Insets(0, 20, 0, 20);
 		c.anchor = GridBagConstraints.SOUTH;
+		c.fill = GridBagConstraints.VERTICAL;
 		setConstraints(1, 0.5, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
 
@@ -150,6 +151,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		initPont();
 		updatePont();
 		setConstraints(1, 0.5, 0, 1, c);
+		c.insets = new Insets(0, 10, 5, 10);
 		c.ipady = 0;
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
@@ -166,8 +168,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JPanel panelTour = new JPanel(new BorderLayout());
 		panelCartesJouees = new JPanel();
 		JLabel invisible = new JLabel();
-		int height = this.getHeight()/5+20; // height de la carte + 20 pour la place prise par le texte
-		BufferedImage bi = new BufferedImage(Math.round(height*(872f/1356f)), height, BufferedImage.TYPE_INT_ARGB);
+		//int height = this.getHeight()/5+20; // height de la carte + 20 pour la place prise par le texte
+		//BufferedImage bi = new BufferedImage(Math.round(height*(872f/1356f)), height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
 		invisible.setIcon(new ImageIcon(bi));
 		panelCartesJouees.add(invisible);
 		panelCartesJouees.setBackground(Color.BLACK);
@@ -190,7 +193,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		scrollPaneCartes.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPaneCartes.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		this.paintMain();
-		setConstraints(0, 0, 0, 5, c);
+		setConstraints(1, 1, 0, 5, c);
 		c.fill = GridBagConstraints.BOTH;
 
 		// Configuration du scrollPane permettant de scroller pour parcourir les cartes
@@ -276,8 +279,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = cartesJoueesDuTour.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			int height = this.getHeight()/5;
-			tmp.setIcon(Utils.redimensionnerImage(image, Math.round(height*(872f/1356f)), height));
+			//int height = this.getHeight()/5;
+			//tmp.setIcon(Utils.redimensionnerImage(image, Math.round(height*(872f/1356f)), height));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 9, this.getHeight() / 7));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			panelCartesJouees.add(tmp);
 		}
@@ -464,11 +468,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			int height = this.getHeight()/4;
-			int width = Math.round(height*(872f/1356f));
-			tmp.setIcon(Utils.redimensionnerImage(image, width, height));
+			//int height = this.getHeight()/4;
+			//int width = Math.round(height*(872f/1356f));
+			//tmp.setIcon(Utils.redimensionnerImage(image, width, height));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 6, this.getHeight() / 5));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
-			tmp.setBackground(Color.BLUE);
 			panelMain.add(tmp);
 
 			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
