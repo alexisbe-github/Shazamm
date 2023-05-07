@@ -84,14 +84,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, screenSize.height * 9 / 10);
-		setResizable(false);
+		setResizable(true);
 
 		getContentPane().setBackground(Color.BLACK);
 		
 		getContentPane().setLayout(new GridBagLayout());
 
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
-		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
+		//c.insets = new Insets(2, 2, 2, 2); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.BOTH;
 
 		panelLogo = new JPanel(new GridBagLayout());
@@ -141,18 +141,15 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// Ajout du panel
 		c.insets = new Insets(0, 20, 0, 20);
 		c.anchor = GridBagConstraints.SOUTH;
-		c.fill = GridBagConstraints.VERTICAL;
 		setConstraints(1, 0.5, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
 
 		// Affichage du pont
 		panelPont = new JPanel();
-		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
 		panelPont.setBackground(Color.BLACK);
 		initPont();
 		updatePont();
 		setConstraints(1, 0.5, 0, 1, c);
-		c.insets = new Insets(0, 10, 5, 10);
 		c.ipady = 0;
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
