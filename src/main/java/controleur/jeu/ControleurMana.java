@@ -10,31 +10,34 @@ import javax.swing.JTextField;
 import main.java.utils.Utils;
 import main.java.vue.jeu.VueJeu;
 
-public class ControleurMana extends KeyAdapter{
-	
+public class ControleurMana extends KeyAdapter {
+
 	private JTextField saisieMana;
 	private JButton boutonJouer;
 	private VueJeu vue;
-	
+
 	public ControleurMana(JTextField saisieMana, JButton boutonJouer, VueJeu vj) {
-		this.saisieMana=saisieMana;
+		this.saisieMana = saisieMana;
 		this.boutonJouer = boutonJouer;
-		this.vue=vj;
+		this.vue = vj;
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		try {
 			// On vérifie que la saisie est comprise entre 1 et le mana du joueur
-			boolean saisieCorrecte = ((Character.isDigit(e.getKeyChar())
-					|| e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
-					|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
-					|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL)
+			boolean saisieCorrecte = ((Character.isDigit(e.getKeyChar()) || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+					|| e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_LEFT
+					|| e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_SHIFT
+					|| e.getKeyCode() == KeyEvent.VK_CONTROL)
 					&& ((Integer.parseInt(saisieMana.getText()
 							+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) <= vue.getJoueur()
 									.getManaActuel())
 							&& (Integer.parseInt(saisieMana.getText()
-									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) >= 1)));
+									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) >= 1)
+							&& (saisieMana.getCaretPosition() == 0 && saisieMana.getText().length() > 0
+									? e.getKeyChar() < '5'
+									: true)));
 
 			if (saisieCorrecte) {
 				saisieMana.setEditable(true);
