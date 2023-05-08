@@ -57,8 +57,6 @@ import main.java.vue.ILancementStrategy;
  */
 public class VueJeu extends JFrame implements ILancementStrategy, PropertyChangeListener {
 
-	private final float RATIOCARTESMAIN = 1/6;
-	private final float RATIOCARTESJOUEES = 1/4;
 	private Joueur joueur;
 	private Partie partie;
 	private JPanel panelLogo, panelPont, panelSorciers, panelJeu, panelMain, panelAction, panelCartesJouees;
@@ -447,11 +445,17 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		
 		// Affichage Joueurs / Mur
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
-		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurRouge().getPath())), c);
+		ImageIcon imgRouge = new ImageIcon(partie.getJoueurRouge().getPath());
+		imgRouge = Utils.redimensionnerImage(imgRouge, this.getHeight()/16);
+		panelSorciers.add(new JLabel(imgRouge), c);
 		c.gridx = partie.getPont().getPosMurDeFeu();
-		panelSorciers.add(new JLabel(new ImageIcon(partie.getPont().getPathMur())), c);
+		ImageIcon imgMur = new ImageIcon(partie.getPont().getPathMur());
+		imgMur = Utils.redimensionnerImage(imgMur, this.getHeight()/16);
+		panelSorciers.add(new JLabel(imgMur), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
-		panelSorciers.add(new JLabel(new ImageIcon(partie.getJoueurVert().getPath())), c);
+		ImageIcon imgVert = new ImageIcon(partie.getJoueurVert().getPath());
+		imgVert = Utils.redimensionnerImage(imgVert, this.getHeight()/16);
+		panelSorciers.add(new JLabel(imgVert), c);
 	}
 
 	/**
@@ -486,7 +490,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			//int height = this.getHeight()/4;
+			//int height = this.getHeight()/5;
 			//int width = Math.round(height*(872f/1356f));
 			//tmp.setIcon(Utils.redimensionnerImage(image, width, height));
 			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 6, this.getHeight() / 5));
