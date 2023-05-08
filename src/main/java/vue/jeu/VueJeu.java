@@ -785,7 +785,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 							|| (e.getKeyChar() == '-' && saisieManaRecyclage.getCaretPosition() == 0)
 							|| (e.getKeyChar() == '+' && saisieManaRecyclage.getCaretPosition() == 0)
 									&& ((Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) >= -5)
-											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) <= 5)))
+											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) <= 5)
+											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) + (tour.getMiseJoueur(joueur)) <= joueur.getManaActuel())
+											&& (joueur.getManaActuel() - Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) - tour.getMiseJoueur(joueur) >= 0)
+											&& (joueur.getManaActuel() - Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) - tour.getMiseJoueur(joueur) <= Joueur.MANA_MAXIMUM)
+											))
 							|| (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
 									|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
 									|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL);
