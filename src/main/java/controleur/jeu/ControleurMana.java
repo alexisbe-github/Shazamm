@@ -36,7 +36,7 @@ public class ControleurMana extends KeyAdapter {
 							&& (Integer.parseInt(saisieMana.getText()
 									+ (e.getKeyChar() == KeyEvent.VK_BACK_SPACE ? "" : e.getKeyChar())) >= 1)
 							&& (saisieMana.getCaretPosition() == 0 && saisieMana.getText().length() > 0
-									? e.getKeyChar() < '5'
+									? e.getKeyChar() < '5' && e.getKeyChar() > '0'
 									: true)));
 
 			if (saisieCorrecte) {
