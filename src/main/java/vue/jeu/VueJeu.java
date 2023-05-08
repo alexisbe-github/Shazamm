@@ -318,17 +318,23 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			tourCourant = partie.getTourPrecedent();
 		List<Carte> cartesJoueesDuTour = tourCourant.getCartesJouees();
 
-		for (int i = 0; i < cartesJoueesDuTour.size(); i++) {
-			Carte c = cartesJoueesDuTour.get(i);
-			JLabel tmp = new JLabel();
-			ImageIcon image = new ImageIcon(c.getPath());
-			//int height = this.getHeight()/5;
-			//tmp.setIcon(Utils.redimensionnerImage(image, Math.round(height*(872f/1356f)), height));
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 9, this.getHeight() / 7));
-			tmp.setHorizontalAlignment(JLabel.CENTER);
-			panelCartesJouees.add(tmp);
+		if(cartesJoueesDuTour.isEmpty()) {
+			JLabel invisible = new JLabel();
+			BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
+			invisible.setIcon(new ImageIcon(bi));
+			panelCartesJouees.add(invisible);
+		}else {
+			for (int i = 0; i < cartesJoueesDuTour.size(); i++) {
+				Carte c = cartesJoueesDuTour.get(i);
+				JLabel tmp = new JLabel();
+				ImageIcon image = new ImageIcon(c.getPath());
+				//int height = this.getHeight()/5;
+				//tmp.setIcon(Utils.redimensionnerImage(image, Math.round(height*(872f/1356f)), height));
+				tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 9, this.getHeight() / 7));
+				tmp.setHorizontalAlignment(JLabel.CENTER);
+				panelCartesJouees.add(tmp);
+			}
 		}
-		this.updateLabelInfosTour(tourCourant);
 	}
 
 	//update le label InfosTour
