@@ -1,7 +1,10 @@
 package main.java.vue.profil;
 
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -16,6 +19,10 @@ import javax.swing.JPanel;
  */
 public class VueSelectionCompte extends JPanel {
 	
+	/**
+	 * Le label affichant le titre du panel
+	 */
+	private final JLabel labelTitre = new JLabel("Sélectionner un profil : ");
 	/**
 	 * Le label précisant ce qu'il faut sélectionner dans la boîte déroulante
 	 */
@@ -43,17 +50,29 @@ public class VueSelectionCompte extends JPanel {
 		
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		
-		c.fill = GridBagConstraints.HORIZONTAL; // Remplissage horizontal
+		c.fill = GridBagConstraints.BOTH; // Remplissage horizontal
 		
-		c.weightx = 0.2; // Poids en X
-		c.gridx = 0; // Position en X (index 0)
-		c.gridy = 0; // Position en Y
-		this.add(labelSelection);
-		
-		c.weightx = 0.8;
-		c.gridx = 1;
+		labelTitre.setFont(new Font(getFont().getFontName(), Font.BOLD, 16));
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridx = 0;
 		c.gridy = 0;
-		this.add(listeChoix);
+		this.add(labelTitre, c); // Ajout du composant avec les contraintes
+		
+		c.weightx = 1; // Poids en X
+		c.weighty = 1; // Poids en Y
+		c.gridx = 0; // Position en X
+		c.gridy = 1; // Position en Y
+		this.add(labelSelection, c);
+		
+		c.weightx = 1;
+		c.weighty = 0.2;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.insets = new Insets(5, 5, 30, 5);
+		this.add(listeChoix, c);
+		
+		listeChoix.setPreferredSize(new Dimension(this.getWidth(), 12));
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 	}

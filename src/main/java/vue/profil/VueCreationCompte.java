@@ -1,11 +1,13 @@
 package main.java.vue.profil;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -18,6 +20,10 @@ import javax.swing.JTextField;
  */
 public class VueCreationCompte extends JPanel {
 
+	/**
+	 * Le label affichant le titre du panel
+	 */
+	private final JLabel labelTitre = new JLabel("Créer un profil : ");
 	/**
 	 * Le label précisant ce qu'il faut entrer dans le champ texte
 	 */
@@ -58,46 +64,59 @@ public class VueCreationCompte extends JPanel {
 		
 		c.fill = GridBagConstraints.HORIZONTAL; // Remplissage horizontal
 		
+		labelTitre.setFont(new Font(getFont().getFontName(), Font.BOLD, 16));
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 0;
+		this.add(labelTitre, c); // Ajout du composant avec les contraintes
+		
 		c.weightx = 0.25; // Poids en X
 		c.gridx = 0; // Position en X (index 0)
-		c.gridy = 0; // Position en Y
+		c.gridy = 1; // Position en Y
 		this.add(labelNom, c); // Ajout du composant avec les contraintes
 		
 		c.weightx = 0.75;
 		c.gridx = 1;
-		c.gridy = 0;
+		c.gridy = 1;
 		this.add(textFieldNom, c);
 		
 		c.weightx = 0.25;
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
 		this.add(labelPrenom, c);
 		
 		c.weightx = 0.75;
 		c.gridx = 1;
-		c.gridy = 1;
+		c.gridy = 2;
 		this.add(textFieldPrenom, c);
 		
 		c.weightx = 0.65;
 		c.gridx = 0;
-		c.gridy = 2;
+		c.gridy = 3;
 		c.insets = new Insets(10, 30, 10, 30); // Padding du composant
 		this.add(boutonSelectionAvatar, c);
 		
 		c.weightx = 0.35;
 		c.gridx = 1;
-		c.gridy = 2;
+		c.gridy = 3;
 		c.insets = new Insets(10, 10, 10, 10);
 		this.add(avatarSelectionne, c);
 		
 		c.weightx = 1;
 		c.gridx = 0;
-		c.gridy = 3;
+		c.gridy = 4;
 		c.gridwidth = 2; // Largeur égale à 2 cellules
 		c.insets = new Insets(20, 50, 0, 50);
 		this.add(boutonOK, c);
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
+	}
+	
+	public static void main(String[] args) {
+		JFrame f = new JFrame();
+		f.setVisible(true);
+		f.getContentPane().add(new VueProfil());
+		f.pack();
 	}
 
 }

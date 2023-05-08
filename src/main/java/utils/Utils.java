@@ -5,12 +5,21 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
+
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.Connexion;
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.beans.JoueurSQL;
 
 /**
  * Classe contenant diverses fonctions utilitaires
@@ -35,9 +44,10 @@ public class Utils {
 		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
 		return new ImageIcon(nvimg); // Transformation en ImageIcon
 	}
-	
+
 	/**
-	 * Redimensionne un objet <code>ImageIcon</code> à l'échelle selon la hauteur spécifiée.
+	 * Redimensionne un objet <code>ImageIcon</code> à l'échelle selon la hauteur
+	 * spécifiée.
 	 * 
 	 * @param img     L'image à redimensionner
 	 * @param hauteur La nouvelle hauteur
@@ -45,7 +55,7 @@ public class Utils {
 	 */
 	public static ImageIcon redimensionnerImage(ImageIcon img, int hauteur) {
 		Image image = img.getImage();
-		int width = Math.round(hauteur*((float) img.getIconWidth() / (float) img.getIconHeight()));
+		int width = Math.round(hauteur * ((float) img.getIconWidth() / (float) img.getIconHeight()));
 		Image nvImg = image.getScaledInstance(width, hauteur, Image.SCALE_SMOOTH);
 		return new ImageIcon(nvImg);
 	}
@@ -113,7 +123,8 @@ public class Utils {
 	 * @return entier généré
 	 */
 	public static int genererEntier(int a, int b) {
-		if(a==b) return a;
+		if (a == b)
+			return a;
 		Random random = new Random();
 		int res;
 		res = a + random.nextInt(b - a);
@@ -131,13 +142,48 @@ public class Utils {
 	public static int genererEntierAvecPoids(int a, int b) {
 		int res = 0;
 		boolean stop = false;
-		while(!stop && res < b) {
-			if(genererEntier(0,2) == 1) {
+		while (!stop && res < b) {
+			if (genererEntier(0, 2) == 1) {
 				stop = true;
-			}else {
+			} else {
 				res++;
-			}	
+			}
 		}
 		return res;
 	}
+
+	/**
+	 * @return La liste des profils contenus dans la base de données
+	 */
+	public static List<Profil> getListeProfils() {
+		ArrayList<Profil> liste = new ArrayList<>();
+		ArrayList<Long> listeIdentifiants = (ArrayList<Long>) Utils.getListeIdentifiantsJoueurs();
+		DAOJoueur dao = new DAOJoueur();
+		for (long id : listeIdentifiants) {
+			Profil profil = new Profil(dao.trouver(id));
+			liste.add(profil);
+		}
+		return liste;
+	}
+
+	/**
+	 * @return La liste des identifiants des joueurs contenus dans la base de
+	 *         données
+	 */
+	private static List<Long> getListeIdentifiantsJoueurs() {
+		ArrayList<Long> liste = new ArrayList<>();
+		String requete = "SELECT DISTINCT id FROM joueur";
+		try (Connection con = Connexion.getInstance().getConnexion();
+				PreparedStatement pstmt = con.prepareStatement(requete);
+				ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				long id = rs.getLong(1);
+				liste.add(id);
+			}
+		} catch (SQLException e) {
+
+		}
+		return liste;
+	}
+
 }
