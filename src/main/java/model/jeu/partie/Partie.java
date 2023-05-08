@@ -9,10 +9,13 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.IA;
+import main.java.model.jeu.ia.IAEtatJeu;
+import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 import main.java.vue.VueConsole;
 
-public class Partie {
+public class Partie implements Cloneable {
 
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
@@ -180,6 +183,17 @@ public class Partie {
 			mancheCourante.passerAuTourSuivant();
 	}
 
+	public Tour getTour(int numeroManche, int numeroTour) {
+		if (this.listeManche.size() >= numeroManche) {
+			Manche manche = this.listeManche.get(numeroManche - 1);
+			if (manche.getListeTours().size() >= numeroTour) {
+				Tour tour = manche.getListeTours().get(numeroTour - 1);
+				return tour;
+			}
+		}
+		return null;
+	}
+
 	public boolean getPartieFinie() {
 		return this.partieFinie;
 	}
@@ -193,6 +207,7 @@ public class Partie {
 			this.cartesJouees = false;
 			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			this.notifierIACartesJouees();
 			this.cartesJouees = true;
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
@@ -200,8 +215,6 @@ public class Partie {
 				this.joueurPousse = true;
 			} else {
 				this.joueurPousse = false;
-				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
-				// joueur avec 0 de mana
 				if (this.getMancheCourante().getNombreTours() == 0) {
 					joueurRouge.melangerPaquet();
 					joueurVert.melangerPaquet();
@@ -210,6 +223,8 @@ public class Partie {
 					joueurRouge.remplirReserveDeMana();
 					joueurVert.remplirReserveDeMana();
 				}
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
 				if ((joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0)
 						&& this.getMancheCourante().getNombreTours() != 0) {
 					this.deplacerMurDeFeuVersJoueurAvec0Mana();
@@ -227,6 +242,29 @@ public class Partie {
 		}
 	}
 
+	/**
+	 * Méthode qui notifie les numéros de cartes joués par le joueur à l'IA
+	 */
+	private void notifierIACartesJouees() {
+		// une fois le tour fini, on informe l'IA (si l'adversaire en est une) des
+		// cartes jouées par son adversaire
+		if (this.joueurRouge instanceof IAEtatJeu || this.joueurVert instanceof IAEtatJeu) {
+			IAEtatJeu ia;
+			if (this.joueurRouge instanceof IA) {
+				ia = (IAEtatJeu) this.joueurRouge;
+				for (Carte c : this.getListeCartesJoueesParJoueur(joueurVert)) {
+					ia.enleverCartePossedeeParAdversaire(c.getNumeroCarte());
+				}
+			} else {
+				ia = (IAEtatJeu) this.joueurVert;
+				for (Carte c : this.getListeCartesJoueesParJoueur(joueurRouge)) {
+					ia.enleverCartePossedeeParAdversaire(c.getNumeroCarte());
+				}
+			}
+
+		}
+	}
+
 	private void printPossibleGagnant() {
 		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
 			System.out.println(pont.getVainqueur());
@@ -236,7 +274,7 @@ public class Partie {
 	public String getGagnant() {
 		return this.pont.getVainqueur();
 	}
-	
+
 	/**
 	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana. S'arrête
 	 * lorsqu'il croise le perdant où lorsque le gagnant a moins de mana que la
@@ -347,6 +385,107 @@ public class Partie {
 
 	public boolean isCartesJouees() {
 		return this.cartesJouees;
+	}
+
+	/**
+	 * Méthode de clonage pour que l'IA puisse simuler une partie. On clone aussi
+	 * les manches et les tours pour éviter de toucher à ceux de la vraie partie
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Partie partieClonee = (Partie) super.clone();
+		List<Manche> tmpManche = new ArrayList<>();
+		for (Manche m : this.listeManche) {
+			List<Tour> tmpTour = new ArrayList<>();
+			Manche mancheClonee = (Manche) m.clone();
+			for (Tour t : mancheClonee.getListeTours()) {
+				Tour tourClonee = (Tour) t.clone();
+				tmpTour.add(tourClonee);
+			}
+			mancheClonee.setListeTours(tmpTour);
+			tmpManche.add(mancheClonee);
+		}
+		partieClonee.listeManche = tmpManche;
+		partieClonee.pont = (Pont) this.pont.clone();
+		this.joueurRouge = (Joueur) joueurRouge.clone();
+		this.joueurVert = (Joueur) joueurVert.clone();
+		return partieClonee;
+	}
+
+	public List<Partie> getCoupsPossibles(Joueur joueur) {
+		List<Partie> res = new ArrayList<>();
+		int combi;
+		// on essaye toutes les combinaisons de la main
+		if (joueur.getMainDuJoueur().size() < 3) {
+			combi = joueur.getMainDuJoueur().size() - 1;
+		} else {
+			combi = 2;
+		}
+		List<List<Integer>> combinaisons = Utils.generateCombinations(combi-1);
+		for (List<Integer> combinaison : combinaisons) {
+			// on essaye toutes les mises
+			for (int i = 1; i < joueur.getManaActuel()+1; i=i+5) {
+				int mise = i;
+				Partie partieTmp;
+
+				try {
+					partieTmp = (Partie) this.clone();
+					partieTmp.getMancheCourante().getTourCourant().setMiseJoueur(joueur, mise);
+					if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+						partieTmp.getMancheCourante().getTourCourant().setMiseJoueurVert(partieTmp.getJoueurVert().getManaActuel()/2);
+					else
+						partieTmp.getMancheCourante().getTourCourant().setMiseJoueurRouge(partieTmp.getJoueurRouge().getManaActuel()/2);
+
+					List<Carte> cartes = new ArrayList<>();
+					for (Integer indexCarte : combinaison) {
+						if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+							cartes.add(partieTmp.joueurRouge.getMainDuJoueur().get(indexCarte));
+						else
+							cartes.add(partieTmp.joueurVert.getMainDuJoueur().get(indexCarte));
+					}
+					for (Carte c : cartes) {
+						partieTmp.jouerCarte(c, joueur);
+					}
+					res.add(partieTmp);
+				} catch (CloneNotSupportedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return res;
+	}
+	
+	public void simulerTour() {
+		Manche mancheCourante = this.getMancheCourante();
+		Tour tourCourant = mancheCourante.getTourCourant();
+		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
+		int miseJoueurVert = tourCourant.getMiseJoueurVert();
+		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			pont.deplacerMurDeFeu(dpMur);
+			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
+				this.lancerNouvelleManche();
+			} else {
+				if (this.getMancheCourante().getNombreTours() == 0) {
+					joueurRouge.melangerPaquet();
+					joueurVert.melangerPaquet();
+					joueurRouge.piocherCartes(3);
+					joueurVert.piocherCartes(3);
+					joueurRouge.remplirReserveDeMana();
+					joueurVert.remplirReserveDeMana();
+				}
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
+				if ((joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0)
+						&& this.getMancheCourante().getNombreTours() != 0) {
+					this.deplacerMurDeFeuVersJoueurAvec0Mana();
+					this.lancerNouvelleManche();
+				} else {
+					this.lancerNouveauTour();
+				}
+			}
+		}
 	}
 
 }

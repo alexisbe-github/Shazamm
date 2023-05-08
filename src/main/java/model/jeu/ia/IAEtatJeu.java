@@ -7,25 +7,14 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
-public abstract class IAEtatJeu extends Joueur {
+public class IAEtatJeu extends Joueur {
 
 	protected Set<Integer> cartesPossedeesParAdversaire;
-	protected Partie partieSimulee;
 
 	protected IAEtatJeu(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		super(couleur, nom, prenom, avatar);
 		this.cartesPossedeesParAdversaire = new HashSet<>();
 		this.initCartesPossedeesParAdversaire();
-	}
-
-	/**
-	 * Pour que l'IA puisse modéliser les et imaginer les mouvements, on simule une
-	 * partie annexe qui permet de ne pas modifier la partie originelle
-	 * 
-	 * @param p
-	 */
-	public void setPartieSimulee(Partie p) {
-		this.partieSimulee = p;
 	}
 
 	/**
@@ -38,7 +27,7 @@ public abstract class IAEtatJeu extends Joueur {
 		}
 	}
 
-	protected void enleverCartePossedeeParAdversaire(Integer i) {
+	public void enleverCartePossedeeParAdversaire(Integer i) {
 		cartesPossedeesParAdversaire.remove(i);
 	}
 
@@ -52,39 +41,68 @@ public abstract class IAEtatJeu extends Joueur {
 	 * 
 	 * Différence de cartes
 	 * 
+	 * Distance joueur/IA avec la lave + ou - 5 fois la distance
+	 * 
 	 * @param partie
 	 * @return
 	 */
-	protected int evaluationTour() {
+	public int evaluationTour(Partie p) {
 		int evaluation = 0;
+		int evaluationMur = 0;
+		int evaluationMana = 0;
+		int evaluationCarte = 0;
+		int evaluationLave = 0;
+
+		Joueur joueurAdverse;
+		if (this.getCouleur().equals(ECouleurJoueur.ROUGE))
+			joueurAdverse = p.getJoueurVert();
+		else
+			joueurAdverse = p.getJoueurRouge();
 
 		// Calcul d'évaluation par rapport au mur
-		if (partieSimulee.getPont().getDistanceEntreMurDeFeuEtJoueur(this) > 3) {
-			evaluation += 20 * partieSimulee.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est gagnante
-		} else {
-			evaluation += -20 * partieSimulee.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est perdante
+		if (p.getPont().getDistanceEntreMurDeFeuEtJoueur(this) > 2) {
+			evaluationMur += 20 * p.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est
+																								// gagnante
 		}
-
-		if (partieSimulee.getPont().getDistanceEntreMurDeFeuEtJoueur(this) == 3) {
-			evaluation = 0; // lorsque le mur est au milieu des deux joueurs
+		if (p.getPont().getDistanceEntreMurDeFeuEtJoueur(joueurAdverse) > 2) {
+			evaluationMur += -20 * p.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est
+																								// perdante
 		}
 
 		// Calcul d'évaluation par rapport au mana restant (différence de mana IA vs
 		// Joueur)
-		Joueur joueurAdverse;
-		if (this.getCouleur().equals(ECouleurJoueur.ROUGE))
-			joueurAdverse = partieSimulee.getJoueurVert();
-		else
-			joueurAdverse = partieSimulee.getJoueurRouge();
-
-		evaluation += this.getManaActuel() - joueurAdverse.getManaActuel();
+		evaluationMana += this.getManaActuel() - joueurAdverse.getManaActuel();
 
 		// Calcul d'évaluation au nombre de cartes restantes
-		evaluation += this.getMainDuJoueur().size() + this.getPaquet().size()
-				- this.cartesPossedeesParAdversaire.size();
-		
-		
+		evaluationCarte += (this.getMainDuJoueur().size() + this.getPaquet().size())
+				- (joueurAdverse.getPaquet().size() + joueurAdverse.getMainDuJoueur().size());
 
+		// Calcul d'évaluation par rapport au joueur le plus proche de la lave
+		if (p.getPont().getDistanceEntreJoueurEtLave(this) > p.getPont()
+				.getDistanceEntreJoueurEtLave(joueurAdverse)) {
+			evaluationLave += 5 * p.getPont().getDistanceEntreJoueurEtLave(this); // cas où le joueur est le
+																								// plus proche de la
+																								// lave:
+																								// 5*distance entre IA
+																								// et
+																								// lave
+		}
+
+		if (p.getPont().getDistanceEntreJoueurEtLave(this) < p.getPont()
+				.getDistanceEntreJoueurEtLave(joueurAdverse)) {
+			evaluationLave += -5 * p.getPont().getDistanceEntreJoueurEtLave(this); // cas où l'IA est le
+																								// plus proche de la
+																								// lave:
+																								// -5*distance entre
+																								// joueur
+																								// et
+																								// lave
+		}
+
+//		System.out.println("Mur:" + evaluationMur + " Mana:" + evaluationMana + " Carte:" + evaluationCarte + " Lave:"
+//				+ evaluationLave);
+		evaluation = evaluationMur + evaluationMana + evaluationCarte + evaluationLave;
+//		System.out.println("Evaluation:" + evaluation);
 		return evaluation;
 	}
 

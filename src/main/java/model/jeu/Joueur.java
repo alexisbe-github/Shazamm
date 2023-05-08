@@ -8,7 +8,7 @@ import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.carte.factory.CarteFactory;
 import main.java.model.jeu.partie.Partie;
 
-public class Joueur {
+public class Joueur implements Cloneable{
 
 	private final ECouleurJoueur COULEUR;
 	private final String NOM, PRENOM, AVATAR;
@@ -147,6 +147,26 @@ public class Joueur {
 
 	public List<Carte> getPaquet() {
 		return paquet;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Joueur joueurClone = (Joueur) super.clone();
+		List<Carte> paquetTmp,mainTmp;
+		paquetTmp = new ArrayList<Carte>();
+		mainTmp = new ArrayList<Carte>();
+		
+		for(Carte c:this.paquet) {
+			paquetTmp.add((Carte)c.clone());
+		}
+		
+		for(Carte c:this.mainDuJoueur) {
+			mainTmp.add((Carte)c.clone());
+		}
+		
+		joueurClone.paquet = paquetTmp;
+		joueurClone.mainDuJoueur = mainTmp;
+		return joueurClone;
 	}
 
 }

@@ -1,6 +1,8 @@
 package main.java.model.jeu;
 
-public class Pont {
+import main.java.model.jeu.partie.Manche;
+
+public class Pont implements Cloneable{
 
 	private int positionMurFeu;
 	private int indexLave, positionJoueurRouge, positionJoueurVert;
@@ -185,4 +187,9 @@ public class Pont {
 		return TAILLE_PONT - positionJoueurVert;
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Pont pontClone = (Pont) super.clone();
+		return pontClone;
+	}
 }

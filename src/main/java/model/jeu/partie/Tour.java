@@ -10,7 +10,7 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
 
-public class Tour {
+public class Tour implements Cloneable {
 
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
@@ -102,17 +102,16 @@ public class Tour {
 		if (!this.harpagonVert) {
 			joueurVert.depenserMana(this.miseJoueurVert);
 		}
-		
+
 		joueurRouge.verifierMana();
 		joueurVert.verifierMana();
 
 		if (this.finDeManche)
 			this.deplacementMur = 0;
 
-		
 		this.manaRestantRouge = joueurRouge.getManaActuel();
 		this.manaRestantVert = joueurVert.getManaActuel();
-		
+
 		return this.deplacementMur;
 	}
 
@@ -334,7 +333,7 @@ public class Tour {
 	public boolean isFinDeManche() {
 		return finDeManche;
 	}
-	
+
 	public int getManaRestantRouge() {
 		return manaRestantRouge;
 	}
@@ -343,4 +342,27 @@ public class Tour {
 		return manaRestantVert;
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Tour tourClone = (Tour) super.clone();
+		List<Carte> cartesJoueesVertTmp, cartesJoueesRougeTmp, cartesJoueesTmp;
+		cartesJoueesVertTmp = new ArrayList<>();
+		cartesJoueesRougeTmp = new ArrayList<>();
+		cartesJoueesTmp = new ArrayList<>();
+		for(Carte c:cartesJoueesVert) {
+			cartesJoueesVertTmp.add((Carte)c.clone());
+		}
+		
+		for(Carte c:cartesJoueesRouge) {
+			cartesJoueesRougeTmp.add((Carte)c.clone());
+		}
+		
+		for(Carte c:cartesJouees) {
+			cartesJoueesTmp.add((Carte)c.clone());
+		}
+		tourClone.cartesJouees = cartesJoueesTmp;
+		tourClone.cartesJoueesRouge = cartesJoueesRougeTmp;
+		tourClone.cartesJoueesVert = cartesJoueesVertTmp;
+		return tourClone;
+	}
 }

@@ -5,9 +5,9 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.locks.Lock;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
@@ -139,5 +139,32 @@ public class Utils {
 			}	
 		}
 		return res;
+	}
+	
+	public static List<List<Integer>> generateCombinations(int n) {
+	    // Créer une liste pour stocker les combinaisons
+	    List<List<Integer>> combinations = new ArrayList<>();
+
+	    // Appeler la fonction récursive pour générer les combinaisons
+	    generateCombinationsHelper(combinations, new ArrayList<>(), 0, n);
+
+	    return combinations;
+	}
+
+	private static void generateCombinationsHelper(List<List<Integer>> combinations, List<Integer> currentCombination, int start, int n) {
+	    // Ajouter la combinaison courante à la liste de combinaisons
+	    combinations.add(new ArrayList<>(currentCombination));
+
+	    // Générer les combinaisons possibles pour chaque position de start jusqu'à n
+	    for (int i = start; i <= n; i++) {
+	        // Ajouter le chiffre courant à la combinaison courante
+	        currentCombination.add(i);
+
+	        // Récursivement générer les combinaisons à partir de la position suivante
+	        generateCombinationsHelper(combinations, currentCombination, i+1, n);
+
+	        // Retirer le chiffre courant de la combinaison courante
+	        currentCombination.remove(currentCombination.size()-1);
+	    }
 	}
 }

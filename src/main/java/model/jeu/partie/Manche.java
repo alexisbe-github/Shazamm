@@ -5,7 +5,7 @@ import java.util.List;
 
 import main.java.model.jeu.Joueur;
 
-public class Manche {
+public class Manche implements Cloneable{
 
 	private List<Tour> listeTours;
 	private boolean mutismeCourant;
@@ -56,6 +56,16 @@ public class Manche {
 
 	public List<Tour> getListeTours() {
 		return listeTours;
+	}
+	
+	public void setListeTours(List<Tour> listeTours) {
+		this.listeTours = listeTours;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Manche mancheClonee = (Manche) super.clone();
+		return mancheClonee;
 	}
 
 }

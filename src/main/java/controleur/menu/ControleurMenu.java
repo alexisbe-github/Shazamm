@@ -58,7 +58,6 @@ public class ControleurMenu implements ActionListener {
 			Joueur joueur = new Joueur(couleur, "Pop", "Simoké", "blabla");
 			IAIntermediaire ia = new IAIntermediaire(couleurIA, "Sorcier", "ledeux", "blabla");
 			Partie partie = new Partie(joueur, ia);
-			ia.setPartieSimulee(partie);
 			VueJeu fenetreJoueur = new VueJeu(joueur, partie);
 			if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 				partie.setStrategy(fenetreJoueur, ia);
@@ -66,6 +65,7 @@ public class ControleurMenu implements ActionListener {
 				partie.setStrategy(ia, fenetreJoueur);
 			}
 			partie.addObserver(fenetreJoueur);
+			System.out.println(ia.getMainDuJoueur());
 			break;
 		}
 	}
