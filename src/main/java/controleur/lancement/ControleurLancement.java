@@ -1,6 +1,5 @@
 package main.java.controleur.lancement;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -8,8 +7,6 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;

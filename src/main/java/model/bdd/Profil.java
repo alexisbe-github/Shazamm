@@ -1,13 +1,19 @@
 package main.java.model.bdd;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import javax.swing.ImageIcon;
 
+import main.java.model.bdd.dao.Connexion;
 import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.bdd.dao.beans.JoueurSQL;
+import main.java.utils.Utils;
 
 /**
  * Profil de joueur
@@ -57,6 +63,40 @@ public class Profil extends JoueurSQL {
 	@Override
 	public String toString() {
 		return String.format(Locale.FRANCE, "%s %s - %d victoire%s", this.getNom(), this.getPrenom(), this.getNbPartiesGagnees(), (this.getNbPartiesGagnees() <= 1 ? "" : "s"));
+	}
+	
+	/**
+	 * @return La liste des profils contenus dans la base de données
+	 */
+	public static List<Profil> getListeProfils() {
+		List<Profil> liste = new ArrayList<>();
+		List<Long> listeIdentifiants = Profil.getListeIdentifiantsJoueurs();
+		DAOJoueur dao = new DAOJoueur();
+		for (long id : listeIdentifiants) {
+			Profil profil = new Profil(dao.trouver(id));
+			liste.add(profil);
+		}
+		return liste;
+	}
+
+	/**
+	 * @return La liste des identifiants des joueurs contenus dans la base de
+	 *         données
+	 */
+	public static List<Long> getListeIdentifiantsJoueurs() {
+		ArrayList<Long> liste = new ArrayList<>();
+		String requete = "SELECT DISTINCT id FROM joueur";
+		Connection con = Connexion.getInstance().getConnexion();
+		try (PreparedStatement pstmt = con.prepareStatement(requete);
+				ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				long id = rs.getLong(1);
+				liste.add(id);
+			}
+		} catch (SQLException e) {
+
+		}
+		return liste;
 	}
 
 }

@@ -151,39 +151,4 @@ public class Utils {
 		}
 		return res;
 	}
-
-	/**
-	 * @return La liste des profils contenus dans la base de données
-	 */
-	public static List<Profil> getListeProfils() {
-		ArrayList<Profil> liste = new ArrayList<>();
-		ArrayList<Long> listeIdentifiants = (ArrayList<Long>) Utils.getListeIdentifiantsJoueurs();
-		DAOJoueur dao = new DAOJoueur();
-		for (long id : listeIdentifiants) {
-			Profil profil = new Profil(dao.trouver(id));
-			liste.add(profil);
-		}
-		return liste;
-	}
-
-	/**
-	 * @return La liste des identifiants des joueurs contenus dans la base de
-	 *         données
-	 */
-	private static List<Long> getListeIdentifiantsJoueurs() {
-		ArrayList<Long> liste = new ArrayList<>();
-		String requete = "SELECT DISTINCT id FROM joueur";
-		Connection con = Connexion.getInstance().getConnexion();
-		try (PreparedStatement pstmt = con.prepareStatement(requete);
-				ResultSet rs = pstmt.executeQuery()) {
-			while (rs.next()) {
-				long id = rs.getLong(1);
-				liste.add(id);
-			}
-		} catch (SQLException e) {
-
-		}
-		return liste;
-	}
-
 }

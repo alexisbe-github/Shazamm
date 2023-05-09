@@ -17,7 +17,7 @@ import javax.swing.JPanel;
  * 
  * @see JPanel
  */
-public class VueSelectionCompte extends JPanel {
+public class VueSelectionProfil extends JPanel {
 	
 	/**
 	 * Le label affichant le titre du panel
@@ -36,7 +36,7 @@ public class VueSelectionCompte extends JPanel {
 	/**
 	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
 	 */
-	public VueSelectionCompte() {
+	public VueSelectionProfil() {
 		super(new GridBagLayout());
 		init();
 	}

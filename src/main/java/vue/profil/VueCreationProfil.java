@@ -7,7 +7,6 @@ import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -18,7 +17,7 @@ import javax.swing.JTextField;
  * 
  * @see JPanel
  */
-public class VueCreationCompte extends JPanel {
+public class VueCreationProfil extends JPanel {
 
 	/**
 	 * Le label affichant le titre du panel
@@ -51,7 +50,7 @@ public class VueCreationCompte extends JPanel {
 	/**
 	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
 	 */
-	public VueCreationCompte() {
+	public VueCreationProfil() {
 		super(new GridBagLayout());
 		init();
 	}
@@ -111,12 +110,4 @@ public class VueCreationCompte extends JPanel {
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 	}
-	
-	public static void main(String[] args) {
-		JFrame f = new JFrame();
-		f.setVisible(true);
-		f.getContentPane().add(new VueProfil());
-		f.pack();
-	}
-
 }
