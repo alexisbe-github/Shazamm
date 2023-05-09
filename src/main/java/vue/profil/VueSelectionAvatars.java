@@ -46,6 +46,15 @@ public class VueSelectionAvatars extends JFrame {
 			JLabel label = new JLabel(imageRedimensionnee);
 			panelAvatars.add(label);
 			ImageIcon i = (ImageIcon) label.getIcon();
+			/**
+			 * 
+			 * 
+			 * 
+			 * TODO Pourquoi c'est null ????
+			 * 
+			 * 
+			 * 
+			 */
 			System.out.println(i.getDescription());
 			label.addMouseListener(new ControleurSelectionAvatar(this, label, null));
 		}
