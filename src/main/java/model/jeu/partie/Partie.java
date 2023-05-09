@@ -408,7 +408,42 @@ public class Partie implements Cloneable {
 		partieClonee.listeManche = tmpManche;
 		partieClonee.pont = (Pont) this.pont.clone();
 		this.joueurRouge = (Joueur) joueurRouge.clone();
-		this.joueurVert = (Joueur) joueurVert.clone();
+		
+		Joueur joueurRougeTmp,joueurVertTmp;
+		List<Carte> paquetTmpRouge,paquetTmpVert,mainTmpRouge,mainTmpVert;
+		
+		joueurRougeTmp = (Joueur)joueurRouge.clone();
+		joueurVertTmp = (Joueur)joueurVert.clone();
+		
+		paquetTmpRouge = new ArrayList<Carte>();
+		mainTmpRouge = new ArrayList<Carte>();
+		paquetTmpVert = new ArrayList<Carte>();
+		mainTmpVert = new ArrayList<Carte>();
+		
+		for(Carte c:joueurRouge.getPaquet()) {
+			paquetTmpRouge.add((Carte)c.clone());
+		}
+		
+		for(Carte c:this.joueurRouge.getMainDuJoueur()) {
+			mainTmpRouge.add((Carte)c.clone());
+		}
+		
+		for(Carte c:joueurRouge.getPaquet()) {
+			paquetTmpVert.add((Carte)c.clone());
+		}
+		
+		for(Carte c:this.joueurRouge.getMainDuJoueur()) {
+			mainTmpVert.add((Carte)c.clone());
+		}
+		
+		joueurRougeTmp.setMainDuJoueur(mainTmpRouge);
+		joueurRougeTmp.setPaquet(paquetTmpRouge);
+		
+		joueurVertTmp.setMainDuJoueur(mainTmpVert);
+		joueurVertTmp.setPaquet(paquetTmpVert);
+		
+		partieClonee.joueurRouge = joueurRougeTmp;
+		partieClonee.joueurVert = joueurVertTmp;
 		return partieClonee;
 	}
 

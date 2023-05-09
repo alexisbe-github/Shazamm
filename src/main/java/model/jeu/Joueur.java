@@ -152,21 +152,15 @@ public class Joueur implements Cloneable{
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Joueur joueurClone = (Joueur) super.clone();
-		List<Carte> paquetTmp,mainTmp;
-		paquetTmp = new ArrayList<Carte>();
-		mainTmp = new ArrayList<Carte>();
-		
-		for(Carte c:this.paquet) {
-			paquetTmp.add((Carte)c.clone());
-		}
-		
-		for(Carte c:this.mainDuJoueur) {
-			mainTmp.add((Carte)c.clone());
-		}
-		
-		joueurClone.paquet = paquetTmp;
-		joueurClone.mainDuJoueur = mainTmp;
 		return joueurClone;
 	}
 
+	public void setPaquet(List<Carte> paquet) {
+		this.paquet = paquet;
+	}
+
+	public void setMainDuJoueur(List<Carte> mainDuJoueur) {
+		this.mainDuJoueur = mainDuJoueur;
+	}
+	
 }
