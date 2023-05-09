@@ -9,9 +9,10 @@ import main.java.model.bdd.dao.beans.CarteSQL;
 
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
- * données et le <code>JavaBean</code> {@link main.java.model.bdd.dao.beans.CarteSQL
- * CarteSQL}, spécifiquement pour la table <code><i>carte</i></code> de la base
- * de données, qui enregistre les informations relatives aux cartes du jeu.
+ * données et le <code>JavaBean</code>
+ * {@link main.java.model.bdd.dao.beans.CarteSQL CarteSQL}, spécifiquement pour
+ * la table <code><i>carte</i></code> de la base de données, qui enregistre les
+ * informations relatives aux cartes du jeu.
  * 
  * 
  * @see CarteSQL <code>CarteSQL</code><a role="link" aria-disabled="true"> - Le
@@ -55,10 +56,9 @@ public class DAOCarte extends DAO<CarteSQL> {
 	@Override
 	public CarteSQL trouver(long id) {
 		CarteSQL carte = new CarteSQL();
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement(
-						"SELECT * FROM " + CARTE + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("SELECT * FROM " + CARTE + " WHERE " + ID + " = ?;",
+				ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 			pstmt.setLong(1, id);
 			pstmt.execute();
 			try (ResultSet rs = pstmt.getResultSet()) {
@@ -83,7 +83,8 @@ public class DAOCarte extends DAO<CarteSQL> {
 	 */
 	@Override
 	public CarteSQL creer(CarteSQL carte) {
-		try (Connection connexion = this.connexion.getConnexion()) {
+		Connection connexion = this.connexion.getConnexion();
+		try {
 			try (PreparedStatement pstmt1 = connexion.prepareStatement(
 					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '" + CARTE + "'")) {
 				pstmt1.execute();
@@ -96,8 +97,6 @@ public class DAOCarte extends DAO<CarteSQL> {
 				}
 				pstmt1.close();
 
-			} catch (SQLException ex) {
-				ex.printStackTrace();
 			}
 
 			try (PreparedStatement pstmt2 = connexion
@@ -107,8 +106,6 @@ public class DAOCarte extends DAO<CarteSQL> {
 				pstmt2.setLong(3, carte.getIdJoueur());
 				pstmt2.setInt(4, carte.getNumeroCarte());
 				pstmt2.execute();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -124,9 +121,9 @@ public class DAOCarte extends DAO<CarteSQL> {
 	 */
 	@Override
 	public CarteSQL maj(CarteSQL carte) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + CARTE + " SET " + ID_TOUR + " = ?, "
-						+ ID_JOUEUR + " = ?, " + NUMERO_CARTE + " = ? WHERE " + ID + " = ?")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + CARTE + " SET " + ID_TOUR + " = ?, "
+				+ ID_JOUEUR + " = ?, " + NUMERO_CARTE + " = ? WHERE " + ID + " = ?")) {
 			pstmt.setLong(1, carte.getIdTour());
 			pstmt.setLong(2, carte.getIdJoueur());
 			pstmt.setInt(3, carte.getNumeroCarte());
@@ -145,9 +142,8 @@ public class DAOCarte extends DAO<CarteSQL> {
 	 */
 	@Override
 	public void supprimer(CarteSQL carte) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion
-						.prepareStatement("DELETE FROM " + CARTE + " WHERE " + ID + " = ?;")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + CARTE + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, carte.getId());
 			pstmt.execute();
 		} catch (SQLException e) {

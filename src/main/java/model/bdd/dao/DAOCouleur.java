@@ -11,9 +11,9 @@ import main.java.model.jeu.ECouleurJoueur;
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
  * données et le <code>JavaBean</code>
- * {@link main.java.model.bdd.dao.beans.CouleurSQL CouleurSQL}, spécifiquement pour
- * la table <code><i>couleur</i></code> de la base de données, qui enregistre
- * les informations relatives aux couleurs.
+ * {@link main.java.model.bdd.dao.beans.CouleurSQL CouleurSQL}, spécifiquement
+ * pour la table <code><i>couleur</i></code> de la base de données, qui
+ * enregistre les informations relatives aux couleurs.
  * 
  * 
  * @see CouleurSQL <code>CouleurSQL</code><a role="link" aria-disabled="true"> -
@@ -56,7 +56,8 @@ public class DAOCouleur extends DAO<CouleurSQL> {
 	@Override
 	public CouleurSQL trouver(long id) {
 		CouleurSQL couleur = new CouleurSQL();
-		try (Connection connexion = this.connexion.getConnexion()) {
+		Connection connexion = this.connexion.getConnexion();
+		try {
 			try (PreparedStatement pstmt = connexion.prepareStatement(
 					"SELECT * FROM " + COULEUR + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
 					ResultSet.CONCUR_READ_ONLY)) {
@@ -72,8 +73,6 @@ public class DAOCouleur extends DAO<CouleurSQL> {
 										: ECouleurJoueur.VERT);
 					}
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 		} catch (SQLException e) {
 
@@ -89,8 +88,8 @@ public class DAOCouleur extends DAO<CouleurSQL> {
 	 */
 	@Override
 	public CouleurSQL creer(CouleurSQL couleur) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("INSERT INTO " + COULEUR + " VALUES (?, ?, ?);")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("INSERT INTO " + COULEUR + " VALUES (?, ?, ?);")) {
 			pstmt.setLong(1, couleur.getIdPartie());
 			pstmt.setString(2, couleur.getCouleurJ1().equals(ECouleurJoueur.VERT) ? "vert" : "rouge");
 			pstmt.setString(3, couleur.getCouleurJ2().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert");
@@ -109,9 +108,9 @@ public class DAOCouleur extends DAO<CouleurSQL> {
 	 */
 	@Override
 	public CouleurSQL maj(CouleurSQL couleur) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + COULEUR + " SET " + COULEUR_J1
-						+ " = ?, " + COULEUR_J2 + " = ? WHERE " + ID + " = ?")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement(
+				"UPDATE " + COULEUR + " SET " + COULEUR_J1 + " = ?, " + COULEUR_J2 + " = ? WHERE " + ID + " = ?")) {
 			pstmt.setString(1, couleur.getCouleurJ1().equals(ECouleurJoueur.VERT) ? "vert" : "rouge");
 			pstmt.setString(2, couleur.getCouleurJ2().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert");
 			pstmt.setLong(3, couleur.getIdPartie());
@@ -129,9 +128,9 @@ public class DAOCouleur extends DAO<CouleurSQL> {
 	 */
 	@Override
 	public void supprimer(CouleurSQL couleur) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion
-						.prepareStatement("DELETE FROM " + COULEUR + " WHERE " + ID + " = ?;")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion
+				.prepareStatement("DELETE FROM " + COULEUR + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, couleur.getIdPartie());
 			pstmt.execute();
 		} catch (SQLException e) {

@@ -10,9 +10,9 @@ import main.java.model.bdd.dao.beans.PartieSQL;
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
  * données et le <code>JavaBean</code>
- * {@link main.java.model.bdd.dao.beans.PartieSQL PartieSQL}, spécifiquement pour la
- * table <code><i>partie</i></code> de la base de données, qui enregistre les
- * informations relatives aux parties.
+ * {@link main.java.model.bdd.dao.beans.PartieSQL PartieSQL}, spécifiquement
+ * pour la table <code><i>partie</i></code> de la base de données, qui
+ * enregistre les informations relatives aux parties.
  * 
  * 
  * @see PartieSQL <code>PartieSQL</code><a role="link" aria-disabled="true"> -
@@ -58,7 +58,8 @@ public class DAOPartie extends DAO<PartieSQL> {
 	@Override
 	public PartieSQL trouver(long id) {
 		PartieSQL partie = new PartieSQL();
-		try (Connection connexion = this.connexion.getConnexion()) {
+		Connection connexion = this.connexion.getConnexion();
+		try {
 			try (PreparedStatement pstmt = connexion.prepareStatement(
 					"SELECT * FROM " + PARTIE + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
 					ResultSet.CONCUR_READ_ONLY)) {
@@ -72,11 +73,9 @@ public class DAOPartie extends DAO<PartieSQL> {
 						partie.setIdVainqueur(rs.getLong(ID_VAINQUEUR));
 					}
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 		} catch (SQLException e) {
-			
+
 		}
 		return partie;
 	}
@@ -89,7 +88,8 @@ public class DAOPartie extends DAO<PartieSQL> {
 	 */
 	@Override
 	public PartieSQL creer(PartieSQL partie) {
-		try (Connection connexion = this.connexion.getConnexion()) {
+		Connection connexion = this.connexion.getConnexion();
+		try {
 			try (PreparedStatement pstmt1 = connexion
 					.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '"
 							+ PARTIE + "'")) {
@@ -103,8 +103,6 @@ public class DAOPartie extends DAO<PartieSQL> {
 				}
 				pstmt1.close();
 
-			} catch (SQLException ex) {
-				ex.printStackTrace();
 			}
 
 			try (PreparedStatement pstmt2 = connexion
@@ -114,9 +112,8 @@ public class DAOPartie extends DAO<PartieSQL> {
 				pstmt2.setLong(3, partie.getIdJoueur2());
 				pstmt2.setLong(4, partie.getIdVainqueur());
 				pstmt2.execute();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+
 		} catch (SQLException e) {
 
 		}
@@ -131,9 +128,9 @@ public class DAOPartie extends DAO<PartieSQL> {
 	 */
 	@Override
 	public PartieSQL maj(PartieSQL partie) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + PARTIE + " SET " + ID_JOUEUR1
-						+ " = ?, " + ID_JOUEUR2 + " = ?, " + ID_VAINQUEUR + " = ? WHERE " + ID + " = ?")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + PARTIE + " SET " + ID_JOUEUR1 + " = ?, "
+				+ ID_JOUEUR2 + " = ?, " + ID_VAINQUEUR + " = ? WHERE " + ID + " = ?")) {
 			pstmt.setLong(1, partie.getIdJoueur1());
 			pstmt.setLong(2, partie.getIdJoueur2());
 			pstmt.setLong(3, partie.getIdVainqueur());
@@ -152,9 +149,8 @@ public class DAOPartie extends DAO<PartieSQL> {
 	 */
 	@Override
 	public void supprimer(PartieSQL partie) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion
-						.prepareStatement("DELETE FROM " + PARTIE + " WHERE " + ID + " = ?;")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + PARTIE + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, partie.getId());
 			pstmt.execute();
 		} catch (SQLException e) {

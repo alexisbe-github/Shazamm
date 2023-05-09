@@ -12,9 +12,9 @@ import main.java.model.bdd.dao.beans.JoueurSQL;
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
  * données et le <code>JavaBean</code>
- * {@link main.java.model.bdd.dao.beans.JoueurSQL JoueurSQL}, spécifiquement pour la
- * table <code><i>joueur</i></code> de la base de données, qui enregistre les
- * informations et les statistiques relatives aux joueurs.
+ * {@link main.java.model.bdd.dao.beans.JoueurSQL JoueurSQL}, spécifiquement
+ * pour la table <code><i>joueur</i></code> de la base de données, qui
+ * enregistre les informations et les statistiques relatives aux joueurs.
  * 
  * 
  * @see JoueurSQL <code>JoueurSQL</code><a role="link" aria-disabled="true"> -
@@ -63,10 +63,9 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	@Override
 	public JoueurSQL trouver(long id) {
 		JoueurSQL joueur = new JoueurSQL();
-		try (Connection connexion = Connexion.getInstance().getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement(
-						"SELECT * FROM " + JOUEUR + " WHERE " + ID + " = ?;", ResultSet.TYPE_SCROLL_SENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
+		Connection connexion = Connexion.getInstance().getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("SELECT * FROM " + JOUEUR + " WHERE " + ID + " = ?;",
+				ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 			pstmt.setLong(1, id);
 			pstmt.execute();
 			try (ResultSet rs = pstmt.getResultSet()) {
@@ -92,7 +91,8 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public JoueurSQL creer(JoueurSQL joueur) {
-		try (Connection connexion = this.connexion.getConnexion()) {
+		Connection connexion = this.connexion.getConnexion();
+		try {
 			try (PreparedStatement pstmt1 = connexion
 					.prepareStatement("SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '"
 							+ JOUEUR + "'")) {
@@ -104,10 +104,6 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 						joueur.setId(id);
 					}
 				}
-				pstmt1.close();
-
-			} catch (SQLException ex) {
-				ex.printStackTrace();
 			}
 
 			try (PreparedStatement pstmt2 = connexion
@@ -118,11 +114,9 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 				pstmt2.setString(4, joueur.getAvatar().getDescription()); // Chemin de l'image
 				pstmt2.setInt(5, joueur.getNbPartiesGagnees());
 				pstmt2.execute();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
 		} catch (SQLException e) {
-			
+
 		}
 		return joueur;
 	}
@@ -135,9 +129,9 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public JoueurSQL maj(JoueurSQL joueur) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + JOUEUR + " SET " + NOM + " = ?, "
-						+ PRENOM + " = ?, " + AVATAR + " = ?, " + NB_PARTIES_GAGNEES + " = ? WHERE " + ID + " = ?")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + JOUEUR + " SET " + NOM + " = ?, " + PRENOM
+				+ " = ?, " + AVATAR + " = ?, " + NB_PARTIES_GAGNEES + " = ? WHERE " + ID + " = ?")) {
 			pstmt.setString(1, joueur.getNom());
 			pstmt.setString(2, joueur.getPrenom());
 			pstmt.setString(3, joueur.getAvatar().getDescription()); // Chemin de l'image
@@ -157,9 +151,8 @@ public class DAOJoueur extends DAO<JoueurSQL> {
 	 */
 	@Override
 	public void supprimer(JoueurSQL joueur) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion
-						.prepareStatement("DELETE FROM " + JOUEUR + " WHERE " + ID + " = ?;")) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + JOUEUR + " WHERE " + ID + " = ?;")) {
 			pstmt.setLong(1, joueur.getId());
 			pstmt.execute();
 		} catch (SQLException e) {

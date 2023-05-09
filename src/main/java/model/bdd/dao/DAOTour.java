@@ -11,10 +11,10 @@ import main.java.model.bdd.dao.beans.TourSQL;
 
 /**
  * La couche <code>DAO</code> secondaire qui fait le lien entre la base de
- * données et le <code>JavaBean</code> {@link main.java.model.bdd.dao.beans.TourSQL
- * TourSQL}, spécifiquement pour la table <code><i>tour</i></code> de la base de
- * données, qui enregistre les informations et les statistiques relatives aux
- * tours.
+ * données et le <code>JavaBean</code>
+ * {@link main.java.model.bdd.dao.beans.TourSQL TourSQL}, spécifiquement pour la
+ * table <code><i>tour</i></code> de la base de données, qui enregistre les
+ * informations et les statistiques relatives aux tours.
  * 
  * 
  * @see TourSQL <code>TourSQL</code><a role="link" aria-disabled="true"> - Le
@@ -93,9 +93,9 @@ public class DAOTour extends DAO<TourSQL> {
 	@Override
 	public TourSQL trouver(long id) {
 		TourSQL tour = new TourSQL();
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion.prepareStatement("SELECT * FROM " + TOUR + " WHERE " + ID + " = ?;",
-						ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("SELECT * FROM " + TOUR + " WHERE " + ID + " = ?;",
+				ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
 			pstmt.setLong(1, id);
 			pstmt.execute();
 			try (ResultSet rs = pstmt.getResultSet()) {
@@ -127,7 +127,8 @@ public class DAOTour extends DAO<TourSQL> {
 	 */
 	@Override
 	public TourSQL creer(TourSQL tour) {
-		try (Connection connexion = this.connexion.getConnexion()) {
+		Connection connexion = this.connexion.getConnexion();
+		try {
 			try (PreparedStatement pstmt1 = connexion.prepareStatement(
 					"SELECT `auto_increment` FROM INFORMATION_SCHEMA.TABLES " + "WHERE table_name = '" + TOUR + "'")) {
 				pstmt1.execute();
@@ -140,8 +141,6 @@ public class DAOTour extends DAO<TourSQL> {
 				}
 				pstmt1.close();
 
-			} catch (SQLException ex) {
-				ex.printStackTrace();
 			}
 
 			try (PreparedStatement pstmt2 = connexion
@@ -158,9 +157,8 @@ public class DAOTour extends DAO<TourSQL> {
 				pstmt2.setInt(10, tour.getNumeroTour());
 				pstmt2.setTimestamp(11, tour.getDate(), Calendar.getInstance(Locale.FRANCE));
 				pstmt2.execute();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
+
 		} catch (SQLException e) {
 
 		}
@@ -175,12 +173,11 @@ public class DAOTour extends DAO<TourSQL> {
 	 */
 	@Override
 	public TourSQL maj(TourSQL tour) {
-		try (Connection connexion = this.connexion.getConnexion();
-				PreparedStatement pstmt = connexion
-						.prepareStatement("UPDATE " + TOUR + " SET " + ID_MANCHE + " = ?, " + POSITION_MUR_FLAMMES
-								+ " = ?, " + POSITION_JOUEUR1 + " = ?, " + POSITION_JOUEUR2 + " = ?, " + MISE_JOUEUR1
-								+ " = ?, " + MISE_JOUEUR2 + " = ?, " + PUISSANCE_JOUEUR1 + " = ?, " + PUISSANCE_JOUEUR2
-								+ " = ?, " + NUMERO_TOUR + " = ?, " + DATE + " = ? WHERE " + ID + " = ?");) {
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("UPDATE " + TOUR + " SET " + ID_MANCHE + " = ?, "
+				+ POSITION_MUR_FLAMMES + " = ?, " + POSITION_JOUEUR1 + " = ?, " + POSITION_JOUEUR2 + " = ?, "
+				+ MISE_JOUEUR1 + " = ?, " + MISE_JOUEUR2 + " = ?, " + PUISSANCE_JOUEUR1 + " = ?, " + PUISSANCE_JOUEUR2
+				+ " = ?, " + NUMERO_TOUR + " = ?, " + DATE + " = ? WHERE " + ID + " = ?");) {
 			pstmt.setLong(1, tour.getIdManche());
 			pstmt.setInt(2, tour.getPositionMurFlammes());
 			pstmt.setInt(3, tour.getPositionJoueur1());
@@ -206,16 +203,13 @@ public class DAOTour extends DAO<TourSQL> {
 	 */
 	@Override
 	public void supprimer(TourSQL tour) {
-		try (Connection connexion = this.connexion.getConnexion()) {
-			try (PreparedStatement pstmt = connexion
-					.prepareStatement("DELETE FROM " + TOUR + " WHERE " + ID + " = ?;")) {
-				pstmt.setLong(1, tour.getId());
-				pstmt.execute();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		Connection connexion = this.connexion.getConnexion();
+		try (PreparedStatement pstmt = connexion.prepareStatement("DELETE FROM " + TOUR + " WHERE " + ID + " = ?;")) {
+			pstmt.setLong(1, tour.getId());
+			pstmt.execute();
+
 		} catch (SQLException e) {
-			
+
 		}
 	}
 

@@ -173,8 +173,8 @@ public class Utils {
 	private static List<Long> getListeIdentifiantsJoueurs() {
 		ArrayList<Long> liste = new ArrayList<>();
 		String requete = "SELECT DISTINCT id FROM joueur";
-		try (Connection con = Connexion.getInstance().getConnexion();
-				PreparedStatement pstmt = con.prepareStatement(requete);
+		Connection con = Connexion.getInstance().getConnexion();
+		try (PreparedStatement pstmt = con.prepareStatement(requete);
 				ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				long id = rs.getLong(1);
