@@ -13,6 +13,7 @@ import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 import main.java.vue.jeu.Chrono;
+import main.java.vue.jeu.VueHistorique;
 import main.java.vue.jeu.VueJeu;
 
 public class ControleurJeu implements ActionListener {
@@ -55,6 +56,9 @@ public class ControleurJeu implements ActionListener {
 				partie.jouerCarte(c, j);
 			}
 			partie.jouerTour();
+			break;
+		case "Historique de la partie":
+			VueHistorique vh = new VueHistorique();
 			break;
 		default:
 			return;

@@ -88,7 +88,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		//Redimensionne la frame
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, screenSize.height * 9 / 10);
-		setResizable(true);
+		setResizable(false);
 
 		//Couleur d'arrière plan et ajout du grid bag layout
 		getContentPane().setBackground(Color.BLACK);
