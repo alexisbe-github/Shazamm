@@ -76,7 +76,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public VueJeu(Joueur joueur, Partie partie) {
 		this.joueur = joueur;
 		this.partie = partie;
-		this.timer = new Chrono(30, this.partie, this.joueur);
+		this.timer = new Chrono(8, this.partie, this.joueur, this);
 
 		cartesJouees = new ArrayList<>();
 		
@@ -289,7 +289,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		imageMise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		//Ajout des listeners
-		ControleurJeu cj = new ControleurJeu(this, partie,timer);
+		ControleurJeu cj = new ControleurJeu(this, partie);
 		boutonJouer.addActionListener(cj);
 		historique.addActionListener(cj);
 		saisieMana.addKeyListener(new ControleurMana(saisieMana, boutonJouer, this));

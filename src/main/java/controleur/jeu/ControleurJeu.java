@@ -20,12 +20,10 @@ public class ControleurJeu implements ActionListener {
 
 	private VueJeu vj;
 	private Partie partie;
-	private Chrono timer;
 	
-	public ControleurJeu(VueJeu vj, Partie p, Chrono c) {
+	public ControleurJeu(VueJeu vj, Partie p) {
 		this.vj = vj;
 		this.partie = p;
-		this.timer=c;
 	}
 
 	@Override
@@ -58,7 +56,7 @@ public class ControleurJeu implements ActionListener {
 			partie.jouerTour();
 			break;
 		case "Historique de la partie":
-			VueHistorique vh = new VueHistorique();
+			VueHistorique vh = new VueHistorique(this.partie);
 			break;
 		default:
 			return;
