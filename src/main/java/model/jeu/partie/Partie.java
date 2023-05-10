@@ -448,7 +448,7 @@ public class Partie implements Cloneable {
 			if(manaMax < 20) {
 				manaMax = joueur.getManaActuel()+1;
 			}else {
-				manaMax = (int) ((joueur.getManaActuel() + 1) / 2.5);
+				manaMax = (int) ((joueur.getManaActuel() + 1) / 1.5);
 			}
 			for (int i = 1; i < manaMax ; i++) {
 				partieTmp = (Partie) partieOriginale.clone();

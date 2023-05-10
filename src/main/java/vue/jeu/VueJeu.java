@@ -76,7 +76,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public VueJeu(Joueur joueur, Partie partie) {
 		this.joueur = joueur;
 		this.partie = partie;
-		this.timer = new Chrono(8, this.partie, this.joueur, this);
+		this.timer = new Chrono(30, this.partie, this.joueur, this);
 
 		cartesJouees = new ArrayList<>();
 		
@@ -503,7 +503,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 		panelMain.removeAll();
 		panelMain.repaint();
-
+		ControleurCartes ml = new ControleurCartes(this.panelMain, this.cartesJouees, this);
+		
 		for (int i = 0; i < mainJoueur.size(); i++) {
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
@@ -511,8 +512,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			tmp.setIcon(Utils.redimensionnerImage(image, this.getHeight() / 4));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
 			tmp.setToolTipText(c.getDescription()); //ajoute la description lorsque la souris passe au dessus de la carte
+			//tmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 			panelMain.add(tmp);
-			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
+			tmp.addMouseListener(ml);
 		}
 	}
 
@@ -521,7 +523,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			if (this.cartesJouees.contains(i)) {
 				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 			} else {
-				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+				((JLabel) panelMain.getComponent(i)).setBorder(BorderFactory.createEmptyBorder());
 			}
 		}
 	}
