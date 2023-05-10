@@ -8,26 +8,60 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
+import main.java.model.jeu.ECouleurJoueur;
+import main.java.model.jeu.Joueur;
+import main.java.model.jeu.ia.IA;
+import main.java.model.jeu.partie.Partie;
+
 public class Chrono extends JLabel{
     private Timer timer;
     private int tempsRestant;
+    private final int DUREE;
+    private Partie partie;
+    private Joueur joueur;
 
-    public Chrono(int sec) {
+    public Chrono(int dsec, Partie p, Joueur j) {
+    	partie = p;
+        joueur = j;
+    	DUREE=dsec;
     	this.setFont(new Font("Verdana", Font.PLAIN, 20));
-    	this.setText(String.format("%02d:%02d", tempsRestant/60, tempsRestant%60));
-    	tempsRestant=sec;
+    	this.setText(String.format("%02d:%02d", DUREE/60, DUREE%60));
         this.setVisible(true);
         this.init();
         this.setForeground(Color.WHITE);
+        this.setHorizontalAlignment(JLabel.CENTER);
+        this.reStart();
     }
 
+    private void finDuTemps() {
+    	timer.stop();
+    	Joueur joueurAdverse;
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			joueurAdverse = this.partie.getJoueurVert();
+		} else {
+			joueurAdverse = this.partie.getJoueurRouge();
+		}
+		boolean adversaireEstUnOrdinateur = joueurAdverse instanceof IA;
+		if (adversaireEstUnOrdinateur)
+			((IA) joueurAdverse).jouerTour(partie);
+		
+    	this.partie.getMancheCourante().getTourCourant().setMiseJoueur(joueur, 1);
+    	this.partie.jouerTour();
+    	this.reStart();
+    }
+    
+    public void reStart() {
+    	timer.start();
+    	tempsRestant=DUREE;
+    }
+    
     private void init() {
         this.timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tempsRestant--;
                 if (tempsRestant==0) {
-                    timer.stop();
+                    Chrono.this.finDuTemps();
                 }else {
                 	int minutes = tempsRestant/60;
                 	int secondes = tempsRestant%60;
