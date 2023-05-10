@@ -2,24 +2,16 @@ package main.java.utils;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
-
-import main.java.model.bdd.Profil;
-import main.java.model.bdd.dao.Connexion;
-import main.java.model.bdd.dao.DAOJoueur;
-import main.java.model.bdd.dao.beans.JoueurSQL;
 
 /**
  * Classe contenant diverses fonctions utilitaires
@@ -60,6 +52,14 @@ public class Utils {
 		return new ImageIcon(nvImg);
 	}
 
+	public static ImageIcon createImageIconColor(Color color, int width, int height) {
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+	    Graphics2D graphics = image.createGraphics();
+	    graphics.setPaint(color);
+	    graphics.fillRect (0, 0, width, height);
+	    return new ImageIcon(image);
+	}
+	
 	/**
 	 * Réalise un fondu d'arrière-plan sur un composant Swing
 	 * 
@@ -113,6 +113,13 @@ public class Utils {
 			}
 		});
 		timer.start();
+	}
+	
+	public static void setConstraints(double weightx, double weighty, int gridx, int gridy, GridBagConstraints c) {
+		c.weightx = weightx;
+		c.weighty = weighty;
+		c.gridx = gridx;
+		c.gridy = gridy;
 	}
 
 	/**

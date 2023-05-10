@@ -121,13 +121,13 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		}else {
 			panelInfosJoueur.setBackground(new Color(47,176,47));
 		}
-		setConstraints(1, 0, 1, 0, c);
+		Utils.setConstraints(1, 0, 1, 0, c);
 		panelLogo.add(panelInfosJoueur, c);
 		
 		//création et ajout de l'image du logo
 		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/13));
 		logo.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
-		setConstraints(1, 0, 0, 0, c);
+		Utils.setConstraints(1, 0, 0, 0, c);
 		panelLogo.add(logo, c);
 		
 		JLabel limite = new JLabel();
@@ -135,7 +135,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo.add(limite);
 		
 		//Ajout du panel logo à la frame
-		setConstraints(0, 0, 0, hauteurElement, c);
+		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelLogo, c);
 		
 		
@@ -148,7 +148,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelInfos.setForeground(Color.LIGHT_GRAY);
 		updateInfos();
 		hauteurElement++;
-		setConstraints(0, 0, 0, hauteurElement, c);
+		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(labelInfos, c);
 
 		
@@ -156,7 +156,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		
 		// Création du label timer et ajout à la fenêtre
 		hauteurElement++;
-		setConstraints(0, 0, 0, hauteurElement, c);
+		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(timer, c);
 
 		
@@ -171,14 +171,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		c.insets = new Insets(0, 20, 0, 20);
 		c.anchor = GridBagConstraints.SOUTH;
 		c.fill = GridBagConstraints.VERTICAL;
-		setConstraints(0, 0, 0, 0, c);
+		Utils.setConstraints(0, 0, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
 		// Création du panel pont et ajout au panel Jeu
 		panelPont = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
 		panelPont.setBackground(Color.BLACK);
 		initPont();
 		updatePont();
-		setConstraints(0, 0, 0, 1, c);
+		Utils.setConstraints(0, 0, 0, 1, c);
 		panelPont.setBounds(0, this.getHeight() * 2 / 10, this.getWidth(), this.getHeight() * 2 / 10);
 		c.insets = new Insets(0, 10, 5, 10);
 		c.ipady = 0;
@@ -190,7 +190,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelJeu.setComponentZOrder(panelPont, 1);
 		//Ajout du panel jeu principal à la frame
 		hauteurElement++;
-		setConstraints(0, 0, 0, hauteurElement, c);
+		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelJeu, c);
 
 		
@@ -219,7 +219,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		//Ajout du panel à la frame
 		c.fill = GridBagConstraints.BOTH;
 		hauteurElement++;
-		setConstraints(0, 0, 0, hauteurElement, c);
+		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelTour, c);
 
 		
@@ -267,7 +267,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		//Ajout du panel Cartes à la frame
 		c.fill = GridBagConstraints.BOTH;
 		hauteurElement++;
-		setConstraints(1, 1, 0, hauteurElement, c);
+		Utils.setConstraints(1, 1, 0, hauteurElement, c);
 		getContentPane().add(scrollPaneCartes, c);
 
 		
@@ -301,7 +301,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelAction.add(labelManaAdversaire);
 		//Ajout du panel à la frame
 		hauteurElement++;
-		setConstraints(0, 0, 0, hauteurElement, c);
+		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelAction, c);
 
 		
@@ -316,7 +316,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 				.setString("Mana : " + String.valueOf(Joueur.MANA_MAXIMUM) + "/" + String.valueOf(Joueur.MANA_MAXIMUM));
 		barreMana.setValue(100);
 		hauteurElement++;
-		setConstraints(1, 0, 0, hauteurElement, c);
+		Utils.setConstraints(1, 0, 0, hauteurElement, c);
 		getContentPane().add(barreMana, c);
 	}
 
@@ -450,7 +450,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private void updateSorciersEtMur() {
 		panelSorciers.removeAll();
 		GridBagConstraints c = new GridBagConstraints();
-		setConstraints(1, 0.5, 0, 1, c);
+		Utils.setConstraints(1, 0.5, 0, 1, c);
 		ImageIcon temp = new ImageIcon(partie.getJoueurRouge().getPath());
 		BufferedImage bi = new BufferedImage(this.getWidth() / 25, this.getHeight() / 15, BufferedImage.TYPE_INT_ARGB);
 		ImageIcon icon = new ImageIcon(bi);
@@ -569,16 +569,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Factorise la modification répétitive des contraintes
-	 */
-	private void setConstraints(double weightx, double weighty, int gridx, int gridy, GridBagConstraints c) {
-		c.weightx = weightx;
-		c.weighty = weighty;
-		c.gridx = gridx;
-		c.gridy = gridy;
 	}
 
 	/**
