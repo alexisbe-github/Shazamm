@@ -110,7 +110,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JLabel labelSorcier = new JLabel(
 				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + " - "
 						+ joueur.getNom() + "</b></html>");
-		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, 16));
+		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, this.getWidth()/70));
 		labelSorcier.setForeground(Color.BLACK);
 		JPanel panelInfosJoueur = new JPanel();
 		panelInfosJoueur.add(labelSorcier);
@@ -341,9 +341,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 				Carte c = cartesJoueesDuTour.get(i);
 				JLabel tmp = new JLabel();
 				ImageIcon image = new ImageIcon(c.getPath());
-				//int height = this.getHeight()/5;
-				//tmp.setIcon(Utils.redimensionnerImage(image, Math.round(height*(872f/1356f)), height));
-				tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 9, this.getHeight() / 7));
+				tmp.setIcon(Utils.redimensionnerImage(image, this.getHeight() / 7));
 				tmp.setHorizontalAlignment(JLabel.CENTER);
 				panelCartesJouees.add(tmp);
 			}
@@ -510,13 +508,10 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
-			//int height = this.getHeight()/5;
-			//int width = Math.round(height*(872f/1356f));
-			//tmp.setIcon(Utils.redimensionnerImage(image, width, height));
-			tmp.setIcon(Utils.redimensionnerImage(image, this.getWidth() / 6, this.getHeight() / 5));
+			tmp.setIcon(Utils.redimensionnerImage(image, this.getHeight() / 4));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
+			tmp.setToolTipText(c.getDescription()); //ajoute la description lorsque la souris passe au dessus de la carte
 			panelMain.add(tmp);
-
 			tmp.addMouseListener(new ControleurCartes(this.panelMain, this.cartesJouees, this));
 		}
 	}

@@ -35,6 +35,10 @@ public abstract class Carte {
 	public void defausser() {
 		this.joueur.defausser(this);
 	}
+	
+	public String getDescription() {
+		return this.description;
+	}
 
 	/**
 	 * Deux cartes sont equals si elles ont le même numéro de carte et la même
