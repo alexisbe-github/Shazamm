@@ -6,10 +6,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import main.java.controleur.menu.ControleurProfil;
 
 /**
  * Le panneau servant à la création d'un nouveau profil de joueur et à son
@@ -46,6 +49,10 @@ public class VueCreationProfil extends JPanel {
 	 * Le bouton <code>OK</code> qui valide l'enregistrement du profil
 	 */
 	private final JButton boutonOK = new JButton("OK");
+	/**
+	 * Le contrôleur de la classe qui écoute les évènements
+	 */
+	private ControleurProfil controleur = new ControleurProfil(this);
 
 	/**
 	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
@@ -93,6 +100,7 @@ public class VueCreationProfil extends JPanel {
 		c.gridx = 0;
 		c.gridy = 3;
 		c.insets = new Insets(10, 30, 10, 30); // Padding du composant
+		boutonSelectionAvatar.addActionListener(controleur);
 		this.add(boutonSelectionAvatar, c);
 		
 		c.weightx = 0.35;
@@ -109,5 +117,13 @@ public class VueCreationProfil extends JPanel {
 		this.add(boutonOK, c);
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
+	}
+	
+	/**
+	 * Met à jour l'avatar sélectionné
+	 * @param avatar
+	 */
+	public void setAvatar(ImageIcon avatar) {
+		this.avatarSelectionne.setIcon(avatar);
 	}
 }

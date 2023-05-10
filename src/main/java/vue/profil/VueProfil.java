@@ -1,7 +1,12 @@
 package main.java.vue.profil;
 
+import java.awt.Component;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
+
+import main.java.controleur.menu.ControleurProfil;
 
 /**
  * Le panneau définissant le profil du joueur.
