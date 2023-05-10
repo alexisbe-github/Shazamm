@@ -106,15 +106,23 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo = new JPanel(new GridLayout(1,3)); //Création du panel principal du logo
 		panelLogo.setBackground(Color.BLACK);	
 		
-		//Création du label info sorcier et ajout a la frame à gauche du logo
+		//Création du label info sorcier et ajout au panel infos joueur
 		JLabel labelSorcier = new JLabel(
 				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + " - "
 						+ joueur.getNom() + "</b></html>");
 		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, 16));
-		labelSorcier.setForeground(Color.LIGHT_GRAY);
-		labelSorcier.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
+		labelSorcier.setForeground(Color.BLACK);
+		JPanel panelInfosJoueur = new JPanel();
+		panelInfosJoueur.add(labelSorcier);
+		
+		panelInfosJoueur.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
+		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			panelInfosJoueur.setBackground(new Color(176,47,47));
+		}else {
+			panelInfosJoueur.setBackground(new Color(47,176,47));
+		}
 		setConstraints(1, 0, 1, 0, c);
-		panelLogo.add(labelSorcier, c);
+		panelLogo.add(panelInfosJoueur, c);
 		
 		//création et ajout de l'image du logo
 		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/13));
