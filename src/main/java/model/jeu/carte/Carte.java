@@ -7,7 +7,7 @@ import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 
-public abstract class Carte {
+public abstract class Carte implements Cloneable {
 
 	protected String nom, path, description;
 	protected Partie partie;
@@ -23,15 +23,15 @@ public abstract class Carte {
 	public Joueur getJoueur() {
 		return this.joueur;
 	}
-	
+
 	public String getNom() {
 		return nom;
 	}
-	
+
 	public void changerDetenteurCarte(Joueur nouveauDetenteur) {
 		joueur = nouveauDetenteur;
 	}
-	
+
 	public void defausser() {
 		this.joueur.defausser(this);
 	}
@@ -59,15 +59,24 @@ public abstract class Carte {
 
 	@Override
 	public String toString() {
-		return "Carte "+ numeroCarte + ": nom : " + nom + ", desc : " + description;
+		return "Carte " + numeroCarte + ": nom : " + nom + ", desc : " + description;
 	}
 
 	public String getPath() {
 		String res = "src/main/resources/cartes/";
-		if(this.numeroCarte < 10) res += "0";
-		res+=this.numeroCarte;
-		if(this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) res+= "r"; 
-		else res += "v";
-		return res+".jpg";
+		if (this.numeroCarte < 10)
+			res += "0";
+		res += this.numeroCarte;
+		if (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			res += "r";
+		else
+			res += "v";
+		return res + ".jpg";
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Carte carteClone = (Carte) super.clone();
+		return carteClone;
 	}
 }

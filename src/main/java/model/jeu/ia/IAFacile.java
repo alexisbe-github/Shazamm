@@ -10,7 +10,7 @@ import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 
-public class IAFacile extends Joueur implements IA, ILancementStrategy {
+public class IAFacile extends IAEtatJeu implements IA, ILancementStrategy {
 
 	public IAFacile(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		super(couleur, nom, prenom, avatar);

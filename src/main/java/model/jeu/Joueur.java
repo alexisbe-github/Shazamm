@@ -8,7 +8,7 @@ import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.carte.factory.CarteFactory;
 import main.java.model.jeu.partie.Partie;
 
-public class Joueur {
+public class Joueur implements Cloneable{
 
 	private final ECouleurJoueur COULEUR;
 	private final String NOM, PRENOM, AVATAR;
@@ -138,11 +138,29 @@ public class Joueur {
 	/**
 	 * Retourne le chemin de l'image correspondant au Joueur
 	 */
- public String getPath(){
+	public String getPath() {
 		if (this.COULEUR.equals(ECouleurJoueur.ROUGE))
 			return "src/main/resources/perso/rouge.png";
-		
+
 		return "src/main/resources/perso/vert.png";
 	}
 
+	public List<Carte> getPaquet() {
+		return paquet;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Joueur joueurClone = (Joueur) super.clone();
+		return joueurClone;
+	}
+
+	public void setPaquet(List<Carte> paquet) {
+		this.paquet = paquet;
+	}
+
+	public void setMainDuJoueur(List<Carte> mainDuJoueur) {
+		this.mainDuJoueur = mainDuJoueur;
+	}
+	
 }
