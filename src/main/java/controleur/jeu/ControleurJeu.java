@@ -12,16 +12,19 @@ import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
+import main.java.vue.jeu.Chrono;
 import main.java.vue.jeu.VueJeu;
 
 public class ControleurJeu implements ActionListener {
 
 	private VueJeu vj;
 	private Partie partie;
-
-	public ControleurJeu(VueJeu vj, Partie p) {
+	private Chrono timer;
+	
+	public ControleurJeu(VueJeu vj, Partie p, Chrono c) {
 		this.vj = vj;
 		this.partie = p;
+		this.timer=c;
 	}
 
 	@Override
@@ -51,7 +54,6 @@ public class ControleurJeu implements ActionListener {
 			for (Carte c : cartes) {
 				partie.jouerCarte(c, j);
 			}
-
 			partie.jouerTour();
 			break;
 		default:

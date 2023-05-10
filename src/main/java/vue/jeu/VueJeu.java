@@ -67,7 +67,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JLabel labelManaAdversaire, labelInfos, labelInfosTour;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
-	private Chrono timer = new Chrono(10);
+	private Chrono timer;
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -76,6 +76,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public VueJeu(Joueur joueur, Partie partie) {
 		this.joueur = joueur;
 		this.partie = partie;
+		this.timer = new Chrono(30, this.partie, this.joueur);
 
 		cartesJouees = new ArrayList<>();
 		
@@ -142,7 +143,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// Création du label timer et ajout à la fenêtre
 		hauteurElement++;
 		setConstraints(0, 0, 0, hauteurElement, c);
-		timer.setHorizontalAlignment(JLabel.CENTER);
 		getContentPane().add(timer, c);
 
 		
@@ -275,7 +275,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		imageMise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
 		//Ajout des listeners
-		ControleurJeu cj = new ControleurJeu(this, partie);
+		ControleurJeu cj = new ControleurJeu(this, partie,timer);
 		boutonJouer.addActionListener(cj);
 		historique.addActionListener(cj);
 		saisieMana.addKeyListener(new ControleurMana(saisieMana, boutonJouer, this));
@@ -312,12 +312,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private void updateCartesJouees() {
 		panelCartesJouees.removeAll();
 		panelCartesJouees.repaint();
-		
 		Tour tourCourant = partie.getMancheCourante().getTourCourant();
 		if (tourCourant.getMiseJoueurRouge() == 0 && tourCourant.getMiseJoueurVert() == 0)
 			tourCourant = partie.getTourPrecedent();
 		List<Carte> cartesJoueesDuTour = tourCourant.getCartesJouees();
-
+		
 		if(cartesJoueesDuTour.isEmpty()) {
 			JLabel invisible = new JLabel();
 			BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
@@ -335,6 +334,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 				panelCartesJouees.add(tmp);
 			}
 		}
+		this.updateLabelInfosTour(tourCourant);
 	}
 
 	//update le label InfosTour
@@ -948,6 +948,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		timer.reStart();
 		this.updateBarreMana();
 		this.updateManaAdversaire();
 		this.updateInfos();
