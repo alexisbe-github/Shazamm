@@ -9,9 +9,13 @@ import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
+import main.java.model.jeu.ia.IAEtatJeu;
+import main.java.model.jeu.ia.IAExperte;
+import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
 import main.java.vue.jeu.VueJeu;
@@ -56,15 +60,50 @@ public class ControleurMenu implements ActionListener {
 			ECouleurJoueur couleur = couleurs.get(0);
 			ECouleurJoueur couleurIA = couleurs.get(1);
 			Joueur joueur = new Joueur(couleur, "Pop", "Simoké", "blabla");
-			IAIntermediaire ia = new IAIntermediaire(couleurIA, "Sorcier", "ledeux", "blabla");
-			Partie partie = new Partie(joueur, ia);
-			VueJeu fenetreJoueur = new VueJeu(joueur, partie);
-			if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
-				partie.setStrategy(fenetreJoueur, ia);
-			} else {
-				partie.setStrategy(ia, fenetreJoueur);
+			Object[] options = { "Facile", "Intermédiaire", "Experte" };
+			int input = JOptionPane.showOptionDialog(vm, "Choisissez la difficulté de l'ordinateur", "Choix difficulté",
+					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+			Partie partie;
+			VueJeu fenetreJoueur;
+			switch (input) {
+			case 0:
+				IAFacile ia = new IAFacile(couleurIA, "Sorcier", "ledeux", "blabla");
+				partie = new Partie(joueur, ia);
+			 fenetreJoueur = new VueJeu(joueur, partie);
+				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
+					partie.setStrategy(fenetreJoueur, ia);
+				} else {
+					partie.setStrategy(ia, fenetreJoueur);
+				}
+				partie.addObserver(fenetreJoueur);
+				break;
+			case 1:
+				IAIntermediaire iaI = new IAIntermediaire(couleurIA, "Sorcier", "ledeux", "blabla");
+				partie = new Partie(joueur, iaI);
+				fenetreJoueur = new VueJeu(joueur, partie);
+				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
+					partie.setStrategy(fenetreJoueur, iaI);
+				} else {
+					partie.setStrategy(iaI, fenetreJoueur);
+				}
+				partie.addObserver(fenetreJoueur);
+				break;
+			case 2:
+				IAExperte iaE = new IAExperte(couleurIA, "Sorcier", "ledeux", "blabla");
+				partie = new Partie(joueur, iaE);
+				fenetreJoueur = new VueJeu(joueur, partie);
+				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
+					partie.setStrategy(fenetreJoueur, iaE);
+				} else {
+					partie.setStrategy(iaE, fenetreJoueur);
+				}
+				partie.addObserver(fenetreJoueur);
+				break;
+			case JOptionPane.CLOSED_OPTION:
+				vm.setVisible(true);
+				break;
 			}
-			partie.addObserver(fenetreJoueur);
+
 			break;
 		}
 	}

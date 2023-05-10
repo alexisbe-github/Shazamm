@@ -8,14 +8,12 @@ import main.java.model.jeu.partie.Partie;
 
 public class Noeud {
 
-	private int score;
 	private List<Noeud> fils;
 	private Partie partie;
 	private int profondeur;
 	
 	public Noeud(Partie p,IAEtatJeu ia,int profondeur) {
 		this.partie = p;
-		this.score = ia.evaluationTour(p);
 		this.fils = new ArrayList<>();
 		this.profondeur = profondeur;
 	}
