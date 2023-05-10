@@ -103,23 +103,29 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		
 		
 		//Création du panel du logo
-		panelLogo = new JPanel(new GridBagLayout()); //Création du panel principal du logo
+		panelLogo = new JPanel(new GridLayout(1,3)); //Création du panel principal du logo
 		panelLogo.setBackground(Color.BLACK);	
-		//création et ajout de l'image du logo
-		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/12));
-		setConstraints(1, 0, 1, 0, c);
-		panelLogo.add(logo, c);
+		
 		//Création du label info sorcier et ajout a la frame à gauche du logo
 		JLabel labelSorcier = new JLabel(
 				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + " - "
 						+ joueur.getNom() + "</b></html>");
-		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, 20));
+		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, 16));
 		labelSorcier.setForeground(Color.LIGHT_GRAY);
-		setConstraints(1, 0, 0, 0, c);
+		labelSorcier.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
+		setConstraints(1, 0, 1, 0, c);
 		panelLogo.add(labelSorcier, c);
-		//Ajout d'un panel vide à droite du logo.
-		setConstraints(1, 0, 2, 0, c);
-		panelLogo.add(new JLabel(), c); // Contraint le logo à se déplacer à gauche
+		
+		//création et ajout de l'image du logo
+		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/13));
+		logo.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
+		setConstraints(1, 0, 0, 0, c);
+		panelLogo.add(logo, c);
+		
+		JLabel limite = new JLabel();
+		limite.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
+		panelLogo.add(limite);
+		
 		//Ajout du panel logo à la frame
 		setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelLogo, c);
