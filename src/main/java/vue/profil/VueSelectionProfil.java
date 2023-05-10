@@ -7,9 +7,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import main.java.controleur.menu.ControleurSelectionProfil;
+import main.java.model.bdd.Profil;
 
 /**
  * Le panneau servant à la sélection d'un profil de joueur enregistré dans la
@@ -27,11 +32,18 @@ public class VueSelectionProfil extends JPanel {
 	 * Le label précisant ce qu'il faut sélectionner dans la boîte déroulante
 	 */
 	private final JLabel labelSelection = new JLabel("Sélectionnez un profil de joueur : ");
-
+	/**
+	 * Le bouton <code>OK</code> qui valide la sélection du profil
+	 */
+	private final JButton boutonOK = new JButton("OK");
 	/**
 	 * La liste des items sélectionnables par le joueur
 	 */
 	private JComboBox<Object> listeChoix;
+	/**
+	 * Le contrôleur du panel
+	 */
+	private ControleurSelectionProfil controleur = new ControleurSelectionProfil(this);
 	
 	/**
 	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
@@ -45,7 +57,7 @@ public class VueSelectionProfil extends JPanel {
 	 * Initialise le panel.
 	 */
 	private void init() {
-		Object[] choix = {}; //TODO À modifier/importer depuis la BDD
+		Object[] choix = Profil.getListeProfils().toArray();
 		listeChoix = new JComboBox<>(choix);
 		
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
@@ -69,11 +81,33 @@ public class VueSelectionProfil extends JPanel {
 		c.weighty = 0.2;
 		c.gridx = 0;
 		c.gridy = 2;
-		c.insets = new Insets(5, 5, 30, 5);
+		c.insets = new Insets(5, 5, 5, 5);
+		listeChoix.setPreferredSize(new Dimension(this.getWidth(), 12));
 		this.add(listeChoix, c);
 		
-		listeChoix.setPreferredSize(new Dimension(this.getWidth(), 12));
+		
+		c.weightx = 1;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 3;
+		c.insets = new Insets(10, 5, 10, 5);
+		this.boutonOK.addActionListener(controleur);
+		this.add(boutonOK, c);
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
+	}
+	
+	/**
+	 * Met à jour la liste déroulante de sélection des profils
+	 */
+	public void majListeSelectionProfils() {
+		DefaultComboBoxModel<Object> modele = (DefaultComboBoxModel<Object>) listeChoix.getModel();
+        modele.removeAllElements();
+        for (Profil profil : Profil.getListeProfils()) {
+            modele.addElement(profil);
+        }
+		listeChoix.setModel(modele);
+		listeChoix.repaint();
+		listeChoix.revalidate();
 	}
 }
