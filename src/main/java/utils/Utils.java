@@ -5,12 +5,21 @@ import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
+
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.Connexion;
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.beans.JoueurSQL;
 
 /**
  * Classe contenant diverses fonctions utilitaires
@@ -35,9 +44,10 @@ public class Utils {
 		Image nvimg = image.getScaledInstance(largeur, hauteur, Image.SCALE_SMOOTH); // Redimensionnement
 		return new ImageIcon(nvimg); // Transformation en ImageIcon
 	}
-	
+
 	/**
-	 * Redimensionne un objet <code>ImageIcon</code> à l'échelle selon la hauteur spécifiée.
+	 * Redimensionne un objet <code>ImageIcon</code> à l'échelle selon la hauteur
+	 * spécifiée.
 	 * 
 	 * @param img     L'image à redimensionner
 	 * @param hauteur La nouvelle hauteur
@@ -45,7 +55,7 @@ public class Utils {
 	 */
 	public static ImageIcon redimensionnerImage(ImageIcon img, int hauteur) {
 		Image image = img.getImage();
-		int width = Math.round(hauteur*((float) img.getIconWidth() / (float) img.getIconHeight()));
+		int width = Math.round(hauteur * ((float) img.getIconWidth() / (float) img.getIconHeight()));
 		Image nvImg = image.getScaledInstance(width, hauteur, Image.SCALE_SMOOTH);
 		return new ImageIcon(nvImg);
 	}
@@ -113,7 +123,8 @@ public class Utils {
 	 * @return entier généré
 	 */
 	public static int genererEntier(int a, int b) {
-		if(a==b) return a;
+		if (a == b)
+			return a;
 		Random random = new Random();
 		int res;
 		res = a + random.nextInt(b - a);
@@ -131,40 +142,13 @@ public class Utils {
 	public static int genererEntierAvecPoids(int a, int b) {
 		int res = 0;
 		boolean stop = false;
-		while(!stop && res < b) {
-			if(genererEntier(0,2) == 1) {
+		while (!stop && res < b) {
+			if (genererEntier(0, 2) == 1) {
 				stop = true;
-			}else {
+			} else {
 				res++;
-			}	
+			}
 		}
 		return res;
-	}
-	
-	public static List<List<Integer>> generateCombinations(int n) {
-	    // Créer une liste pour stocker les combinaisons
-	    List<List<Integer>> combinations = new ArrayList<>();
-
-	    // Appeler la fonction récursive pour générer les combinaisons
-	    generateCombinationsHelper(combinations, new ArrayList<>(), 0, n);
-
-	    return combinations;
-	}
-
-	private static void generateCombinationsHelper(List<List<Integer>> combinations, List<Integer> currentCombination, int start, int n) {
-	    // Ajouter la combinaison courante à la liste de combinaisons
-	    combinations.add(new ArrayList<>(currentCombination));
-
-	    // Générer les combinaisons possibles pour chaque position de start jusqu'à n
-	    for (int i = start; i <= n; i++) {
-	        // Ajouter le chiffre courant à la combinaison courante
-	        currentCombination.add(i);
-
-	        // Récursivement générer les combinaisons à partir de la position suivante
-	        generateCombinationsHelper(combinations, currentCombination, i+1, n);
-
-	        // Retirer le chiffre courant de la combinaison courante
-	        currentCombination.remove(currentCombination.size()-1);
-	    }
 	}
 }
