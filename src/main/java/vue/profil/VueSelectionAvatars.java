@@ -33,7 +33,7 @@ public class VueSelectionAvatars extends JFrame {
 		super();
 		getContentPane().setLayout(new GridBagLayout());
 		setAlwaysOnTop(true);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setVisible(true);
 		init();

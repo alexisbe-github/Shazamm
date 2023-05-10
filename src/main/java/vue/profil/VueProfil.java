@@ -1,12 +1,7 @@
 package main.java.vue.profil;
 
-import java.awt.Component;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JSplitPane;
-
-import main.java.controleur.menu.ControleurProfil;
 
 /**
  * Le panneau définissant le profil du joueur.
@@ -44,7 +39,8 @@ public class VueProfil extends JSplitPane {
 	public static void main(String[] args) {
 		JFrame fenetre = new JFrame();
 		fenetre.setVisible(true);
-		fenetre.getContentPane().add(new VueProfil(new VueCreationProfil(), new VueSelectionProfil()));
+		VueProfil vp = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
+		fenetre.getContentPane().add(vp);
 		fenetre.pack();
 	}
 }
