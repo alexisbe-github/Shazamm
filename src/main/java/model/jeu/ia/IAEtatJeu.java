@@ -1,34 +1,13 @@
 package main.java.model.jeu.ia;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
 public class IAEtatJeu extends Joueur {
 
-	protected Set<Integer> cartesPossedeesParAdversaire;
-
 	protected IAEtatJeu(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		super(couleur, nom, prenom, avatar);
-		this.cartesPossedeesParAdversaire = new HashSet<>();
-		this.initCartesPossedeesParAdversaire();
-	}
-
-	/**
-	 * Méthode qui initialise l'ensemble des cartes possédées par l'adversaire En
-	 * début de partie l'adversaire à toutes ces cartes
-	 */
-	private void initCartesPossedeesParAdversaire() {
-		for (int i = 1; i < 15; i++) {
-			this.cartesPossedeesParAdversaire.add(i);
-		}
-	}
-
-	public void enleverCartePossedeeParAdversaire(Integer i) {
-		cartesPossedeesParAdversaire.remove(i);
 	}
 
 	/**
@@ -61,11 +40,11 @@ public class IAEtatJeu extends Joueur {
 
 		// Calcul d'évaluation par rapport au mur
 		if (p.getPont().getDistanceEntreMurDeFeuEtJoueur(this) > 2) {
-			evaluationMur += 20 * p.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est
+			evaluationMur += 5 * p.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est
 																								// gagnante
 		}
 		if (p.getPont().getDistanceEntreMurDeFeuEtJoueur(joueurAdverse) > 2) {
-			evaluationMur += -20 * p.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est
+			evaluationMur += -5 * p.getPont().getDistanceEntreMurDeFeuEtMilieu(); // lorsque l'IA est
 																								// perdante
 		}
 
@@ -80,7 +59,7 @@ public class IAEtatJeu extends Joueur {
 		// Calcul d'évaluation par rapport au joueur le plus proche de la lave
 		if (p.getPont().getDistanceEntreJoueurEtLave(this) > p.getPont()
 				.getDistanceEntreJoueurEtLave(joueurAdverse)) {
-			evaluationLave += 5 * p.getPont().getDistanceEntreJoueurEtLave(this); // cas où le joueur est le
+			evaluationLave += 20 * p.getPont().getDistanceEntreJoueurEtLave(this); // cas où le joueur est le
 																								// plus proche de la
 																								// lave:
 																								// 5*distance entre IA
@@ -90,7 +69,7 @@ public class IAEtatJeu extends Joueur {
 
 		if (p.getPont().getDistanceEntreJoueurEtLave(this) < p.getPont()
 				.getDistanceEntreJoueurEtLave(joueurAdverse)) {
-			evaluationLave += -5 * p.getPont().getDistanceEntreJoueurEtLave(this); // cas où l'IA est le
+			evaluationLave += -20 * p.getPont().getDistanceEntreJoueurEtLave(this); // cas où l'IA est le
 																								// plus proche de la
 																								// lave:
 																								// -5*distance entre

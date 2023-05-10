@@ -65,7 +65,6 @@ public class ControleurMenu implements ActionListener {
 				partie.setStrategy(ia, fenetreJoueur);
 			}
 			partie.addObserver(fenetreJoueur);
-			System.out.println(ia.getMainDuJoueur());
 			break;
 		}
 	}

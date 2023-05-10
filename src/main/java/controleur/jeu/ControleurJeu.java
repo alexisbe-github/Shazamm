@@ -54,6 +54,7 @@ public class ControleurJeu implements ActionListener {
 				partie.jouerCarte(c, j);
 			}
 			partie.jouerTour();
+
 			break;
 		default:
 			return;

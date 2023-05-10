@@ -620,8 +620,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 //				while (anc > nv * 2) {
 //					anc -= 2;
 //					mana--;
-		barreMana.setValue(joueur.getManaActuel() * 2);
-		barreMana.setString("Mana : " + joueur.getManaActuel() + "/" + Joueur.MANA_MAXIMUM);
+		Joueur jPartie;
+		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) jPartie = partie.getJoueurRouge();
+		else jPartie = partie.getJoueurVert();
+		barreMana.setValue(jPartie.getManaActuel() * 2);
+		barreMana.setString("Mana : " + jPartie.getManaActuel() + "/" + Joueur.MANA_MAXIMUM);
 //
 //					try {
 //						Thread.sleep(10);

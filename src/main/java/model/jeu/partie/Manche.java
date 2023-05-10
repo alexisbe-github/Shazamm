@@ -5,7 +5,7 @@ import java.util.List;
 
 import main.java.model.jeu.Joueur;
 
-public class Manche implements Cloneable{
+public class Manche implements Cloneable {
 
 	private List<Tour> listeTours;
 	private boolean mutismeCourant;
@@ -17,7 +17,10 @@ public class Manche implements Cloneable{
 	}
 
 	public Tour getTourCourant() {
-		return listeTours.get(listeTours.size() - 1);
+		if (this.listeTours.size() > 0) {
+			return listeTours.get(listeTours.size() - 1);
+		}
+		return null;
 	}
 
 	public int getNumeroTourCourant() {
@@ -33,9 +36,9 @@ public class Manche implements Cloneable{
 			this.listeTours.add(new Tour(false));
 		}
 	}
-	
+
 	public Tour getTourPrecedent() {
-		if(this.getNombreTours() > 1) {
+		if (this.getNombreTours() > 1) {
 			return this.listeTours.get(this.getNombreTours() - 2);
 		}
 		return null;
@@ -57,7 +60,7 @@ public class Manche implements Cloneable{
 	public List<Tour> getListeTours() {
 		return listeTours;
 	}
-	
+
 	public void setListeTours(List<Tour> listeTours) {
 		this.listeTours = listeTours;
 	}

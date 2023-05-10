@@ -43,4 +43,8 @@ public class Noeud {
 	public int getProfondeur() {
 		return this.profondeur;
 	}
+	
+	public boolean estFeuille() {
+		return this.fils.size() == 0;
+	}
 }

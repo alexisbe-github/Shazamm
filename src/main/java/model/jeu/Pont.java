@@ -2,7 +2,7 @@ package main.java.model.jeu;
 
 import main.java.model.jeu.partie.Manche;
 
-public class Pont implements Cloneable{
+public class Pont implements Cloneable {
 
 	private int positionMurFeu;
 	private int indexLave, positionJoueurRouge, positionJoueurVert;
@@ -38,7 +38,7 @@ public class Pont implements Cloneable{
 
 	public boolean unSorcierEstTombe() {
 		boolean res = false;
-		if (positionJoueurRouge <= indexLave || positionJoueurVert >= TAILLE_PONT - this.indexLave)
+		if (positionJoueurRouge + 1 <= indexLave || positionJoueurVert + 1 >= TAILLE_PONT - this.indexLave)
 			res = true;
 		return res;
 	}
@@ -182,7 +182,7 @@ public class Pont implements Cloneable{
 	 */
 	public int getDistanceEntreJoueurEtLave(Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			return positionJoueurRouge+1;
+			return positionJoueurRouge + 1;
 		}
 		return TAILLE_PONT - positionJoueurVert;
 	}
