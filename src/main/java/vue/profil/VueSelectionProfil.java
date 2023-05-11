@@ -110,4 +110,21 @@ public class VueSelectionProfil extends JPanel {
 		listeChoix.repaint();
 		listeChoix.revalidate();
 	}
+	
+	/**
+	 * @return Le profil sélectionné
+	 */
+	public Profil getProfilSelectionne() {
+		if (this.listeChoix.getSelectedItem() instanceof Profil) {
+			return (Profil) this.listeChoix.getSelectedItem();
+		}
+		return null;
+	}
+	
+	/**
+	 * @return <code>true</code> si le profil a été choisi, <code>false</code> sinon
+	 */
+	public boolean isProfilChoisi() {
+		return controleur.isProfilChoisi();
+	}
 }

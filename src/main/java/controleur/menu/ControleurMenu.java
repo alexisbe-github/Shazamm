@@ -4,26 +4,35 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.beans.JoueurSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.ia.IAEtatJeu;
 import main.java.model.jeu.ia.IAExperte;
 import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
+import main.java.vue.profil.VueCreationProfil;
+import main.java.vue.profil.VueProfil;
+import main.java.vue.profil.VueSelectionProfil;
 
 public class ControleurMenu implements ActionListener {
 
 	private VueMenu vm;
+	private Profil profilSelectionne = new Profil(new DAOJoueur().trouver(14L)); // TODO (profil par défaut pour pas bugger)
 
 	public ControleurMenu(VueMenu vm) {
 		this.vm = vm;
@@ -38,8 +47,10 @@ public class ControleurMenu implements ActionListener {
 			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-			Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
-			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
+			selectionProfil(couleurJ1); // TODO - Afficher avant
+			Joueur joueur1 = new Joueur(couleurJ1, profilSelectionne);
+			selectionProfil(couleurJ2);
+			Joueur joueur2 = new Joueur(couleurJ1, profilSelectionne);
 			Partie p = new Partie(joueur1, joueur2);
 			VueJeu fenetreJ1 = new VueJeu(joueur1, p);
 			VueJeu fenetreJ2 = new VueJeu(joueur2, p);
@@ -67,7 +78,7 @@ public class ControleurMenu implements ActionListener {
 			VueJeu fenetreJoueur;
 			switch (input) {
 			case 0:
-				IAFacile ia = new IAFacile(couleurIA, "Sorcier", "ledeux", "blabla");
+				IAFacile ia = new IAFacile(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, ia);
 			 fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -78,7 +89,7 @@ public class ControleurMenu implements ActionListener {
 				partie.addObserver(fenetreJoueur);
 				break;
 			case 1:
-				IAIntermediaire iaI = new IAIntermediaire(couleurIA, "Sorcier", "ledeux", "blabla");
+				IAIntermediaire iaI = new IAIntermediaire(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, iaI);
 				fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -89,7 +100,7 @@ public class ControleurMenu implements ActionListener {
 				partie.addObserver(fenetreJoueur);
 				break;
 			case 2:
-				IAExperte iaE = new IAExperte(couleurIA, "Sorcier", "ledeux", "blabla");
+				IAExperte iaE = new IAExperte(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("src/main/resources/avatars/alien-bug.png")));
 				partie = new Partie(joueur, iaE);
 				fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -119,6 +130,42 @@ public class ControleurMenu implements ActionListener {
 			couleurs.add(ECouleurJoueur.ROUGE);
 		}
 		return couleurs;
+	}
+	
+	private void selectionProfil(ECouleurJoueur couleur) {
+		VueProfil vp = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
+		vp.addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+				profilSelectionne = vp.getPanelSelection().getProfilSelectionne();
+				Joueur joueur = new Joueur(couleur, profilSelectionne);
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+		});
 	}
 
 }

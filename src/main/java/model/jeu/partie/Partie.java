@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+
+import main.java.model.bdd.Profil;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -612,7 +615,7 @@ public class Partie implements Cloneable {
 
 	public Partie nouvellePartie() {
 		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
-		IAFacile jV = new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire");
+		IAFacile jV = new IAFacile(joueurVert.getCouleur(), new Profil("IAdversaire", "IAdversaire", new ImageIcon("IAdversaire")));
 		Partie p = new Partie(jR,jV);
 		p.strategyVert = jV;
 		System.out.println(p.strategyVert);
