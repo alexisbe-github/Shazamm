@@ -89,7 +89,7 @@ public class ControleurProfil implements ActionListener, KeyListener, PropertyCh
 							Thread.sleep(50);
 							bouton.setEnabled(false);
 							insererBDD();
-							VueProfil vueProfil = (VueProfil) vp.getParent();
+							VueProfil vueProfil = (VueProfil) vp.getRootPane().getParent();
 							Thread.sleep(50);
 							vueProfil.getPanelSelection().majListeSelectionProfils();
 						} catch (InterruptedException ex) {
