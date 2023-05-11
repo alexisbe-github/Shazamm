@@ -16,13 +16,13 @@ import javax.swing.JOptionPane;
 
 import main.java.model.bdd.Profil;
 import main.java.model.bdd.dao.DAOJoueur;
-import main.java.model.bdd.dao.beans.JoueurSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAExperte;
 import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
+import main.java.vue.classement.VueClassement;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
 import main.java.vue.profil.VueCreationProfil;
@@ -32,7 +32,8 @@ import main.java.vue.profil.VueSelectionProfil;
 public class ControleurMenu implements ActionListener {
 
 	private VueMenu vm;
-	private Profil profilSelectionne = new Profil(new DAOJoueur().trouver(14L)); // TODO (profil par défaut pour pas bugger)
+	private Profil profilSelectionne = new Profil(new DAOJoueur().trouver(14L)); // TODO (profil par défaut pour pas
+																					// bugger)
 
 	public ControleurMenu(VueMenu vm) {
 		this.vm = vm;
@@ -80,7 +81,7 @@ public class ControleurMenu implements ActionListener {
 			case 0:
 				IAFacile ia = new IAFacile(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, ia);
-			 fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, ia);
 				} else {
@@ -89,7 +90,8 @@ public class ControleurMenu implements ActionListener {
 				partie.addObserver(fenetreJoueur);
 				break;
 			case 1:
-				IAIntermediaire iaI = new IAIntermediaire(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
+				IAIntermediaire iaI = new IAIntermediaire(couleurIA,
+						new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, iaI);
 				fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -100,7 +102,8 @@ public class ControleurMenu implements ActionListener {
 				partie.addObserver(fenetreJoueur);
 				break;
 			case 2:
-				IAExperte iaE = new IAExperte(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("src/main/resources/avatars/alien-bug.png")));
+				IAExperte iaE = new IAExperte(couleurIA,
+						new Profil("Sorcier", "ledeux", new ImageIcon("src/main/resources/avatars/alien-bug.png")));
 				partie = new Partie(joueur, iaE);
 				fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -114,7 +117,10 @@ public class ControleurMenu implements ActionListener {
 				vm.setVisible(true);
 				break;
 			}
-
+			break;
+		case "Classement":
+			vm.dispose();
+			new VueClassement();
 			break;
 		}
 	}
@@ -131,7 +137,7 @@ public class ControleurMenu implements ActionListener {
 		}
 		return couleurs;
 	}
-	
+
 	private void selectionProfil(ECouleurJoueur couleur) {
 		VueProfil vp = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		vp.addWindowListener(new WindowListener() {

@@ -66,7 +66,7 @@ public class VueMenu extends JFrame {
 	    panel.add(new JPanel(), c);
 		
 		iconeProfil.setIcon(new ImageIcon("src/resources/images/icone-profil-joueur.png"));
-		c.weightx = 0;
+		c.weightx = 0.2;
 		c.gridx = 1;
 		c.gridy = 0;
 		panel.add(iconeProfil, c); // Ajout du composant avec les contraintes
@@ -102,6 +102,9 @@ public class VueMenu extends JFrame {
 		ControleurMenu cm = new ControleurMenu(this);
 		boutonJouer.addActionListener(cm);
 		boutonJouerIA.addActionListener(cm);
+		boutonClassement.addActionListener(cm);
+		boutonHistorique.addActionListener(cm);
+		boutonOptions.addActionListener(cm);
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 		
