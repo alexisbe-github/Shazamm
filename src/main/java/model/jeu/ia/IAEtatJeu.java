@@ -1,14 +1,13 @@
 package main.java.model.jeu.ia;
 
-import main.java.model.bdd.Profil;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 
 public class IAEtatJeu extends Joueur {
 
-	protected IAEtatJeu(ECouleurJoueur couleur, Profil profil) {
-		super(couleur, profil);
+	protected IAEtatJeu(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
+		super(couleur, nom, prenom, avatar);
 	}
 
 	/**

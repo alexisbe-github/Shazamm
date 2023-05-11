@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import main.java.model.bdd.Profil;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.carte.factory.CarteFactory;
 import main.java.model.jeu.partie.Partie;
@@ -13,15 +12,17 @@ import main.java.model.jeu.partie.Partie;
 public class Joueur implements Cloneable{
 
 	private final ECouleurJoueur COULEUR;
-	private Profil profil;
+	private final String NOM, PRENOM, AVATAR;
 	public static final int MANA_MAXIMUM = 50;
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
 	private List<Carte> paquet, mainDuJoueur;
 
-	public Joueur(ECouleurJoueur couleur, Profil profil) {
+	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		this.COULEUR = couleur;
-		this.profil = profil;
+		this.NOM = nom;
+		this.PRENOM = prenom;
+		this.AVATAR = avatar;
 		manaActuel = 0;
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
@@ -29,7 +30,7 @@ public class Joueur implements Cloneable{
 
 	@Override
 	public String toString() {
-		return "Joueur " + COULEUR + ". nom : " + profil.getNom() + " " + profil.getPrenom() + ", mana : " + manaActuel + "\nmain :\n"
+		return "Joueur " + COULEUR + ". nom : " + NOM + " " + PRENOM + ", mana : " + manaActuel + "\nmain :\n"
 				+ this.mainString();
 	}
 
@@ -54,7 +55,7 @@ public class Joueur implements Cloneable{
 	}
 
 	public String getNom() {
-		return this.profil.getNom() + " " + this.profil.getPrenom();
+		return this.NOM + " " + this.PRENOM;
 	}
 
 	public ECouleurJoueur getCouleur() {

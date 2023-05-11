@@ -8,36 +8,24 @@ import javax.swing.JSplitPane;
  * 
  * @see JSplitPane
  */
-public class VueProfil extends JFrame {
+public class VueProfil extends JSplitPane {
 
-	private JSplitPane panel = new JSplitPane();
 	private VueCreationProfil creation;
 	private VueSelectionProfil selection;
 
 	/**
 	 * Construit le panel.
-	 * 
-	 * @param creation  Le panneau de création de profil 
-	 * @param selection Le panneau de sélection de profil
 	 */
 	public VueProfil(VueCreationProfil creation, VueSelectionProfil selection) {
 		super();
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setVisible(true);
-		setResizable(false);
 		this.creation = creation;
 		this.selection = selection;
-		init();
-		pack();
-	}
-	
-	private void init() {
-		panel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		panel.setLeftComponent(creation);
-		panel.setRightComponent(selection);
-		panel.setResizeWeight(0.5f); // Le panneau de gauche doit occuper 50 % du total
-		panel.setDividerSize(3); // La barre séparatrice fait 3px de large
-		getContentPane().add(panel);
+		this.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		this.setLeftComponent(creation);
+		this.setRightComponent(selection);
+
+		setResizeWeight(0.5f); // Le panneau de gauche doit occuper 50 % du total
+		setDividerSize(3); // La barre séparatrice fait 3px de large
 	}
 	
 	public VueCreationProfil getPanelCreation() {
@@ -46,5 +34,13 @@ public class VueProfil extends JFrame {
 	
 	public VueSelectionProfil getPanelSelection() {
 		return this.selection;
+	}
+	
+	public static void main(String[] args) {
+		JFrame fenetre = new JFrame();
+		fenetre.setVisible(true);
+		VueProfil vp = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
+		fenetre.getContentPane().add(vp);
+		fenetre.pack();
 	}
 }
