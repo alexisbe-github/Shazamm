@@ -109,15 +109,18 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo.setBackground(Color.BLACK);	
 		
 		//Création du label info sorcier et ajout au panel infos joueur
+		JLabel logoJoueur = new JLabel();
+		logoJoueur.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/avatars/popsimoke.png"), this.getHeight()/13));
+		logoJoueur.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 		JLabel labelSorcier = new JLabel(
-				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + " - "
+				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + "<br>"
 						+ joueur.getNom() + "</b></html>");
 		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, this.getWidth()/70));
 		labelSorcier.setForeground(Color.BLACK);
 		JPanel panelInfosJoueur = new JPanel();
+		panelInfosJoueur.add(logoJoueur);
 		panelInfosJoueur.add(labelSorcier);
 		
-		panelInfosJoueur.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
 		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			panelInfosJoueur.setBackground(new Color(176,47,47));
 		}else {
@@ -128,7 +131,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		
 		//création et ajout de l'image du logo
 		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/13));
-		logo.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
 		Utils.setConstraints(1, 0, 0, 0, c);
 		panelLogo.add(logo, c);
 		
