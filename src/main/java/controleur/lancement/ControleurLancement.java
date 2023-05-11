@@ -6,7 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+
+import main.java.model.bdd.Profil;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
@@ -31,8 +34,8 @@ public class ControleurLancement implements ActionListener {
 			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-			Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
-			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
+			Joueur joueur1 = new Joueur(couleurJ1, new Profil("Pop", "Simoké", new ImageIcon("src/main/resources/avatars/alien-bug.png")));
+			Joueur joueur2 = new Joueur(couleurJ2, new Profil("Sorcier", "ledeux", new ImageIcon("src/main/resources/avatars/alien-egg.png")));
 			Partie p = new Partie(joueur1, joueur2);
 			VueConsole vc = new VueConsole(p);
 			p.setStrategy(vc,vc);

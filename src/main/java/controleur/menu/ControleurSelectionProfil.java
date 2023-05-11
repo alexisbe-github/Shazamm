@@ -4,12 +4,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
+import main.java.vue.profil.VueProfil;
 import main.java.vue.profil.VueSelectionProfil;
 
 public class ControleurSelectionProfil implements ActionListener {
 
 	private VueSelectionProfil vp;
+	private boolean profilChoisi = false;
 
 	public ControleurSelectionProfil(VueSelectionProfil vp) {
 		this.vp = vp;
@@ -21,11 +24,21 @@ public class ControleurSelectionProfil implements ActionListener {
 			JButton bouton = (JButton) e.getSource();
 			switch (bouton.getText()) {
 			case "OK":
-				// TODO Lier le profil au joueur de la partie
-			break;
-			default: break;
+				profilChoisi = true;
+				JFrame f = (JFrame) vp.getRootPane().getParent();
+				f.dispose();
+				return;
+			default:
+				break;
 			}
 		}
+	}
+	
+	/**
+	 * @return <code>true</code> si le profil a été choisi, <code>false</code> sinon
+	 */
+	public boolean isProfilChoisi() {
+		return profilChoisi;
 	}
 
 }

@@ -47,6 +47,8 @@ public class VueSelectionProfil extends JPanel {
 	
 	/**
 	 * Construit un <code>JPanel</code> en respectant les contraintes de positionnement des composants.
+	 * 
+	 * @param fenetre La fenêtre contenant le panel
 	 */
 	public VueSelectionProfil() {
 		super(new GridBagLayout());
@@ -109,5 +111,22 @@ public class VueSelectionProfil extends JPanel {
 		listeChoix.setModel(modele);
 		listeChoix.repaint();
 		listeChoix.revalidate();
+	}
+	
+	/**
+	 * @return Le profil sélectionné
+	 */
+	public Profil getProfilSelectionne() {
+		if (this.listeChoix.getSelectedItem() instanceof Profil) {
+			return (Profil) this.listeChoix.getSelectedItem();
+		}
+		return null;
+	}
+	
+	/**
+	 * @return <code>true</code> si le profil a été choisi, <code>false</code> sinon
+	 */
+	public boolean isProfilChoisi() {
+		return controleur.isProfilChoisi();
 	}
 }
