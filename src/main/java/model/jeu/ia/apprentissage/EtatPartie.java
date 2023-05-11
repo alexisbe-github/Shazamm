@@ -68,4 +68,8 @@ public class EtatPartie implements Encodable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public Partie getPartie() {
+		return this.partie;
+	}
 }

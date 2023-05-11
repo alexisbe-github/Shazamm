@@ -22,7 +22,7 @@ public class Partie implements Cloneable {
 	private List<Manche> listeManche;
 	private boolean partieFinie, joueurPousse, cartesJouees;
 
-	private ILancementStrategy strategyVert, strategyRouge;
+	public ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
 	public Partie(Joueur j1, Joueur j2) {
@@ -133,9 +133,10 @@ public class Partie implements Cloneable {
 	 * @param joueur
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
+		this.setStrategyVert((IAFacile)joueurVert);
+		if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 			strategyVert.lancerLarcin(p, tour, joueur);
-		else
+		}else
 			strategyRouge.lancerLarcin(p, tour, joueur);
 	}
 
@@ -610,12 +611,16 @@ public class Partie implements Cloneable {
 	}
 
 	public Partie nouvellePartie() {
-		return new Partie(new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage"),
-				new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire"));
+		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
+		IAFacile jV = new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire");
+		Partie p = new Partie(jR,jV);
+		p.strategyVert = jV;
+		System.out.println(p.strategyVert);
+		return p;
 	}
 
 	public EtatPartie getEtatPartie() {
-		return new EtatPartie(this, joueurRouge,(IAFacile)joueurVert);
+		return new EtatPartie(this, joueurRouge, (IAFacile) joueurVert);
 	}
 
 }

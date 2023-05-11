@@ -4,9 +4,13 @@ import java.io.IOException;
 
 import org.deeplearning4j.rl4j.learning.configuration.QLearningConfiguration;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
+import org.deeplearning4j.rl4j.network.NeuralNetOutput;
 import org.deeplearning4j.rl4j.network.configuration.DQNDenseNetworkConfiguration;
+import org.deeplearning4j.rl4j.network.dqn.DQN;
 import org.deeplearning4j.rl4j.network.dqn.DQNFactoryStdDense;
-import org.nd4j.linalg.learning.config.RmsProp;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.learning.config.Adam;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -37,16 +41,32 @@ public class Apprentissage {
 		dql.train();
 		// get the final policy
 		dql.getPolicy().save("dql.model"); // save the model at the end
+		// Entrée d'exemple
+		double[] stateArray = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+		INDArray state = Nd4j.create(stateArray).reshape(1,34);
+
+		// Calculer la sortie pour l'entrée donnée
+		NeuralNetOutput output = dql.getNeuralNet().output(state);
+
+		double[] stateArray2 = new double[15];
+		INDArray state2 = Nd4j.create(stateArray2).reshape(1,15);
+		INDArray[] res = dql.getNeuralNet().outputAll(state);
+		for(INDArray a:res) {
+			System.out.println(a.toString());
+		}
 		mdp.close();
 
 		System.out.println("ok");
 
+
 	}
 
-	public static DQNFactoryStdDense buildDQNFactory() {
+	public static DQN buildDQNFactory() {
 		final DQNDenseNetworkConfiguration build = DQNDenseNetworkConfiguration.builder().l2(0.001)
-				.updater(new RmsProp(0.000025)).numHiddenNodes(300).numLayers(3).build();
-		return new DQNFactoryStdDense(build);
+				.updater(new Adam(0.01)).numHiddenNodes(300).numLayers(2).build();
+		DQNFactoryStdDense factory = new DQNFactoryStdDense(build);
+		int[] inputShape = {34};
+		return factory.buildDQN(inputShape, 15);
 	}
 
 }
