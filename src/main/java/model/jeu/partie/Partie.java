@@ -447,13 +447,13 @@ public class Partie implements Cloneable {
 		try {
 			Partie partieOriginale = (Partie) this.clone();
 			Partie partieTmp;
-			int manaMax = joueur.getManaActuel() + 1;
-			if (manaMax < 20) {
-				manaMax = joueur.getManaActuel() + 1;
-			} else {
+			int manaMax = joueur.getManaActuel()+1;
+			if(manaMax < 20) {
+				manaMax = joueur.getManaActuel()+1;
+			}else {
 				manaMax = (int) ((joueur.getManaActuel() + 1) / 1.5);
 			}
-			for (int i = 1; i < manaMax; i++) {
+			for (int i = 1; i < manaMax ; i++) {
 				partieTmp = (Partie) partieOriginale.clone();
 				int mise = i;
 
