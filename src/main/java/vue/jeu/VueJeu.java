@@ -66,7 +66,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JLabel labelManaAdversaire, labelInfos, labelInfosTour;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
-	VueChrono labelTimer;
+	Chrono timer;
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
@@ -75,7 +75,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public VueJeu(Joueur joueur, Partie partie, Chrono timer) {
 		this.joueur = joueur;
 		this.partie = partie;
-		this.labelTimer = new VueChrono(timer);
+		this.timer=timer;
+		VueChrono labelTimer = new VueChrono(timer);
 		timer.setVueJeu(this);
 		timer.startChrono();
 		
@@ -390,6 +391,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		}
 		if (partie.getPont().unSorcierEstTombe()) {
 			text = partie.getGagnant();
+			this.timer.stopChrono();
 		} else {
 			text += "</html>";
 		}
@@ -532,6 +534,10 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	public JButton getBoutonJouer() {
 		return this.boutonJouer;
+	}
+	
+	public Chrono getChrono() {
+		return this.timer;
 	}
 
 	/**

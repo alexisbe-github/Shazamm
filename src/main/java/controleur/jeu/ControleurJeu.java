@@ -46,6 +46,7 @@ public class ControleurJeu implements ActionListener {
 			boolean adversaireEstUnOrdinateur = joueurAdverse instanceof IA;
 			if (adversaireEstUnOrdinateur) {
 				((IA) joueurAdverse).jouerTour(partie);
+				vj.getChrono().joueurJoue();
 			}
 
 			int mise = vj.getMise();
@@ -55,6 +56,9 @@ public class ControleurJeu implements ActionListener {
 			for (Carte c : cartes) {
 				partie.jouerCarte(c, j);
 			}
+			
+			vj.getChrono().joueurJoue();
+			
 			partie.jouerTour();
 
 			break;

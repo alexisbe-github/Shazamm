@@ -19,6 +19,7 @@ public class Chrono {
     private int tempsRestant;
     private final int DUREE;
     PropertyChangeSupport pcs;
+    boolean relancer = false;
     
     public Chrono(int duree) {
     	this.DUREE=duree;
@@ -32,6 +33,19 @@ public class Chrono {
     
     public int getDuree() {
     	return DUREE;
+    }
+    
+    public void joueurJoue() {
+    	if(relancer) {
+    		this.tempsRestant = DUREE;
+    		relancer = false;
+    	}else {
+    		relancer = true;
+    	}
+    }
+    
+    public void stopChrono() {
+    	this.timer.stop();
     }
     
     public void secondePasse() {
