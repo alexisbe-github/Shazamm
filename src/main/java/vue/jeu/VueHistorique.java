@@ -8,11 +8,11 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -39,15 +39,17 @@ public class VueHistorique extends JFrame{
 		this.tableauPrincipal = new JPanel();
 		this.partie = p;
 		this.init();
-
+		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 3, screenSize.height * 9 / 10);
 	}
 	
 	private void init() {
+		tableauPrincipal.setAlignmentX(CENTER_ALIGNMENT);
 		tableauPrincipal.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		tableauPrincipal.setBackground(Color.BLACK);
 		tableauPrincipal.add(derniersCoups);
+		derniersCoups.setBackground(Color.BLUE);
 		
 		try { 
 			this.addTour(partie.getTourPrecedent());
@@ -74,15 +76,18 @@ public class VueHistorique extends JFrame{
 		headerTour.setHorizontalAlignment(JLabel.CENTER);
 		panelTour.add(headerTour);
 		
-		panelTour.add(this.getBilanEtPont(t));
+		
+		panelTour.add(this.getBilanEtPont(t,true)); //parametre : tour-1 -> true (avant le tour)
+		panelTour.add(this.getBilanEtPont(t,false)); //parametre : tour -> false (apres le tour)
 		
 		this.tableauPrincipal.add(panelTour);
 	}
 	
 	private JPanel getEtatPont(Tour t) {
 		JPanel panelPont = new JPanel(new GridLayout(2,Pont.TAILLE_PONT));
-		int l = 10;
-		int h = 15;
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int l = screenSize.width/200;
+		int h = screenSize.width/150;
 		ImageIcon caseIcon = new ImageIcon();
 
 		for(int i=0;i<Pont.TAILLE_PONT;i++) {
@@ -122,21 +127,27 @@ public class VueHistorique extends JFrame{
 	}
 	
 	
-	private JPanel getBilanEtPont(Tour t) {
-		
+	private JPanel getBilanEtPont(Tour t, boolean avant) {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		JPanel bilanDesMises = new JPanel();
-		
-		JLabel titre = new JLabel("<html>Bilan des Mises<br/></html>");
+		JLabel titre = new JLabel();
+		if(avant) {
+			titre.setText("<html>Avant tour<br/></html>");
+		}else {
+			titre.setText("<html>Après tour<br/></html>");
+		}
 		titre.setForeground(Color.WHITE);
 		bilanDesMises.add(titre);
 		bilanDesMises.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		bilanDesMises.setBackground(Color.BLACK);
 		JLabel bilanRouge = new JLabel();
 		bilanRouge.setForeground(Color.RED);
+		bilanRouge.setFont(new Font("Arial", Font.PLAIN, screenSize.width/150));
 		JLabel bilanVert = new JLabel();
 		bilanVert.setForeground(Color.GREEN);
-		bilanRouge.setText(getBilanJoueur(ECouleurJoueur.ROUGE, t));
-		bilanVert.setText(getBilanJoueur(ECouleurJoueur.VERT, t));
+		bilanVert.setFont(new Font("Arial", Font.PLAIN, screenSize.width/150));
+		bilanRouge.setText(getBilanJoueur(ECouleurJoueur.ROUGE, t,avant));
+		bilanVert.setText(getBilanJoueur(ECouleurJoueur.VERT, t,avant));
 		
 		bilanDesMises.add(bilanRouge);
 		bilanDesMises.add(bilanVert);
@@ -145,20 +156,23 @@ public class VueHistorique extends JFrame{
 		return bilanDesMises;
 	}
 	
-	private String getBilanJoueur(ECouleurJoueur couleur, Tour t) {
+	private String getBilanJoueur(ECouleurJoueur couleur, Tour t,boolean avant) {
 		Joueur j;
 		if(couleur.equals(ECouleurJoueur.ROUGE)) 
 			j = partie.getJoueurRouge(); 
 		else j = partie.getJoueurVert();
 		
-		String texteBilan = String.format("<html>Mise de %s : %s.<br/>Sorts :<br/>", j.getNom(), ((Integer) t.getMiseJoueur(j)).toString());
-		for(Carte c : t.getCartesJouees()) {
-			if(c.getJoueur().equals(j)) {
-				texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),c.getNom());
+		String texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur(j)).toString());
+		
+		if(avant) {
+			texteBilan+="Sorts :<br/>";
+			for(Carte c : t.getCartesJouees()) {
+				if(c.getJoueur().equals(j)) {
+					texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),c.getNom());
+				}
 			}
 		}
-		texteBilan+="<br/></html>";
-		System.out.println(texteBilan);
+		texteBilan+="</html>";
 		return texteBilan;
 	}
 	
