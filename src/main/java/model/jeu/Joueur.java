@@ -57,6 +57,10 @@ public class Joueur implements Cloneable{
 	public int getManaActuel() {
 		return manaActuel;
 	}
+	
+	public String getPathAvatar() {
+		return this.AVATAR;
+	}
 
 	public String mainString() {
 		String res = "";

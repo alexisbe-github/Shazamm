@@ -37,7 +37,7 @@ public class VueLancementPartie extends JFrame {
 				VueLancementPartie vlp = VueLancementPartie.this;
 				Profil pj1 = VueLancementPartie.this.vueProfilJ1.getPanelSelection().getProfilSelectionne();
 				Profil pj2 = VueLancementPartie.this.vueProfilJ2.getPanelSelection().getProfilSelectionne();
-				if(!pj1.equals(pj2) && pj1!=null && pj2!=null) {
+				if(pj1.getId()!=pj2.getId() && pj1!=null && pj2!=null) {
 					lancerPartie(pj1,pj2);
 				}
 			}
