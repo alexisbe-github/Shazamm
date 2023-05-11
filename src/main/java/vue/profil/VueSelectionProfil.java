@@ -33,10 +33,6 @@ public class VueSelectionProfil extends JPanel {
 	 */
 	private final JLabel labelSelection = new JLabel("Sélectionnez un profil de joueur : ");
 	/**
-	 * Le bouton <code>OK</code> qui valide la sélection du profil
-	 */
-	private final JButton boutonOK = new JButton("OK");
-	/**
 	 * La liste des items sélectionnables par le joueur
 	 */
 	private JComboBox<Object> listeChoix;
@@ -84,15 +80,6 @@ public class VueSelectionProfil extends JPanel {
 		c.insets = new Insets(5, 5, 5, 5);
 		listeChoix.setPreferredSize(new Dimension(this.getWidth(), 12));
 		this.add(listeChoix, c);
-		
-		
-		c.weightx = 1;
-		c.weighty = 0;
-		c.gridx = 0;
-		c.gridy = 3;
-		c.insets = new Insets(10, 5, 10, 5);
-		this.boutonOK.addActionListener(controleur);
-		this.add(boutonOK, c);
 		
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 	}
