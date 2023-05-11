@@ -10,6 +10,8 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.IAFacile;
+import main.java.model.jeu.ia.apprentissage.EtatPartie;
 import main.java.vue.ILancementStrategy;
 import main.java.vue.VueConsole;
 
@@ -444,13 +446,13 @@ public class Partie implements Cloneable {
 		try {
 			Partie partieOriginale = (Partie) this.clone();
 			Partie partieTmp;
-			int manaMax = joueur.getManaActuel()+1;
-			if(manaMax < 20) {
-				manaMax = joueur.getManaActuel()+1;
-			}else {
+			int manaMax = joueur.getManaActuel() + 1;
+			if (manaMax < 20) {
+				manaMax = joueur.getManaActuel() + 1;
+			} else {
 				manaMax = (int) ((joueur.getManaActuel() + 1) / 1.5);
 			}
-			for (int i = 1; i < manaMax ; i++) {
+			for (int i = 1; i < manaMax; i++) {
 				partieTmp = (Partie) partieOriginale.clone();
 				int mise = i;
 
@@ -605,6 +607,15 @@ public class Partie implements Cloneable {
 				this.partieFinie = true;
 			}
 		}
+	}
+
+	public Partie nouvellePartie() {
+		return new Partie(new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage"),
+				new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire"));
+	}
+
+	public EtatPartie getEtatPartie() {
+		return new EtatPartie(this, joueurRouge,(IAFacile)joueurVert);
 	}
 
 }

@@ -2,6 +2,7 @@ package main.java.model.jeu;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import main.java.model.bdd.Profil;
@@ -160,6 +161,17 @@ public class Joueur implements Cloneable{
 
 	public void setMainDuJoueur(List<Carte> mainDuJoueur) {
 		this.mainDuJoueur = mainDuJoueur;
+	}
+	
+	public List<Integer> getCartesPossedees(){
+		List<Integer> cartesPossedees = new ArrayList<>();
+		List<Carte> cartes = new ArrayList<>();
+		cartes.addAll(this.mainDuJoueur);
+		cartes.addAll(this.paquet);
+		for(Carte c:cartes) {
+			cartesPossedees.add(c.getNumeroCarte());
+		}
+		return cartesPossedees;
 	}
 	
 }
