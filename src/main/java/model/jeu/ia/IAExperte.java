@@ -1,11 +1,9 @@
 package main.java.model.jeu.ia;
 
-import main.java.model.bdd.Profil;
 
 import java.io.IOException;
 
 import org.deeplearning4j.rl4j.policy.DQNPolicy;
-import org.nd4j.linalg.api.ndarray.INDArray;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -16,8 +14,8 @@ import main.java.vue.ILancementStrategy;
 
 public class IAExperte extends IAEtatJeu implements IA,ILancementStrategy{
 
-	public IAExperte(ECouleurJoueur couleur, Profil profil) {
-		super(couleur, profil);
+	public IAExperte(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
+		super(couleur, nom, prenom, avatar);
 	}
 
 	@Override

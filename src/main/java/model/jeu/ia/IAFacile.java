@@ -2,7 +2,6 @@ package main.java.model.jeu.ia;
 
 import java.util.List;
 
-import main.java.model.bdd.Profil;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
@@ -13,8 +12,8 @@ import main.java.vue.ILancementStrategy;
 
 public class IAFacile extends IAEtatJeu implements IA, ILancementStrategy {
 
-	public IAFacile(ECouleurJoueur couleur, Profil profil) {
-		super(couleur, profil);
+	public IAFacile(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
+		super(couleur, nom, prenom, avatar);
 	}
 
 	/**
