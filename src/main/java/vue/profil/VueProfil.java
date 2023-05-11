@@ -1,6 +1,7 @@
 package main.java.vue.profil;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 /**
@@ -8,7 +9,7 @@ import javax.swing.JSplitPane;
  * 
  * @see JFrame
  */
-public class VueProfil extends JFrame {
+public class VueProfil extends JPanel {
 
 	private JSplitPane panel = new JSplitPane();
 	private VueCreationProfil creation;
@@ -22,16 +23,12 @@ public class VueProfil extends JFrame {
 	 */
 	public VueProfil(VueCreationProfil creation, VueSelectionProfil selection) {
 		super();
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setVisible(true);
-		setResizable(false);
 		this.creation = creation;
 		this.selection = selection;
 		panel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		panel.setLeftComponent(creation);
 		panel.setRightComponent(selection);
 		init();
-		pack();
 	}
 	
 	private void init() {
@@ -40,7 +37,7 @@ public class VueProfil extends JFrame {
 		panel.setRightComponent(selection);
 		panel.setResizeWeight(0.5f); // Le panneau de gauche doit occuper 50 % du total
 		panel.setDividerSize(3); // La barre séparatrice fait 3px de large
-		getContentPane().add(panel);
+		this.add(panel);
 	}
 	
 	public VueCreationProfil getPanelCreation() {

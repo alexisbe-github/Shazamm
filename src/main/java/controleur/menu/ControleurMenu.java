@@ -4,8 +4,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,9 +23,7 @@ import main.java.model.jeu.partie.Partie;
 import main.java.vue.classement.VueClassement;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
-import main.java.vue.profil.VueCreationProfil;
-import main.java.vue.profil.VueProfil;
-import main.java.vue.profil.VueSelectionProfil;
+import main.java.vue.profil.VueLancementPartie;
 
 public class ControleurMenu implements ActionListener {
 
@@ -46,25 +42,12 @@ public class ControleurMenu implements ActionListener {
 		case "Jouer":
 			vm.dispose();
 			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
+			
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-			selectionProfil(couleurJ1); // TODO - Afficher avant
-			Joueur joueur1 = new Joueur(couleurJ1, profilSelectionne);
-			selectionProfil(couleurJ2);
-			Joueur joueur2 = new Joueur(couleurJ1, profilSelectionne);
-			Partie p = new Partie(joueur1, joueur2);
-			VueJeu fenetreJ1 = new VueJeu(joueur1, p);
-			VueJeu fenetreJ2 = new VueJeu(joueur2, p);
-			int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-			fenetreJ1.setLocation(new Point(0, 0));
-			fenetreJ2.setLocation(new Point(width / 2, 0));
-			if (joueur1.getCouleur().equals(ECouleurJoueur.VERT)) {
-				p.setStrategy(fenetreJ1, fenetreJ2);
-			} else {
-				p.setStrategy(fenetreJ2, fenetreJ1);
-			}
-			p.addObserver(fenetreJ1);
-			p.addObserver(fenetreJ2);
+			
+			VueLancementPartie vlp = new VueLancementPartie(couleurJ1,couleurJ2);
+			
 			break;
 		case "Jouer contre l'ordinateur":
 			vm.dispose();
@@ -136,42 +119,6 @@ public class ControleurMenu implements ActionListener {
 			couleurs.add(ECouleurJoueur.ROUGE);
 		}
 		return couleurs;
-	}
-
-	private void selectionProfil(ECouleurJoueur couleur) {
-		VueProfil vp = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
-		vp.addWindowListener(new WindowListener() {
-
-			@Override
-			public void windowOpened(WindowEvent e) {
-			}
-
-			@Override
-			public void windowIconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeiconified(WindowEvent e) {
-			}
-
-			@Override
-			public void windowDeactivated(WindowEvent e) {
-			}
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-			}
-
-			@Override
-			public void windowClosed(WindowEvent e) {
-				profilSelectionne = vp.getPanelSelection().getProfilSelectionne();
-				Joueur joueur = new Joueur(couleur, profilSelectionne);
-			}
-
-			@Override
-			public void windowActivated(WindowEvent e) {
-			}
-		});
 	}
 
 }

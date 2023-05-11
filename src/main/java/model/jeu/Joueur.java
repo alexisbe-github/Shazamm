@@ -157,6 +157,10 @@ public class Joueur implements Cloneable{
 
 		return "src/main/resources/perso/vert.png";
 	}
+	
+	public Profil getProfil() {
+		return this.profil;
+	}
 
 	public List<Carte> getPaquet() {
 		return paquet;
