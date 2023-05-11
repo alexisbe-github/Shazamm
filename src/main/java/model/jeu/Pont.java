@@ -1,7 +1,5 @@
 package main.java.model.jeu;
 
-import main.java.model.jeu.partie.Manche;
-
 public class Pont implements Cloneable {
 
 	private int positionMurFeu;
@@ -184,7 +182,7 @@ public class Pont implements Cloneable {
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
 			return positionJoueurRouge + 1;
 		}
-		return TAILLE_PONT - positionJoueurVert;
+		return TAILLE_PONT - positionJoueurVert + 1;
 	}
 
 	@Override

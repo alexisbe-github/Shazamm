@@ -9,53 +9,47 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.IA;
+import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.partie.Partie;
 
 public class EtatPartie implements Encodable {
 
 	private final Partie partie;
 	private final Joueur joueur;
-
-	public EtatPartie(Partie p,Joueur joueur) {
+	private final IAFacile adversaire;
+	
+	public EtatPartie(Partie p,Joueur joueur,IAFacile adversaire) {
 		this.partie = p;
 		this.joueur = joueur;
+		this.adversaire = adversaire;
 	}
 
 	@Override
 	public double[] toArray() {
-		double[] array = new double[18];
-		List<Carte> cartesPossedeesParJoueur = new ArrayList<>();
-		cartesPossedeesParJoueur.addAll(joueur.getMainDuJoueur());
-		cartesPossedeesParJoueur.addAll(joueur.getPaquet());
-		for(int i=0;i<14;i++) {
-			boolean carteTrouvee = false;
-			for(Carte c:cartesPossedeesParJoueur) {
-				if(c.getNumeroCarte()==i+1) {
-					array[i] = 1;
-					carteTrouvee = true;
-				}
-			}
-			if(!carteTrouvee) {
-				array[i] = 0;
-			}
-			carteTrouvee = false;
+		int nbCartesJoueur = 14;
+		int nbCartesAdversaire = 14;
+		int nbPositions = 4; //position joueur rouge, vert, mur de feu, distance lave/vert,lave/rouge
+		int nbMontantMana = 2; //montant de mana des deux joueurs
+		int numInputs = nbCartesJoueur + nbCartesAdversaire + nbPositions + nbMontantMana;
+		double[] array = new double[numInputs];
+		for(Integer i:joueur.getCartesPossedees()) {
+			array[i-1] = 1;
 		}
-		
-		Joueur joueurAdverse;
-		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			joueurAdverse = partie.getJoueurVert();
-		}else {
-			joueurAdverse = partie.getJoueurRouge();
+		for(Integer i:adversaire.getCartesPossedees()) {
+			array[(i-1)+nbCartesJoueur] = 1;
 		}
-		array[14] = partie.getPont().getDistanceEntreJoueurEtLave(joueur);
-		array[15] = partie.getPont().getDistanceEntreMurDeFeuEtJoueur(joueur);
-		array[16] = partie.getPont().getDistanceEntreJoueurEtLave(joueurAdverse);
-		array[17] = joueur.getManaActuel();
+		array[28] = partie.getPont().getDistanceEntreJoueurEtLave(joueur);
+		array[29] = partie.getPont().getDistanceEntreMurDeFeuEtJoueur(joueur);
+		array[30] = partie.getPont().getDistanceEntreJoueurEtLave(adversaire);
+		array[31] = partie.getPont().getDistanceEntreMurDeFeuEtJoueur(adversaire);
+		array[32] = joueur.getManaActuel();
+		array[33] = adversaire.getManaActuel();
 		return array;
 	}
 
-	public int getGain(Joueur j) {
-		return this.partie.getMancheCourante().getTourCourant().evaluerTour(j);
+	public int getGain() {
+		return this.partie.getMancheCourante().getTourCourant().evaluerTour(joueur,partie);
 	}
 	
 	@Override
