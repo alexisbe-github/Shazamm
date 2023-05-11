@@ -13,7 +13,7 @@ import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
-import main.java.vue.jeu.Chrono;
+import main.java.vue.jeu.VueChrono;
 import main.java.vue.jeu.VueHistorique;
 import main.java.vue.jeu.VueJeu;
 

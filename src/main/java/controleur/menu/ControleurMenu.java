@@ -10,6 +10,7 @@ import java.util.Random;
 
 import javax.swing.JButton;
 
+import main.java.model.jeu.Chrono;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAIntermediaire;
@@ -28,6 +29,7 @@ public class ControleurMenu implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
+		Chrono timer = new Chrono(10);
 		switch (bouton.getText()) {
 		case "Jouer":
 			vm.dispose();
@@ -37,8 +39,8 @@ public class ControleurMenu implements ActionListener {
 			Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
 			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
 			Partie p = new Partie(joueur1, joueur2);
-			VueJeu fenetreJ1 = new VueJeu(joueur1, p);
-			VueJeu fenetreJ2 = new VueJeu(joueur2, p);
+			VueJeu fenetreJ1 = new VueJeu(joueur1, p, timer);
+			VueJeu fenetreJ2 = new VueJeu(joueur2, p, timer);
 			int width = Toolkit.getDefaultToolkit().getScreenSize().width;
 			fenetreJ1.setLocation(new Point(0, 0));
 			fenetreJ2.setLocation(new Point(width / 2, 0));
@@ -58,7 +60,7 @@ public class ControleurMenu implements ActionListener {
 			Joueur joueur = new Joueur(couleur, "Pop", "Simoké", "blabla");
 			IAIntermediaire ia = new IAIntermediaire(couleurIA, "Sorcier", "ledeux", "blabla");
 			Partie partie = new Partie(joueur, ia);
-			VueJeu fenetreJoueur = new VueJeu(joueur, partie);
+			VueJeu fenetreJoueur = new VueJeu(joueur, partie, timer);
 			if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 				partie.setStrategy(fenetreJoueur, ia);
 			} else {

@@ -14,8 +14,6 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -42,6 +40,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import main.java.controleur.jeu.ControleurCartes;
 import main.java.controleur.jeu.ControleurJeu;
 import main.java.controleur.jeu.ControleurMana;
+import main.java.model.jeu.Chrono;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -67,17 +66,17 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	private JLabel labelManaAdversaire, labelInfos, labelInfosTour;
 	private List<Integer> cartesJouees;
 	private int choix; // choix pour les cartes qui nécéssitent une sélection
-	private Chrono timer;
+	VueChrono labelTimer;
 
 	/**
 	 * Construit un objet <code>Fenetre</code> avec le titre spécifié, qui
 	 * correspond à l'interface graphique affichant le jeu.
 	 */
-	public VueJeu(Joueur joueur, Partie partie) {
+	public VueJeu(Joueur joueur, Partie partie, Chrono timer) {
 		this.joueur = joueur;
 		this.partie = partie;
-		this.timer = new Chrono(30, this.partie, this.joueur, this);
-
+		this.labelTimer = new VueChrono(timer);
+		
 		cartesJouees = new ArrayList<>();
 		
 		int hauteurElement = 0; // Variable permettant de gérer la hauteur des élements dans le gridbag layout. à incrémenter avant utilisation.
@@ -157,7 +156,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// Création du label timer et ajout à la fenêtre
 		hauteurElement++;
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
-		getContentPane().add(timer, c);
+		getContentPane().add(labelTimer, c);
 
 		
 		
@@ -952,7 +951,6 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		timer.reStart();
 		this.updateBarreMana();
 		this.updateManaAdversaire();
 		this.updateInfos();
