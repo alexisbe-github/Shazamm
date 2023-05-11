@@ -7,7 +7,6 @@ import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.space.ObservationSpace;
 
 import main.java.model.jeu.Joueur;
-import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
@@ -39,8 +38,10 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 
 	@Override
 	public EtatPartie reset() {
-		partie = partie.nouvellePartie();
-		return partie.getEtatPartie();
+		this.partie = partie.nouvellePartie();
+		System.out.println(partie.strategyVert);
+		EtatPartie ep = partie.getEtatPartie();
+		return ep;
 	}
 
 	@Override
@@ -51,10 +52,6 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 
 	@Override
 	public StepReply<EtatPartie> step(Integer action) {
-		int nbCartesAJouer = action; // Le nombre de cartes à jouer correspond à l'action choisie
-		if (nbCartesAJouer < 0 || nbCartesAJouer > joueur.getMainDuJoueur().size()) {
-	        throw new IllegalArgumentException("Nombre de cartes jouées invalide : " + nbCartesAJouer);
-	    }
 		int mise = Utils.genererEntier(1, joueur.getManaActuel()+1);
 		partie.getMancheCourante().getTourCourant().setMiseJoueur(joueur, mise);
 		adversaire.jouerTour(partie);
