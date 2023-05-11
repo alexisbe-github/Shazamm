@@ -13,7 +13,7 @@ import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
-import main.java.vue.jeu.Chrono;
+import main.java.vue.jeu.VueChrono;
 import main.java.vue.jeu.VueHistorique;
 import main.java.vue.jeu.VueJeu;
 
@@ -46,6 +46,7 @@ public class ControleurJeu implements ActionListener {
 			boolean adversaireEstUnOrdinateur = joueurAdverse instanceof IA;
 			if (adversaireEstUnOrdinateur) {
 				((IA) joueurAdverse).jouerTour(partie);
+				vj.getChrono().joueurJoue();
 			}
 
 			int mise = vj.getMise();
@@ -55,6 +56,9 @@ public class ControleurJeu implements ActionListener {
 			for (Carte c : cartes) {
 				partie.jouerCarte(c, j);
 			}
+			
+			vj.getChrono().joueurJoue();
+			
 			partie.jouerTour();
 
 			break;
