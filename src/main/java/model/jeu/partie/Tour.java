@@ -365,4 +365,16 @@ public class Tour implements Cloneable {
 		tourClone.cartesJoueesVert = cartesJoueesVertTmp;
 		return tourClone;
 	}
+	
+	public int evaluerTour(Joueur j) {
+		int res = 0;
+		if(j.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			if(this.deplacementMur < 0) res = -1;
+			else res =1;
+		}else {
+			if(this.deplacementMur < 0) res = 1;
+			else res = -1;
+		}
+		return res;
+	}
 }

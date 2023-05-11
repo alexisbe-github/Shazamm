@@ -5,15 +5,21 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import org.deeplearning4j.rl4j.environment.Environment;
+import org.deeplearning4j.rl4j.environment.Schema;
+import org.deeplearning4j.rl4j.environment.StepResult;
 
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.apprentissage.EtatPartie;
 import main.java.vue.ILancementStrategy;
 import main.java.vue.VueConsole;
 
-public class Partie implements Cloneable {
+public class Partie implements Cloneable,Environment {
 
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
@@ -444,13 +450,13 @@ public class Partie implements Cloneable {
 		try {
 			Partie partieOriginale = (Partie) this.clone();
 			Partie partieTmp;
-			int manaMax = joueur.getManaActuel()+1;
-			if(manaMax < 20) {
-				manaMax = joueur.getManaActuel()+1;
-			}else {
+			int manaMax = joueur.getManaActuel() + 1;
+			if (manaMax < 20) {
+				manaMax = joueur.getManaActuel() + 1;
+			} else {
 				manaMax = (int) ((joueur.getManaActuel() + 1) / 1.5);
 			}
-			for (int i = 1; i < manaMax ; i++) {
+			for (int i = 1; i < manaMax; i++) {
 				partieTmp = (Partie) partieOriginale.clone();
 				int mise = i;
 
@@ -605,6 +611,46 @@ public class Partie implements Cloneable {
 				this.partieFinie = true;
 			}
 		}
+	}
+
+	public Partie nouvellePartie() {
+		return new Partie(
+				new Joueur(joueurRouge.getCouleur(), "a","a","a"),
+				new Joueur(joueurVert.getCouleur(), "a", "a", "a"));
+	}
+	
+	public EtatPartie getEtatPartie() {
+		return new EtatPartie(this,joueurRouge);
+	}
+
+	@Override
+	public Schema getSchema() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map reset() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public StepResult step(Object action) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isEpisodeFinished() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
