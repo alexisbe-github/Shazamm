@@ -76,6 +76,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.joueur = joueur;
 		this.partie = partie;
 		this.labelTimer = new VueChrono(timer);
+		timer.setVueJeu(this);
+		timer.startChrono();
 		
 		cartesJouees = new ArrayList<>();
 		
@@ -321,6 +323,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 
 	
 	
+	
 	//update le panel CartesJouees
 	private void updateCartesJouees() {
 		panelCartesJouees.removeAll();
@@ -527,47 +530,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		}
 	}
 
-	/**
-	 * @param couleur : couleur du sorcier
-	 * @return Le label contenant le sorcier en question
-	 */
-	private JLabel getLabelSorcier(ECouleurJoueur couleur) {
-		for (Component c : panelSorciers.getComponents()) {
-			try {
-				JLabel label = (JLabel) c;
-				ImageIcon image = (ImageIcon) label.getIcon();
-				if ((image.getDescription() == partie.getJoueurRouge().getPath()
-						&& couleur.equals(ECouleurJoueur.ROUGE))
-						|| (image.getDescription() == partie.getJoueurVert().getPath()
-								&& couleur.equals(ECouleurJoueur.VERT))) {
-					return label;
-				} else if (image.getDescription() == partie.getJoueurVert().getPath()
-						&& couleur.equals(ECouleurJoueur.VERT)) {
-
-				}
-			} catch (NullPointerException e) {
-
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @return Le label contenant le mur de feu
-	 */
-	private JLabel getLabelMurFeu() {
-		for (Component c : panelSorciers.getComponents()) {
-			try {
-				JLabel label = (JLabel) c;
-				ImageIcon image = (ImageIcon) label.getIcon();
-				if (image.getDescription() == partie.getPont().getPathMur()) {
-					return label;
-				}
-			} catch (NullPointerException e) {
-
-			}
-		}
-		return null;
+	public JButton getBoutonJouer() {
+		return this.boutonJouer;
 	}
 
 	/**

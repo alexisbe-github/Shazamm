@@ -20,7 +20,6 @@ public class VueChrono extends JLabel implements PropertyChangeListener{
         this.setForeground(Color.WHITE);
         this.setHorizontalAlignment(JLabel.CENTER);
         chrono.addObserver(this);
-        chrono.startChrono();
     }
     
     public void updateChrono() {

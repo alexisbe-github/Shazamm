@@ -15,6 +15,7 @@ import main.java.vue.jeu.VueJeu;
 public class Chrono {
 
 	private Timer timer;
+	private VueJeu vj1,vj2;
     private int tempsRestant;
     private final int DUREE;
     PropertyChangeSupport pcs;
@@ -36,37 +37,34 @@ public class Chrono {
     public void secondePasse() {
     	this.tempsRestant--;
     	pcs.firePropertyChange("property","x","y");
+    	if(tempsRestant==0) {
+    		if(vj1!=null) this.finTemps(vj1);
+    		if(vj2!=null) this.finTemps(vj2);    		
+    	}
+    }
+    
+    public void setVueJeu(VueJeu vj) {
+    	if(this.vj1==null) {
+    		this.vj1=vj;
+    	}else {
+    		this.vj2=vj;
+    	}
     }
     
     public void startChrono() {
-    	this.timer.start();
     	this.tempsRestant=DUREE;
+    	this.timer.start();
     }
     
-    public void finTemps(Partie partie, VueJeu vj) {
+    public void finTemps(VueJeu vj) {
     	timer.stop();
-    	Joueur joueurAdverse;
-    	Joueur joueur = vj.getJoueur();
+
+    	vj.getBoutonJouer().doClick();
     	
-		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			joueurAdverse = partie.getJoueurVert();
-		} else {
-			joueurAdverse = partie.getJoueurRouge();
-		}
-		
-		boolean adversaireEstUnOrdinateur = joueurAdverse instanceof IA;
-		if (adversaireEstUnOrdinateur)
-			((IA) joueurAdverse).jouerTour(partie);
-		
-		int mise = vj.getMise();
-		Tour tourCourant = partie.getMancheCourante().getTourCourant();
-		tourCourant.setMiseJoueur(joueur, mise);
-		
-		partie.jouerTour();
     	this.startChrono();
     }
     
-    public void addObserver(VueChrono l) {
+    public void addObserver(PropertyChangeListener l) {
     	pcs.addPropertyChangeListener(l);
     }
     

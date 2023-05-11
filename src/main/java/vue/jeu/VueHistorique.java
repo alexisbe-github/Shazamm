@@ -51,6 +51,7 @@ public class VueHistorique extends JFrame{
 		
 		try { 
 			this.addTour(partie.getTourPrecedent());
+			this.addTour(partie.getTourPrecedent());
 		}catch(NullPointerException e) {
 			
 		}
