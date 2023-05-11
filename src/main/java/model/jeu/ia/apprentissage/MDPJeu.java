@@ -33,13 +33,12 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 
 	@Override
 	public DiscreteSpace getActionSpace() {
-		return new DiscreteSpace(joueur.getMainDuJoueur().size());
+		return new DiscreteSpace(15);
 	}
 
 	@Override
 	public EtatPartie reset() {
 		this.partie = partie.nouvellePartie();
-		System.out.println(partie.strategyVert);
 		EtatPartie ep = partie.getEtatPartie();
 		return ep;
 	}
@@ -52,13 +51,13 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 
 	@Override
 	public StepReply<EtatPartie> step(Integer action) {
-		int mise = Utils.genererEntier(1, joueur.getManaActuel()+1);
+		int mise = Utils.genererEntier(1, (joueur.getManaActuel()+1)/2);
+		System.out.println(action);
 		partie.getMancheCourante().getTourCourant().setMiseJoueur(joueur, mise);
 		adversaire.jouerTour(partie);
 		partie.jouerTour(); // La partie avance au prochain tour avec le joueur ayant joué ses cartes
 		EtatPartie etatPartie = partie.getEtatPartie();
-		Tour tour = partie.getTourPrecedent();
-		double reward = etatPartie.getGain(); // La récompense correspond au gain du joueur dans l'état actuel
+		double reward = etatPartie.getPartie().getTourPrecedent().evaluerTour(joueur, partie); // La récompense correspond au gain du joueur dans l'état actuel
 		boolean done = partie.getPont().unSorcierEstTombe(); // La partie est terminée si une des conditions de fin est atteinte
 		return new StepReply<>(etatPartie, reward, done, null); // On retourne l'état suivant, la récompense, l'état
 																// final et les informations additionnelles (null ici)

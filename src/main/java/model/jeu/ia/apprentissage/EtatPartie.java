@@ -49,6 +49,7 @@ public class EtatPartie implements Encodable {
 	}
 
 	public int getGain() {
+		System.out.println(this.partie.getPont());
 		return this.partie.getMancheCourante().getTourCourant().evaluerTour(joueur,partie);
 	}
 	

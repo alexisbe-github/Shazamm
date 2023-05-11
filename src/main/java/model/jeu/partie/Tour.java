@@ -349,36 +349,47 @@ public class Tour implements Cloneable {
 		cartesJoueesVertTmp = new ArrayList<>();
 		cartesJoueesRougeTmp = new ArrayList<>();
 		cartesJoueesTmp = new ArrayList<>();
-		for(Carte c:cartesJoueesVert) {
-			cartesJoueesVertTmp.add((Carte)c.clone());
+		for (Carte c : cartesJoueesVert) {
+			cartesJoueesVertTmp.add((Carte) c.clone());
 		}
-		
-		for(Carte c:cartesJoueesRouge) {
-			cartesJoueesRougeTmp.add((Carte)c.clone());
+
+		for (Carte c : cartesJoueesRouge) {
+			cartesJoueesRougeTmp.add((Carte) c.clone());
 		}
-		
-		for(Carte c:cartesJouees) {
-			cartesJoueesTmp.add((Carte)c.clone());
+
+		for (Carte c : cartesJouees) {
+			cartesJoueesTmp.add((Carte) c.clone());
 		}
 		tourClone.cartesJouees = cartesJoueesTmp;
 		tourClone.cartesJoueesRouge = cartesJoueesRougeTmp;
 		tourClone.cartesJoueesVert = cartesJoueesVertTmp;
 		return tourClone;
 	}
-	
-	public int evaluerTour(Joueur j,Partie p) {
+
+	public int evaluerTour(Joueur j, Partie p) {
 		int res = 0;
-		if(j.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			if(this.deplacementMur < 0) res = -1;
-			else res =1;
-			if(p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu()+deplacementMur) res += 10;
-			if(p.getPont().getPosJoueurRouge() == p.getPont().getPosMurDeFeu()+deplacementMur) res -= 10;
-		}else {
-			if(this.deplacementMur < 0) res = 1;
-			else res = -1;
-			if(p.getPont().getPosJoueurRouge() == p.getPont().getPosMurDeFeu()+deplacementMur) res += 10;
-			if(p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu()+deplacementMur) res -= 10;
+		if (j.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			if (this.deplacementMur < 0)
+				res = -1;
+			if (this.deplacementMur > 0)
+				res = 1;
+			if (p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu() + deplacementMur)
+				res += 10;
+			if (p.getPont().getPosJoueurRouge() == p.getPont().getPosMurDeFeu() + deplacementMur)
+				res -= 10;
+			System.out.println(p.getPont());
+			System.out.println(p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu() + deplacementMur);
+		} else {
+			if (this.deplacementMur < 0)
+				res = 1;
+			if (this.deplacementMur > 0)
+				res = -1;
+			if (p.getPont().getPosJoueurRouge() == p.getPont().getPosMurDeFeu() + deplacementMur)
+				res += 10;
+			if (p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu() + deplacementMur)
+				res -= 10;
 		}
+
 		return res;
 	}
 }

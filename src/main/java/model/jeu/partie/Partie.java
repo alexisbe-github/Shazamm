@@ -22,7 +22,7 @@ public class Partie implements Cloneable {
 	private List<Manche> listeManche;
 	private boolean partieFinie, joueurPousse, cartesJouees;
 
-	public ILancementStrategy strategyVert, strategyRouge;
+	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
 	public Partie(Joueur j1, Joueur j2) {
@@ -39,6 +39,7 @@ public class Partie implements Cloneable {
 		this.joueurPousse = false;
 		this.cartesJouees = false;
 		this.pcs = new PropertyChangeSupport(this);
+		if(joueurVert instanceof IAFacile)this.strategyVert = (IAFacile)joueurVert; //pour l'apprentissage de l'IA
 		lancerPartie();
 	}
 
@@ -133,7 +134,6 @@ public class Partie implements Cloneable {
 	 * @param joueur
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		this.setStrategyVert((IAFacile)joueurVert);
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 			strategyVert.lancerLarcin(p, tour, joueur);
 		}else
@@ -615,7 +615,6 @@ public class Partie implements Cloneable {
 		IAFacile jV = new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire");
 		Partie p = new Partie(jR,jV);
 		p.strategyVert = jV;
-		System.out.println(p.strategyVert);
 		return p;
 	}
 
