@@ -125,8 +125,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelLogo.add(panelInfosJoueur, c);
 		
 		//création et ajout de l'image du logo
-		logo.setIcon(Utils.redimensionnerImage(new ImageIcon(this.joueur.getPathAvatar()), this.getHeight()/13));
-		System.out.println(this.joueur.getPathAvatar());
+		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/13));
 		logo.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
 		setConstraints(1, 0, 0, 0, c);
 		panelLogo.add(logo, c);
