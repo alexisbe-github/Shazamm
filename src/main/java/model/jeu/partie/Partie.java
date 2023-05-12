@@ -43,7 +43,7 @@ public class Partie implements Cloneable {
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
-		initPartieBDD(j1.getCouleur());
+		
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
@@ -181,6 +181,7 @@ public class Partie implements Cloneable {
 		joueurVert.piocherCartes(5);
 		joueurRouge.remplirReserveDeMana();
 		joueurVert.remplirReserveDeMana();
+		initPartieBDD(couleurJ1);
 		this.listeManche.add(new Manche(this));
 	}
 
@@ -646,6 +647,7 @@ public class Partie implements Cloneable {
 			this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
 			this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
 		}
+		this.partieSQL.setIdVainqueur(joueurRouge.getProfil().getId());
 		new DAOPartie().creer(this.partieSQL);
 	}
 

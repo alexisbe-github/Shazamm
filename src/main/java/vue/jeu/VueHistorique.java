@@ -14,6 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.beans.JoueurSQL;
+import main.java.model.bdd.dao.beans.PartieSQL;
+import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -28,6 +32,8 @@ public class VueHistorique extends JFrame{
 	
 	private JLabel derniersCoups; //Label de l'image "Derniers coups" présente au dessus du tableau.
 	private JPanel tableauPrincipal; //Tableau de une colonne dans lequel on placera Un label (manche x tour x) par tour et un panel contenant les infos
+	private JoueurSQL j1SQL;
+	private JoueurSQL j2SQL;
 	
 
 	public VueHistorique(Partie p) {
@@ -51,9 +57,15 @@ public class VueHistorique extends JFrame{
 		tableauPrincipal.add(derniersCoups);
 		derniersCoups.setBackground(Color.BLUE);
 		
+		PartieSQL p = partie.getPartieSQL();
+		
+		DAOJoueur daoj = new DAOJoueur();
+		
+		j1SQL = daoj.trouver(p.getIdJoueur1());
+		j2SQL = daoj.trouver(p.getIdJoueur2());
+		
 		try { 
-			this.addTour(partie.getTourPrecedent());
-			this.addTour(partie.getTourPrecedent());
+			this.addTours();
 		}catch(NullPointerException e) {
 			
 		}
@@ -62,9 +74,15 @@ public class VueHistorique extends JFrame{
 	}
 	
 	
+	private void addTours() {
+		Tour t = partie.getTourPrecedent();
+		//boucle sur partie.getListeManches()
+			//boucle sur partie.getListeTours()
+		addTour(t.getTourSQL());
+		
+	}
 	
-	
-	private void addTour(Tour t) {
+	private void addTour(TourSQL t) {
 		JPanel panelTour = new JPanel(new GridLayout(0, 1));
 		panelTour.setBackground(Color.BLACK);
 		panelTour.setBorder(BorderFactory.createLineBorder(Color.WHITE));
@@ -83,21 +101,24 @@ public class VueHistorique extends JFrame{
 		this.tableauPrincipal.add(panelTour);
 	}
 	
-	private JPanel getEtatPont(Tour t) {
+	private JPanel getEtatPont(TourSQL t) {
 		JPanel panelPont = new JPanel(new GridLayout(2,Pont.TAILLE_PONT));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		int l = screenSize.width/200;
 		int h = screenSize.width/150;
 		ImageIcon caseIcon = new ImageIcon();
 
+		
+		
 		for(int i=0;i<Pont.TAILLE_PONT;i++) {
-			if(i==6) {
+			
+			if(i==t.getPositionJoueur1()) {
 				//Condition à remplacer par : SI i == posJoueurRouge du tour
 				caseIcon = Utils.createImageIconColor(Color.RED, l, h);
-			}else if(i==12){
+			}else if(i==t.getPositionJoueur2()){
 				//Condition à remplacer par : SI i == posJoueurVert du tour
 				caseIcon = Utils.createImageIconColor(Color.GREEN, l, h);
-			}else if(i==9) {
+			}else if(i==t.getPositionMurFlammes()) {
 				//Condition à remplacer par : SI i == posMur du tour
 				caseIcon = Utils.createImageIconColor(Color.ORANGE, l, h);
 			}else {
@@ -127,7 +148,7 @@ public class VueHistorique extends JFrame{
 	}
 	
 	
-	private JPanel getBilanEtPont(Tour t, boolean avant) {
+	private JPanel getBilanEtPont(TourSQL t, boolean avant) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		JPanel bilanDesMises = new JPanel();
 		JLabel titre = new JLabel();
@@ -156,21 +177,23 @@ public class VueHistorique extends JFrame{
 		return bilanDesMises;
 	}
 	
-	private String getBilanJoueur(ECouleurJoueur couleur, Tour t,boolean avant) {
+	private String getBilanJoueur(ECouleurJoueur couleur, TourSQL t,boolean avant) {
 		Joueur j;
 		if(couleur.equals(ECouleurJoueur.ROUGE)) 
 			j = partie.getJoueurRouge(); 
 		else j = partie.getJoueurVert();
 		
-		String texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur(j)).toString());
+		String texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur1()).toString()); //remplacer par joueurRouge
 		
 		if(avant) {
 			texteBilan+="Sorts :<br/>";
-			for(Carte c : t.getCartesJouees()) {
+			/* REMPLACER PAR getcartesjouees(t) ou un truc comme ça
+			for(Carte c : )) {
 				if(c.getJoueur().equals(j)) {
 					texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),c.getNom());
 				}
 			}
+			*/
 		}
 		texteBilan+="</html>";
 		return texteBilan;
