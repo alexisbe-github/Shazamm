@@ -696,15 +696,19 @@ public class Partie implements Cloneable {
 			int nbVictoiresRouge = this.joueurRouge.getProfil().getNbPartiesGagnees();
 			nbVictoiresRouge++;
 			this.joueurRouge.getProfil().setNbPartiesGagnees(nbVictoiresRouge);
-			new DAOJoueur().maj(this.joueurRouge.getProfil());
-			this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			if (this.joueurRouge.getProfil() != null && this.partieSQL != null) {
+				new DAOJoueur().maj(this.joueurRouge.getProfil());
+				this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			}
 			break;
 		case VERT:
 			int nbVictoiresVert = this.joueurVert.getProfil().getNbPartiesGagnees();
 			nbVictoiresVert++;
 			this.joueurVert.getProfil().setNbPartiesGagnees(nbVictoiresVert);
-			new DAOJoueur().maj(this.joueurVert.getProfil());
-			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			if (this.joueurVert.getProfil() != null && this.partieSQL != null) {
+				new DAOJoueur().maj(this.joueurVert.getProfil());
+				this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			}
 			break;
 		}
 	}
@@ -718,14 +722,15 @@ public class Partie implements Cloneable {
 	}
 
 	private void initialiserCouleurJoueursBDD() {
-		if(this.partieSQL!=null) {
+		if (this.partieSQL != null) {
 			CouleurSQL couleur = new CouleurSQL();
 			couleur.setIdPartie(partieSQL.getId());
 			couleur.setCouleurJ1(getCouleurJ1());
-			couleur.setCouleurJ2(getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
+			couleur.setCouleurJ2(
+					getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
 			new DAOCouleur().creer(couleur);
 		}
-		
+
 	}
 
 }

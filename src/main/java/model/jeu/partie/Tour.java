@@ -19,7 +19,7 @@ public class Tour implements Cloneable {
 	private Manche mancheCourante;
 	private TourSQL tourSQL;
 	private List<CarteSQL> listeCartesJouees = new ArrayList<>();
-	
+
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int manaRestantRouge, manaRestantVert;
@@ -74,19 +74,23 @@ public class Tour implements Cloneable {
 		this.trierCartesJouees();
 		ajouterCarteTour(carteAJouer, joueur);
 	}
-	
+
 	private void ajouterCarteTour(Carte c, Joueur j) {
 		CarteSQL carte = new CarteSQL();
-		carte.setIdJoueur(j.getProfil().getId());
-		carte.setNumeroCarte(c.getNumeroCarte());
+		if (j.getProfil() != null) {
+			carte.setIdJoueur(j.getProfil().getId());
+			carte.setNumeroCarte(c.getNumeroCarte());
+		}
 		listeCartesJouees.add(carte);
 	}
-	
+
 	private void initCarteBDD() {
 		DAOCarte dao = new DAOCarte();
 		for (CarteSQL c : this.listeCartesJouees) {
-			c.setIdTour(getTourSQL().getId());
-			dao.creer(c);
+			if (getTourSQL() != null) {
+				c.setIdTour(getTourSQL().getId());
+				dao.creer(c);
+			}
 		}
 		this.listeCartesJouees.clear();
 	}
@@ -137,14 +141,12 @@ public class Tour implements Cloneable {
 
 		this.manaRestantRouge = joueurRouge.getManaActuel();
 		this.manaRestantVert = joueurVert.getManaActuel();
-		
+
 		initTourBDD();
 		initCarteBDD();
 
 		return this.deplacementMur;
 	}
-	
-
 
 	private void calculDeplacementMur() {
 		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
@@ -420,9 +422,9 @@ public class Tour implements Cloneable {
 		}
 		return res;
 	}
-	
+
 	private void initTourBDD() {
-		if(this.mancheCourante.getMancheSQL()!=null) {
+		if (this.mancheCourante.getMancheSQL() != null) {
 			ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
 			ECouleurJoueur couleurJ2 = couleurJ1 == ECouleurJoueur.ROUGE ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;
 			tourSQL = new TourSQL();
@@ -436,15 +438,15 @@ public class Tour implements Cloneable {
 			tourSQL.setPuissanceJoueur2(getAttaqueJoueur(couleurJ2));
 			tourSQL.setNumeroTour(mancheCourante.getNumeroTourCourant());
 			tourSQL.setDate(new Timestamp(System.currentTimeMillis()));
-			
+
 			new DAOTour().creer(tourSQL);
 		}
 	}
-	
+
 	public TourSQL getTourSQL() {
 		return this.tourSQL;
 	}
-	
+
 	/**
 	 * Joue le tour en fonction des mises
 	 * 
@@ -491,7 +493,7 @@ public class Tour implements Cloneable {
 
 		this.manaRestantRouge = joueurRouge.getManaActuel();
 		this.manaRestantVert = joueurVert.getManaActuel();
-		
+
 		return this.deplacementMur;
 	}
 }
