@@ -193,8 +193,8 @@ public class VueHistorique extends JFrame{
 		
 		
 		
-		bilanRouge.setText(getBilanJoueur(jRougeSQL, t);
-		bilanVert.setText(getBilanJoueur(jVertSQL, t);
+		bilanRouge.setText(getBilanJoueur(jRougeSQL, t));
+		bilanVert.setText(getBilanJoueur(jVertSQL, t));
 		
 		bilanDesMises.add(bilanRouge);
 		bilanDesMises.add(bilanVert);
