@@ -15,6 +15,7 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 
 import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAFacile;
@@ -25,7 +26,7 @@ public class Apprentissage {
 	public static void main(String[] args) throws IOException {
 		// Définir l'environnement de votre jeu
 		Joueur joueur1 = new Joueur(ECouleurJoueur.ROUGE, "IApprentissage", "IApprentissage", "IApprentissage");
-		IAFacile joueur2 = new IAFacile(ECouleurJoueur.VERT, new Profil("IAdversaire", "IAdversaire", new ImageIcon("IAdversaire")));
+		IAFacile joueur2 = new IAFacile(ECouleurJoueur.VERT, new Profil(new DAOJoueur().trouver(1L)));
 		Partie partie = new Partie(joueur1, joueur2);
 
 		// Créer le MDP
