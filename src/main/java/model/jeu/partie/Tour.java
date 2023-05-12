@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import main.java.model.bdd.dao.DAOCarte;
 import main.java.model.bdd.dao.DAOTour;
+import main.java.model.bdd.dao.beans.CarteSQL;
 import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -16,6 +18,7 @@ public class Tour implements Cloneable {
 
 	private Manche mancheCourante;
 	private TourSQL tourSQL;
+	private List<CarteSQL> listeCartesJouees = new ArrayList<>();
 	
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
@@ -69,6 +72,23 @@ public class Tour implements Cloneable {
 		}
 		this.cartesJouees.add(carteAJouer);
 		this.trierCartesJouees();
+		ajouterCarteTour(carteAJouer, joueur);
+	}
+	
+	private void ajouterCarteTour(Carte c, Joueur j) {
+		CarteSQL carte = new CarteSQL();
+		carte.setIdJoueur(j.getProfil().getId());
+		carte.setNumeroCarte(c.getNumeroCarte());
+		listeCartesJouees.add(carte);
+	}
+	
+	private void initCarteBDD() {
+		DAOCarte dao = new DAOCarte();
+		for (CarteSQL c : this.listeCartesJouees) {
+			c.setIdTour(getTourSQL().getId());
+			dao.creer(c);
+		}
+		this.listeCartesJouees.clear();
 	}
 
 	/**
@@ -119,6 +139,7 @@ public class Tour implements Cloneable {
 		this.manaRestantVert = joueurVert.getManaActuel();
 		
 		initTourBDD();
+		initCarteBDD();
 
 		return this.deplacementMur;
 	}

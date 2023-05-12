@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.ImageIcon;
-
 import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOCarte;
 import main.java.model.bdd.dao.DAOCouleur;
 import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.bdd.dao.DAOPartie;
+import main.java.model.bdd.dao.beans.CarteSQL;
 import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
+import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
