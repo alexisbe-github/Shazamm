@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JTextField;
 
 import main.java.model.bdd.Profil;
@@ -13,6 +14,7 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.partie.Partie;
 import main.java.vue.jeu.VueJeu;
+import main.java.vue.menu.VueMenu;
 import main.java.vue.profil.VueLancementPartie;
 
 public class ControleurLancementPartie implements ActionListener{
@@ -33,20 +35,30 @@ public class ControleurLancementPartie implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Profil pj1 = vlp.getVueProfilJ1().getPanelSelection().getProfilSelectionne();
-		Profil pj2 = vlp.getVueProfilJ2().getPanelSelection().getProfilSelectionne();
-		int time = 0;
-		try {
-			time = Integer.parseInt(saisieTemps.getText());
-			timer.setDuree(time);
-		}catch(NumberFormatException ex) {
-			
-		}
-		if(pj1.getId()!=pj2.getId() && pj1!=null && pj2!=null && time>=10 && time<600) {
-			
-			lancerPartie(pj1,pj2);
+		JButton bouton = (JButton) e.getSource();
+		switch(bouton.getText()) {
+		case "Lancer" :
+			Profil pj1 = vlp.getVueProfilJ1().getPanelSelection().getProfilSelectionne();
+			Profil pj2 = vlp.getVueProfilJ2().getPanelSelection().getProfilSelectionne();
+			int time = 0;
+			try {
+				time = Integer.parseInt(saisieTemps.getText());
+				timer.setDuree(time);
+			}catch(NumberFormatException ex) {
+				
+			}
+			if(pj1.getId()!=pj2.getId() && pj1!=null && pj2!=null && time>=10 && time<600) {
+				//Je vérifie que les profils existent bien, qu'ils ne sont pas identiques et que le temps est "acceptable"
+				lancerPartie(pj1,pj2);
+			}
+			break;
+		case "Retour" :
+			vlp.dispose();
+			new VueMenu();
+			break;
 		}
 	}
+		
 	
 	public void lancerPartie(Profil pj1, Profil pj2) {
 		Joueur joueur1 = new Joueur(cj1, pj1);

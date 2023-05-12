@@ -30,14 +30,17 @@ public class VueLancementPartie extends JFrame {
 		vueProfilJ1 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		vueProfilJ2 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		JButton boutonLancement = new JButton("Lancer");
+		JButton boutonRetour = new JButton("Retour");
 		
-		saisieTemps = new JTextField("10",5);
+		saisieTemps = new JTextField("30",5);
 		
 		ControleurLancementPartie control = new ControleurLancementPartie(this, saisieTemps, timer, couleurJ1, couleurJ2);
 		
 		boutonLancement.addActionListener(control);
+		boutonRetour.addActionListener(control);
 		
 		JPanel validerPanel = new JPanel();
+		validerPanel.add(boutonRetour);
 		validerPanel.add(boutonLancement);
 		validerPanel.add(saisieTemps);
 		
