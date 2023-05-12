@@ -20,9 +20,11 @@ import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
 import main.java.model.bdd.dao.Connexion;
+import main.java.model.bdd.dao.DAOCarte;
 import main.java.model.bdd.dao.DAOManche;
 import main.java.model.bdd.dao.DAOPartie;
 import main.java.model.bdd.dao.DAOTour;
+import main.java.model.bdd.dao.beans.CarteSQL;
 import main.java.model.bdd.dao.beans.MancheSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.bdd.dao.beans.TourSQL;
@@ -239,6 +241,34 @@ public class Utils {
 		}
 		return liste;
 	}
+	
+	/**
+	 * Fonction permettant de récupérer les cartes correspondant à un tour
+	 * 
+	 * @param t tour
+	 * 
+	 * @return liste de cartes
+	 */
+	public static List<CarteSQL> getCartes(TourSQL t) {
+			List<CarteSQL> liste = new ArrayList<>();
+			DAOCarte dao = new DAOCarte();
+			
+			String requete = "SELECT DISTINCT `id`, `id_tour` FROM carte";
+			Connection con = Connexion.getInstance().getConnexion();
+			try (PreparedStatement pstmt = con.prepareStatement(requete);
+					ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					long idCarte = rs.getLong(1);
+					long idTour = rs.getLong(2);
+					if (idTour == t.getId()) {
+						liste.add(dao.trouver(idCarte));
+					}
+				}
+			} catch (SQLException e) {
+
+			}
+			return liste;
+		}
 
 	/**
 	 * Fonction permettant de récupérer toutes les parties
