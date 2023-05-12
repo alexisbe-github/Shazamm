@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
@@ -21,6 +20,7 @@ import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
 import main.java.vue.classement.VueClassement;
 import main.java.vue.jeu.VueJeu;
+import main.java.vue.menu.VueHistoriqueGeneral;
 import main.java.vue.menu.VueMenu;
 import main.java.vue.profil.VueLancementPartie;
 
@@ -102,6 +102,9 @@ public class ControleurMenu implements ActionListener {
 		case "Classement":
 			vm.dispose();
 			new VueClassement();
+			break;
+		case "Historique":
+			new VueHistoriqueGeneral();
 			break;
 		}
 	}
