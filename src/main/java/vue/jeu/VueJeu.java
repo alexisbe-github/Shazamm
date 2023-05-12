@@ -45,6 +45,7 @@ import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.IA;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
@@ -75,82 +76,78 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public VueJeu(Joueur joueur, Partie partie, Chrono timer) {
 		this.joueur = joueur;
 		this.partie = partie;
-		this.timer=timer;
+		this.timer = timer;
 		VueChrono labelTimer = new VueChrono(timer);
 		timer.setVueJeu(this);
 		timer.startChrono();
-		
+
 		cartesJouees = new ArrayList<>();
-		
-		int hauteurElement = 0; // Variable permettant de gérer la hauteur des élements dans le gridbag layout. à incrémenter avant utilisation.
+
+		int hauteurElement = 0; // Variable permettant de gérer la hauteur des élements dans le gridbag layout.
+								// à incrémenter avant utilisation.
 
 		setVisible(true); // Rend la fenêtre visible
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Quitte le programme quand on ferme la fenêtre
 
-		//Redimensionne la frame
+		// Redimensionne la frame
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 2, screenSize.height * 9 / 10);
 		setResizable(false);
 
-		//Couleur d'arrière plan et ajout du grid bag layout
+		// Couleur d'arrière plan et ajout du grid bag layout
 		getContentPane().setBackground(Color.BLACK);
 		getContentPane().setLayout(new GridBagLayout());
 
-		//Création de le contrainte et initialisation
+		// Création de le contrainte et initialisation
 		GridBagConstraints c = new GridBagConstraints(); // Les contraintes de positionnement des composants
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des éléments en pixels
 		c.fill = GridBagConstraints.BOTH;
 
-		
-		
-		
-		//Création du panel du logo
-		panelLogo = new JPanel(new GridLayout(1,3)); //Création du panel principal du logo
-		panelLogo.setBackground(Color.BLACK);	
-		
-		//Création du label info sorcier et ajout au panel infos joueur
+		// Création du panel du logo
+		panelLogo = new JPanel(new GridLayout(1, 3)); // Création du panel principal du logo
+		panelLogo.setBackground(Color.BLACK);
+
+		// Création du label info sorcier et ajout au panel infos joueur
 		JLabel logoJoueur = new JLabel();
 		ImageIcon iconLogoJoueur = new ImageIcon(joueur.getPathAvatar());
-		if(iconLogoJoueur.getIconWidth()<=0) {
+		if (iconLogoJoueur.getIconWidth() <= 0) {
 			iconLogoJoueur = new ImageIcon("src/main/resources/images/icone-profil-joueur.png");
 		}
-		logoJoueur.setIcon(Utils.redimensionnerImage(iconLogoJoueur,this.getHeight()/13));
-		logoJoueur.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
-		
+		logoJoueur.setIcon(Utils.redimensionnerImage(iconLogoJoueur, this.getHeight() / 13));
+		logoJoueur.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+
 		JLabel labelSorcier = new JLabel(
-				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + "<br>"
-						+ joueur.getNom() + "</b></html>");
-		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, this.getWidth()/70));
+				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert")
+						+ "<br>" + joueur.getNom() + "</b></html>");
+		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, this.getWidth() / 70));
 		labelSorcier.setForeground(Color.BLACK);
 		JPanel panelInfosJoueur = new JPanel();
-		
+
 		panelInfosJoueur.add(logoJoueur);
 		panelInfosJoueur.add(labelSorcier);
-		
-		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
-			panelInfosJoueur.setBackground(new Color(176,47,47));
-		}else {
-			panelInfosJoueur.setBackground(new Color(47,176,47));
+
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			panelInfosJoueur.setBackground(new Color(176, 47, 47));
+		} else {
+			panelInfosJoueur.setBackground(new Color(47, 176, 47));
 		}
 		Utils.setConstraints(1, 0, 1, 0, c);
 		panelLogo.add(panelInfosJoueur, c);
-		
-		//création et ajout de l'image du logo
-		logo.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight()/13));
+
+		// création et ajout de l'image du logo
+		logo.setIcon(
+				Utils.redimensionnerImage(new ImageIcon("src/main/resources/logo_shazamm.gif"), this.getHeight() / 13));
 		Utils.setConstraints(1, 0, 0, 0, c);
 		panelLogo.add(logo, c);
-		
+
 		JLabel limite = new JLabel();
-		limite.setPreferredSize(new Dimension(this.getWidth()/3, this.getHeight()/10));
+		limite.setPreferredSize(new Dimension(this.getWidth() / 3, this.getHeight() / 10));
 		panelLogo.add(limite);
-		
-		//Ajout du panel logo à la frame
+
+		// Ajout du panel logo à la frame
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelLogo, c);
-		
-		
-		
-		
+
 		// Création du Label infos joueur et ajout à la frame
 		labelInfos = new JLabel();
 		labelInfos.setHorizontalAlignment(JLabel.CENTER);
@@ -161,17 +158,11 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(labelInfos, c);
 
-		
-		
-		
 		// Création du label timer et ajout à la fenêtre
 		hauteurElement++;
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(labelTimer, c);
 
-		
-		
-		
 		// Création du panel Principal Jeu, contenant le pont, les sorciers et le mur
 		panelJeu = new JPanel(new GridBagLayout());
 		panelJeu.setBackground(Color.BLACK);
@@ -184,7 +175,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		Utils.setConstraints(0, 0, 0, 0, c);
 		panelJeu.add(panelSorciers, c);
 		// Création du panel pont et ajout au panel Jeu
-		panelPont = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+		panelPont = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		panelPont.setBackground(Color.BLACK);
 		initPont();
 		updatePont();
@@ -198,27 +189,27 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		// On met les sorciers au-dessus du pont
 		panelJeu.setComponentZOrder(panelSorciers, 0);
 		panelJeu.setComponentZOrder(panelPont, 1);
-		//Ajout du panel jeu principal à la frame
+		// Ajout du panel jeu principal à la frame
 		hauteurElement++;
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelJeu, c);
 
-		
-		
-		
 		// Création du panel Tour (informations du tour précédent) et ajout à la frame
 		JPanel panelTour = new JPanel(new BorderLayout());
 		panelCartesJouees = new JPanel();
 		panelCartesJouees.setBackground(Color.BLACK);
 		JLabel invisible = new JLabel();
-		//Création et ajout d'une image invisible permettant de combler l'éspace généré par le panel cartesjouées lorsqu'il est plein
-		//int height = this.getHeight()/5+20; // height de la carte + 20 pour la place prise par le texte
-		//BufferedImage bi = new BufferedImage(Math.round(height*(872f/1356f)), height, BufferedImage.TYPE_INT_ARGB);
+		// Création et ajout d'une image invisible permettant de combler l'éspace généré
+		// par le panel cartesjouées lorsqu'il est plein
+		// int height = this.getHeight()/5+20; // height de la carte + 20 pour la place
+		// prise par le texte
+		// BufferedImage bi = new BufferedImage(Math.round(height*(872f/1356f)), height,
+		// BufferedImage.TYPE_INT_ARGB);
 		BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
 		invisible.setIcon(new ImageIcon(bi));
 		panelCartesJouees.add(invisible);
 		panelTour.add(panelCartesJouees, BorderLayout.CENTER);
-		//Création du label Infos Tour et ajout au panel
+		// Création du label Infos Tour et ajout au panel
 		labelInfosTour = new JLabel();
 		labelInfosTour.setOpaque(true);
 		labelInfosTour.setBackground(Color.BLACK);
@@ -226,18 +217,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelInfosTour.setFont(new Font("Verdana", Font.PLAIN, 13));
 		labelInfosTour.setForeground(Color.WHITE);
 		panelTour.add(labelInfosTour, BorderLayout.NORTH);
-		//Ajout du panel à la frame
+		// Ajout du panel à la frame
 		c.fill = GridBagConstraints.BOTH;
 		hauteurElement++;
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelTour, c);
 
-		
-		
-		
-		
 		// Création du panel main (cartes dans la main du joueur) et ajout à la frame
-		panelMain = new JPanel(new FlowLayout(FlowLayout.CENTER,0,0));
+		panelMain = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
 		panelMain.setBackground(Color.BLACK);
 		this.paintMain();
 		// Configuration du scrollPane permettant de scroller pour parcourir les cartes
@@ -274,21 +261,16 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 				return createEmptyButton();
 			}
 		});
-		//Ajout du panel Cartes à la frame
+		// Ajout du panel Cartes à la frame
 		c.fill = GridBagConstraints.BOTH;
 		hauteurElement++;
 		Utils.setConstraints(1, 1, 0, hauteurElement, c);
 		getContentPane().add(scrollPaneCartes, c);
 
-		
-		
-		
-		
-		
 		// Création du panel d'actions et ajout à la frame
 		panelAction = new JPanel();
 		panelAction.setBackground(Color.BLACK);
-		//Initialisation des éléments du panel
+		// Initialisation des éléments du panel
 		boutonJouer = new JButton("Jouer le tour");
 		saisieMana = new JTextField("1", 10);
 		labelManaAdversaire = new JLabel();
@@ -298,25 +280,24 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		JLabel imageMise = new JLabel();
 		imageMise.setIcon(new ImageIcon("src/main/resources/fr_votremise_"
 				+ Character.toLowerCase(joueur.getCouleur().toString().charAt(0)) + ".gif"));
-		//Ajout des listeners
+		// Ajout des listeners
 		ControleurJeu cj = new ControleurJeu(this, partie);
 		boutonJouer.addActionListener(cj);
 		historique.addActionListener(cj);
 		saisieMana.addKeyListener(new ControleurMana(saisieMana, boutonJouer, this));
-		//Ajout des éléments au panel
+		// Ajout des éléments au panel
 		panelAction.add(boutonJouer);
-		panelAction.add(historique);
+		if (!(partie.getJoueurRouge() instanceof IA || partie.getJoueurVert() instanceof IA)) {
+			panelAction.add(historique);
+		}
 		panelAction.add(imageMise);
 		panelAction.add(saisieMana);
 		panelAction.add(labelManaAdversaire);
-		//Ajout du panel à la frame
+		// Ajout du panel à la frame
 		hauteurElement++;
 		Utils.setConstraints(0, 0, 0, hauteurElement, c);
 		getContentPane().add(panelAction, c);
 
-		
-		
-		
 		// Affichage du mana
 		barreMana = new JProgressBar();
 		barreMana.setStringPainted(true);
@@ -330,10 +311,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		getContentPane().add(barreMana, c);
 	}
 
-	
-	
-	
-	//update le panel CartesJouees
+	// update le panel CartesJouees
 	private void updateCartesJouees() {
 		panelCartesJouees.removeAll();
 		panelCartesJouees.repaint();
@@ -341,13 +319,13 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		if (tourCourant.getMiseJoueurRouge() == 0 && tourCourant.getMiseJoueurVert() == 0)
 			tourCourant = partie.getTourPrecedent();
 		List<Carte> cartesJoueesDuTour = tourCourant.getCartesJouees();
-		
-		if(cartesJoueesDuTour.isEmpty()) {
+
+		if (cartesJoueesDuTour.isEmpty()) {
 			JLabel invisible = new JLabel();
 			BufferedImage bi = new BufferedImage(this.getWidth() / 9, this.getWidth() / 7, BufferedImage.TYPE_INT_ARGB);
 			invisible.setIcon(new ImageIcon(bi));
 			panelCartesJouees.add(invisible);
-		}else {
+		} else {
 			for (int i = 0; i < cartesJoueesDuTour.size(); i++) {
 				Carte c = cartesJoueesDuTour.get(i);
 				JLabel tmp = new JLabel();
@@ -360,7 +338,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		this.updateLabelInfosTour(tourCourant);
 	}
 
-	//update le label InfosTour
+	// update le label InfosTour
 	private void updateLabelInfosTour(Tour tourCourant) {
 		String text = "<html>";
 		if (tourCourant.isFinDeManche()) {
@@ -410,7 +388,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		labelInfos.setText(getInfos());
 	}
 
-	//update le label ManaAdversaire
+	// update le label ManaAdversaire
 	private void updateManaAdversaire() {
 		labelManaAdversaire.setText(String.format("Mana de l'adversaire : %d", getManaAdversaire()));
 	}
@@ -419,8 +397,8 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	 * Pose les images du pont sur l'interface graphique
 	 */
 	private void initPont() {
-		panelPont.setLayout(new FlowLayout(FlowLayout.CENTER,0,0));
-		
+		panelPont.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+
 		for (int i = 0; i < Pont.TAILLE_PONT; i++) {
 			JLabel tmp = new JLabel();
 			String source = this.getImageCasePont(i);
@@ -472,19 +450,19 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			l.setIcon(icon);
 			panelSorciers.add(l, c);
 		}
-		
+
 		// Affichage Joueurs / Mur
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.ROUGE);
 		ImageIcon imgRouge = new ImageIcon(partie.getJoueurRouge().getPath());
-		imgRouge = Utils.redimensionnerImage(imgRouge, this.getHeight()/16);
+		imgRouge = Utils.redimensionnerImage(imgRouge, this.getHeight() / 16);
 		panelSorciers.add(new JLabel(imgRouge), c);
 		c.gridx = partie.getPont().getPosMurDeFeu();
 		ImageIcon imgMur = new ImageIcon(partie.getPont().getPathMur());
-		imgMur = Utils.redimensionnerImage(imgMur, this.getHeight()/16);
+		imgMur = Utils.redimensionnerImage(imgMur, this.getHeight() / 16);
 		panelSorciers.add(new JLabel(imgMur), c);
 		c.gridx = partie.getPosJoueur(ECouleurJoueur.VERT);
 		ImageIcon imgVert = new ImageIcon(partie.getJoueurVert().getPath());
-		imgVert = Utils.redimensionnerImage(imgVert, this.getHeight()/16);
+		imgVert = Utils.redimensionnerImage(imgVert, this.getHeight() / 16);
 		panelSorciers.add(new JLabel(imgVert), c);
 	}
 
@@ -516,15 +494,16 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		panelMain.removeAll();
 		panelMain.repaint();
 		ControleurCartes ml = new ControleurCartes(this.panelMain, this.cartesJouees, this);
-		
+
 		for (int i = 0; i < mainJoueur.size(); i++) {
 			Carte c = mainJoueur.get(i);
 			JLabel tmp = new JLabel();
 			ImageIcon image = new ImageIcon(c.getPath());
 			tmp.setIcon(Utils.redimensionnerImage(image, this.getHeight() / 4));
 			tmp.setHorizontalAlignment(JLabel.CENTER);
-			tmp.setToolTipText(c.getDescription()); //ajoute la description lorsque la souris passe au dessus de la carte
-			//tmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+			tmp.setToolTipText(c.getDescription()); // ajoute la description lorsque la souris passe au dessus de la
+													// carte
+			// tmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 			panelMain.add(tmp);
 			tmp.addMouseListener(ml);
 		}
@@ -543,7 +522,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 	public JButton getBoutonJouer() {
 		return this.boutonJouer;
 	}
-	
+
 	public Chrono getChrono() {
 		return this.timer;
 	}
@@ -583,8 +562,10 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 //					anc -= 2;
 //					mana--;
 		Joueur jPartie;
-		if(joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) jPartie = partie.getJoueurRouge();
-		else jPartie = partie.getJoueurVert();
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
+			jPartie = partie.getJoueurRouge();
+		else
+			jPartie = partie.getJoueurVert();
 		barreMana.setValue(jPartie.getManaActuel() * 2);
 		barreMana.setString("Mana : " + jPartie.getManaActuel() + "/" + Joueur.MANA_MAXIMUM);
 //
@@ -773,10 +754,14 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 							|| (e.getKeyChar() == '+' && saisieManaRecyclage.getCaretPosition() == 0)
 									&& ((Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) >= -5)
 											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) <= 5)
-											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) + (tour.getMiseJoueur(joueur)) <= joueur.getManaActuel())
-											&& (joueur.getManaActuel() - Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) - tour.getMiseJoueur(joueur) >= 0)
-											&& (joueur.getManaActuel() - Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar()) - tour.getMiseJoueur(joueur) <= Joueur.MANA_MAXIMUM)
-											))
+											&& (Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar())
+													+ (tour.getMiseJoueur(joueur)) <= joueur.getManaActuel())
+											&& (joueur.getManaActuel()
+													- Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar())
+													- tour.getMiseJoueur(joueur) >= 0)
+											&& (joueur.getManaActuel()
+													- Integer.parseInt(saisieManaRecyclage.getText() + e.getKeyChar())
+													- tour.getMiseJoueur(joueur) <= Joueur.MANA_MAXIMUM)))
 							|| (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE
 									|| e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT
 									|| e.getKeyCode() == KeyEvent.VK_SHIFT || e.getKeyCode() == KeyEvent.VK_CONTROL);
