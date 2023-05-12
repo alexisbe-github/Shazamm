@@ -420,10 +420,10 @@ public class Tour implements Cloneable {
 			if (p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu() + deplacementMur)
 				res -= 10;
 		}
-		return res;
+		return res;	
 	}
 
-	private void initTourBDD() {
+	public void initTourBDD() {
 		if (this.mancheCourante.getMancheSQL() != null) {
 			ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
 			ECouleurJoueur couleurJ2 = couleurJ1 == ECouleurJoueur.ROUGE ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;

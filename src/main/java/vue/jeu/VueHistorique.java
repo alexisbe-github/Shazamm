@@ -20,6 +20,7 @@ import javax.swing.JScrollPane;
 import main.java.model.bdd.dao.DAOCouleur;
 import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.bdd.dao.DAOManche;
+import main.java.model.bdd.dao.beans.CarteSQL;
 import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.bdd.dao.beans.JoueurSQL;
 import main.java.model.bdd.dao.beans.MancheSQL;
@@ -82,14 +83,14 @@ public class VueHistorique extends JFrame{
 		JPanel res = new JPanel(new GridBagLayout());
 		hauteurElement = 0;
 		GridBagConstraints c = new GridBagConstraints();
-		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		numeroManche=0;
 		
 		for(MancheSQL m : Utils.getManches(partie)) {
 			numeroManche++;
-			hauteurElement++;
-			Utils.setConstraints(0,0,0,hauteurElement,c);
 			for(TourSQL t : Utils.getTours(m)) {
+				hauteurElement++;
+				Utils.setConstraints(0,0,0,hauteurElement,c);
 				res.add(addTour(t),c);
 			}
 		}
@@ -215,17 +216,65 @@ public class VueHistorique extends JFrame{
 
 		
 		texteBilan+="Sorts :<br/>";
-		/* REMPLACER PAR getcartesjouees(t) ou un truc comme ça
-		for(Carte c : )) {
-			if(c.getJoueur().equals(j)) {
-				texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),c.getNom());
+		for(CarteSQL c : Utils.getCartes(t)) {
+			if(c.getIdJoueur() == j.getId()) {
+				texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),this.getNomCarte(c.getNumeroCarte()));
 			}
 		}
-		*/
 		texteBilan+="</html>";
 		return texteBilan;
 	}
 	
-	
+	private String getNomCarte(int numCarte) {
+		String res="";
+		switch(numCarte) {
+		case 1 : 
+			res="Mutisme";
+			break;
+		case 2 : 
+			res="Clone";
+			break;
+		case 3 : 
+			res="Larcin";
+			break;
+		case 4 : 
+			res="Fin de Manche";
+			break;
+		case 5 : 
+			res="Milieu";
+			break;
+		case 6 : 
+			res="Recyclage";
+			break;
+		case 7 : 
+			res="Boost Attaque";
+			break;
+		case 8 : 
+			res="Double Dose";
+			break;
+		case 9 : 
+			res="Qui Perd Gagne";
+			break;
+		case 10 : 
+			res="Brasier";
+			break;
+		case 11 : 
+			res="Résistance";
+			break;
+		case 12 : 
+			res="Harpagon";
+			break;
+		case 13 : 
+			res="Boost résèrve";
+			break;
+		case 14 : 
+			res="Aspiration";
+			break;
+		default :
+			res="erreur";
+			break;
+		}
+		return res;
+	}
 	
 }

@@ -52,7 +52,7 @@ public class VueHistoriqueGeneral extends JFrame{
 	private JPanel addParties() {
 		//GridBagLayout : permet d'aligner mes éléments au centre à la verticale malgré le JScrollPane
 		
-		hauteurElement = 0;
+		hauteurElement = 100000;
 		GridBagConstraints c = new GridBagConstraints();
 		JPanel res = new JPanel(new GridBagLayout());
 		
@@ -64,7 +64,7 @@ public class VueHistoriqueGeneral extends JFrame{
 		res.setBackground(Color.BLACK);
 		//pour toutes parties je l'ajoute a leur hauteur respective
 		for(PartieSQL p : Utils.getParties()) {
-			hauteurElement++;
+			hauteurElement--;
 			Utils.setConstraints(0,0,0,hauteurElement,c);
 			res.add(addPartie(p),c);
 		}
@@ -98,7 +98,7 @@ public class VueHistoriqueGeneral extends JFrame{
 		
 		DAOJoueur daoj = new DAOJoueur();
 		
-		JPanel resj1 = this.getResultatJoueur(partie, daoj.trouver(partie.getIdJoueur1())); //REMPLACER PAR JOUEUR ROUGE/JOUEUR VERT
+		JPanel resj1 = this.getResultatJoueur(partie, daoj.trouver(partie.getIdJoueur1()));
 		JPanel resj2 = this.getResultatJoueur(partie, daoj.trouver(partie.getIdJoueur2()));
 		
 		panel.setLeftComponent(resj1);
@@ -112,7 +112,6 @@ public class VueHistoriqueGeneral extends JFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				new VueHistorique(partie);	
-				System.out.println("hello");
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {

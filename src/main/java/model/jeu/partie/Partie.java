@@ -274,7 +274,8 @@ public class Partie implements Cloneable {
 			pcs.firePropertyChange("property", "x", "y");
 			if (pont.unSorcierEstTombe()) {
 				this.partieFinie = true;
-				switch (this.getGagnant()) {
+				this.getMancheCourante().getTourCourant().initTourBDD();
+				switch(this.getGagnant()) {
 				case 1:
 					this.setVainqueur(ECouleurJoueur.VERT);
 					break;
@@ -297,9 +298,9 @@ public class Partie implements Cloneable {
 		return this.pont.getVainqueurString();
 	}
 
-	/*
-	 * @return -1:Pas de gagnant, 0:Egalité, 1:JoueurVert gagnant, 2:JoueurRouge
-	 * gagnant
+
+	/**
+	 * @return -1:Pas de gagnant, 0:Egalité, 1:JoueurVert gagnant, 2:JoueurRouge gagnant
 	 */
 	public int getGagnant() {
 		int res = -1;
@@ -691,14 +692,17 @@ public class Partie implements Cloneable {
 	}
 
 	private void setVainqueur(ECouleurJoueur couleur) {
+		DAOPartie daop = new DAOPartie();
 		switch (couleur) {
 		case ROUGE:
 			int nbVictoiresRouge = this.joueurRouge.getProfil().getNbPartiesGagnees();
 			nbVictoiresRouge++;
 			this.joueurRouge.getProfil().setNbPartiesGagnees(nbVictoiresRouge);
 			if (this.joueurRouge.getProfil() != null && this.partieSQL != null) {
-				new DAOJoueur().maj(this.joueurRouge.getProfil());
-				this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+
+			new DAOJoueur().maj(this.joueurRouge.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			daop.maj(partieSQL);
 			}
 			break;
 		case VERT:
@@ -706,8 +710,10 @@ public class Partie implements Cloneable {
 			nbVictoiresVert++;
 			this.joueurVert.getProfil().setNbPartiesGagnees(nbVictoiresVert);
 			if (this.joueurVert.getProfil() != null && this.partieSQL != null) {
-				new DAOJoueur().maj(this.joueurVert.getProfil());
-				this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+
+			new DAOJoueur().maj(this.joueurVert.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			daop.maj(partieSQL);
 			}
 			break;
 		}

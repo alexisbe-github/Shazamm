@@ -252,7 +252,6 @@ public class Utils {
 	public static List<CarteSQL> getCartes(TourSQL t) {
 			List<CarteSQL> liste = new ArrayList<>();
 			DAOCarte dao = new DAOCarte();
-			
 			String requete = "SELECT DISTINCT `id`, `id_tour` FROM carte";
 			Connection con = Connexion.getInstance().getConnexion();
 			try (PreparedStatement pstmt = con.prepareStatement(requete);
