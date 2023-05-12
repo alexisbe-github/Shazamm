@@ -271,7 +271,7 @@ public class Partie implements Cloneable {
 					this.setVainqueur(ECouleurJoueur.VERT);
 					break;
 				case 2 :
-					this.setVainqueur(ECouleurJoueur.VERT);
+					this.setVainqueur(ECouleurJoueur.ROUGE);
 				}
 			}
 			printPossibleGagnant();
