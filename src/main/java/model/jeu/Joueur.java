@@ -4,18 +4,34 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.carte.factory.CarteFactory;
 import main.java.model.jeu.partie.Partie;
 
-public class Joueur {
+public class Joueur implements Cloneable {
 
 	private final ECouleurJoueur COULEUR;
+
+	private Profil profil;
 	private final String NOM, PRENOM, AVATAR;
 	public static final int MANA_MAXIMUM = 50;
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
 	private List<Carte> paquet, mainDuJoueur;
+
+	
+	public Joueur(ECouleurJoueur couleur, Profil profil) {
+		this.COULEUR = couleur;
+		this.profil = profil;
+		this.NOM = profil.getNom();
+		this.PRENOM = profil.getPrenom();
+		this.AVATAR = profil.getAvatar().getDescription();
+		manaActuel = 0;
+		paquet = new ArrayList<>();
+		mainDuJoueur = new ArrayList<>();
+	}
 
 	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		this.COULEUR = couleur;
@@ -26,6 +42,18 @@ public class Joueur {
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
 	}
+
+	public Joueur(ECouleurJoueur couleur, String nom, String prenom) {
+		this.COULEUR = couleur;
+		this.NOM = nom;
+		this.PRENOM = prenom;
+		this.AVATAR = "src/main/resources/images/icone-profil-joueur.png";
+		manaActuel = 0;
+		paquet = new ArrayList<>();
+		mainDuJoueur = new ArrayList<>();
+	}
+	
+	
 
 	@Override
 	public String toString() {
@@ -43,6 +71,10 @@ public class Joueur {
 
 	public int getManaActuel() {
 		return manaActuel;
+	}
+
+	public String getPathAvatar() {
+		return this.AVATAR;
 	}
 
 	public String mainString() {
@@ -77,7 +109,6 @@ public class Joueur {
 	 */
 	public void ajouterMana(int ajout) {
 		manaActuel += ajout;
-
 	}
 
 	/**
@@ -139,11 +170,51 @@ public class Joueur {
 	/**
 	 * Retourne le chemin de l'image correspondant au Joueur
 	 */
- public String getPath(){
+	public String getPath() {
 		if (this.COULEUR.equals(ECouleurJoueur.ROUGE))
 			return "src/main/resources/perso/rouge.png";
-		
+
 		return "src/main/resources/perso/vert.png";
+	}
+
+	public Profil getProfil() {
+		return this.profil;
+	}
+
+	public List<Carte> getPaquet() {
+		return paquet;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Joueur joueurClone = (Joueur) super.clone();
+		return joueurClone;
+	}
+
+	public void setPaquet(List<Carte> paquet) {
+		this.paquet = paquet;
+	}
+
+	public void setMainDuJoueur(List<Carte> mainDuJoueur) {
+		this.mainDuJoueur = mainDuJoueur;
+	}
+
+	public List<Integer> getCartesPossedees() {
+		List<Integer> cartesPossedees = new ArrayList<>();
+		List<Carte> cartes = new ArrayList<>();
+		cartes.addAll(this.mainDuJoueur);
+		cartes.addAll(this.paquet);
+		for (Carte c : cartes) {
+			cartesPossedees.add(c.getNumeroCarte());
+		}
+		return cartesPossedees;
+	}
+	
+	public boolean possedeLaCarteDansSaMain(int numCarte) {
+		for(Carte c:this.mainDuJoueur) {
+			if(c.getNumeroCarte() == numCarte) return true;
+		}
+		return false;
 	}
 
 }

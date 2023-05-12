@@ -2,6 +2,7 @@ package main.java.model.jeu.ia;
 
 import java.util.List;
 
+import main.java.model.bdd.Profil;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
@@ -10,10 +11,15 @@ import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 
-public class IAFacile extends Joueur implements IA, ILancementStrategy {
+public class IAFacile extends IAEtatJeu implements IA, ILancementStrategy {
 
-	public IAFacile(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
-		super(couleur, nom, prenom, avatar);
+
+	public IAFacile(Joueur j) {
+		super(j.getCouleur(), j.getProfil());
+	}
+	
+	public IAFacile(ECouleurJoueur couleur, Profil profil) {
+		super(couleur, profil);
 	}
 
 	/**
@@ -29,6 +35,9 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 		// on joue entre 0 et le nombre de cartes dans la main
 		int nbCartesAJouer = Utils.genererEntierAvecPoids(0, getMainDuJoueur().size());
 
+		// si mutisme est activé, l'IA ne jouera plus de cartes pendant la manche
+		if(p.getMancheCourante().getMutismeCourant()) nbCartesAJouer = 0;
+		
 		for (int i = 0; i < nbCartesAJouer; i++) {
 			int index = Utils.genererEntier(0, getMainDuJoueur().size());
 			Carte carte = getMainDuJoueur().get(index);
@@ -48,7 +57,7 @@ public class IAFacile extends Joueur implements IA, ILancementStrategy {
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		int miseRecyclage = Utils.genererEntier(-5, 6);
-		tour.changerMise(joueur, miseRecyclage);
+		tour.recyclerMise(joueur, miseRecyclage);
 	}
 
 	@Override

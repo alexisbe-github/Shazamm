@@ -32,6 +32,7 @@ public class ControleurCartes implements MouseListener{
 	public void mouseEntered(MouseEvent e) {
 		JLabel tmp = (JLabel) e.getComponent();
 		tmp.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class ControleurCartes implements MouseListener{
 		if (cartesJouees.contains(index)) {
 			tmp.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 		} else {
-			tmp.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+			tmp.setBorder(BorderFactory.createEmptyBorder());
 		}
 	}
 
@@ -52,10 +53,13 @@ public class ControleurCartes implements MouseListener{
 			Integer index = (Integer) panelMain.getComponentZOrder(tmp);
 			if (!cartesJouees.contains(index)) {
 				cartesJouees.add(index);
+				vue.displayCartesJouees();
 			} else {
 				cartesJouees.remove(index);
+				vue.displayCartesJouees();
+				tmp.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 			}
-			vue.displayCartesJouees();
+			
 		}
 	}
 

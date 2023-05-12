@@ -1,6 +1,6 @@
 package main.java.model.jeu;
 
-public class Pont {
+public class Pont implements Cloneable {
 
 	private int positionMurFeu;
 	private int indexLave, positionJoueurRouge, positionJoueurVert;
@@ -36,12 +36,12 @@ public class Pont {
 
 	public boolean unSorcierEstTombe() {
 		boolean res = false;
-		if (positionJoueurRouge <= indexLave || positionJoueurVert >= TAILLE_PONT - this.indexLave)
+		if (positionJoueurRouge + 1 <= indexLave || positionJoueurVert + 1 >= TAILLE_PONT - this.indexLave)
 			res = true;
 		return res;
 	}
-
-	public String getVainqueur() {
+	
+	public String getVainqueurString() {
 		String res = "";
 		if (positionJoueurRouge <= indexLave && positionJoueurVert >= TAILLE_PONT - this.indexLave) {
 			res = "Egalité!";
@@ -54,6 +54,10 @@ public class Pont {
 			}
 		}
 		return res;
+	}
+	
+	public int getIndexLave() {
+		return this.indexLave;
 	}
 
 	@Override
@@ -150,5 +154,44 @@ public class Pont {
 	public String getPathMur() {
 		return "src/main/resources/perso/mur.gif";
 	}
-	
+
+	/**
+	 * Méthode utilisée par l'IA pour évaluer la partie
+	 * 
+	 * @param joueur
+	 * @return
+	 */
+	public int getDistanceEntreMurDeFeuEtJoueur(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			return Math.abs(positionMurFeu - positionJoueurRouge) - 1;
+		}
+		return Math.abs(positionMurFeu - positionJoueurVert) - 1;
+	}
+
+	/**
+	 * Méthode utilisée par l'IA pour évaluer la partie
+	 *
+	 * @return
+	 */
+	public int getDistanceEntreMurDeFeuEtMilieu() {
+		return Math.abs((positionJoueurRouge + 3) - positionMurFeu);
+	}
+
+	/**
+	 * Méthode utilisée par l'IA pour évaluer la partie
+	 *
+	 * @return
+	 */
+	public int getDistanceEntreJoueurEtLave(Joueur joueur) {
+		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			return positionJoueurRouge + 1;
+		}
+		return TAILLE_PONT - positionJoueurVert + 1;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Pont pontClone = (Pont) super.clone();
+		return pontClone;
+	}
 }

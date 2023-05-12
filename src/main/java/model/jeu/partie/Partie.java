@@ -3,39 +3,60 @@ package main.java.model.jeu.partie;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOCouleur;
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.DAOPartie;
+import main.java.model.bdd.dao.beans.CouleurSQL;
+import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
+import main.java.model.jeu.ia.IAFacile;
+import main.java.model.jeu.ia.apprentissage.EtatPartie;
 import main.java.vue.ILancementStrategy;
 import main.java.vue.VueConsole;
 
-public class Partie {
+public class Partie implements Cloneable {
 
 	private Joueur joueurRouge, joueurVert;
 	private Pont pont;
 	private List<Manche> listeManche;
-	private boolean partieFinie;
+	private boolean partieFinie, joueurPousse, cartesJouees;
+	private PartieSQL partieSQL;
+	private ECouleurJoueur couleurJ1;
+
 	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
 	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			couleurJ1 = ECouleurJoueur.ROUGE;
 			joueurRouge = j1;
 			joueurVert = j2;
 		} else {
+			couleurJ1 = ECouleurJoueur.VERT;
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
+
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
+		this.joueurPousse = false;
+		this.cartesJouees = false;
 		this.pcs = new PropertyChangeSupport(this);
+		if (joueurVert instanceof IAFacile)
+			this.strategyVert = (IAFacile) joueurVert; // pour l'apprentissage de l'IA
+		// this.strategyRouge =new SimulationStrategyLancementSort();
 		lancerPartie();
+		initialiserCouleurJoueursBDD();
 	}
-	
+
 	public void addObserver(PropertyChangeListener l) {
 		pcs.addPropertyChangeListener(l);
 	}
@@ -52,6 +73,24 @@ public class Partie {
 	}
 
 	/**
+	 * Etabli le pattern strategy du joueur vert
+	 * 
+	 * @param strategyVert
+	 */
+	public void setStrategyVert(ILancementStrategy strategyVert) {
+		this.strategyVert = strategyVert;
+	}
+
+	/**
+	 * Etabli le pattern strategy du joueur rouge
+	 * 
+	 * @param strategyRouge
+	 */
+	public void setStrategyRouge(ILancementStrategy strategyRouge) {
+		this.strategyRouge = strategyRouge;
+	}
+
+	/**
 	 * Donne la liste des cartes jouées par un joueur passé en paramètre du tour
 	 * courant
 	 * 
@@ -60,6 +99,8 @@ public class Partie {
 	 */
 	public List<Carte> getListeCartesJoueesParJoueur(Joueur joueur) {
 		Tour tourCourant = this.getMancheCourante().getTourCourant();
+		if (tourCourant == null)
+			return new ArrayList<>();
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
 			return tourCourant.getCartesJoueesRouge();
 		return tourCourant.getCartesJoueesVert();
@@ -80,9 +121,10 @@ public class Partie {
 	 */
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
-			strategyVert.lancerClone(p, tour, joueur);
-		else
-			strategyRouge.lancerClone(p, tour, joueur);
+			if (strategyVert != null)
+				strategyVert.lancerClone(p, tour, joueur);
+			else if (strategyRouge != null)
+				strategyRouge.lancerClone(p, tour, joueur);
 	}
 
 	/**
@@ -95,9 +137,10 @@ public class Partie {
 	 */
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
-			strategyVert.lancerRecyclage(p, tour, joueur);
-		else
-			strategyRouge.lancerRecyclage(p, tour, joueur);
+			if (strategyVert != null)
+				strategyVert.lancerRecyclage(p, tour, joueur);
+			else if (strategyRouge != null)
+				strategyRouge.lancerRecyclage(p, tour, joueur);
 	}
 
 	/**
@@ -110,9 +153,10 @@ public class Partie {
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
-			strategyVert.lancerLarcin(p, tour, joueur);
-		else
-			strategyRouge.lancerLarcin(p, tour, joueur);
+			if (strategyVert != null)
+				strategyVert.lancerLarcin(p, tour, joueur);
+			else if (strategyRouge != null)
+				strategyRouge.lancerLarcin(p, tour, joueur);
 	}
 
 	/**
@@ -145,7 +189,8 @@ public class Partie {
 		joueurVert.piocherCartes(5);
 		joueurRouge.remplirReserveDeMana();
 		joueurVert.remplirReserveDeMana();
-		this.listeManche.add(new Manche());
+		initPartieBDD(couleurJ1);
+		this.listeManche.add(new Manche(this));
 	}
 
 	public void lancerNouvelleManche() {
@@ -157,7 +202,7 @@ public class Partie {
 		joueurVert.remplirReserveDeMana();
 		pont.effondrerMorceauxDuPont();
 		pont.placerJoueurs();
-		this.listeManche.add(new Manche());
+		this.listeManche.add(new Manche(this));
 	}
 
 	public void lancerFinDeManche() {
@@ -177,6 +222,17 @@ public class Partie {
 			mancheCourante.passerAuTourSuivant();
 	}
 
+	public Tour getTour(int numeroManche, int numeroTour) {
+		if (this.listeManche.size() >= numeroManche) {
+			Manche manche = this.listeManche.get(numeroManche - 1);
+			if (manche.getListeTours().size() >= numeroTour) {
+				Tour tour = manche.getListeTours().get(numeroTour - 1);
+				return tour;
+			}
+		}
+		return null;
+	}
+
 	public boolean getPartieFinie() {
 		return this.partieFinie;
 	}
@@ -187,32 +243,79 @@ public class Partie {
 		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			this.cartesJouees = false;
+			pcs.firePropertyChange("property", "x", "y");
 			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			this.cartesJouees = true;
 			pont.deplacerMurDeFeu(dpMur);
-			if (pont.murDeFeuPousseUnSorcier()) {
+			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
 				this.lancerNouvelleManche();
+				this.joueurPousse = true;
 			} else {
-				this.lancerNouveauTour();
+				this.joueurPousse = false;
+				if (this.getMancheCourante().getNombreTours() == 0) {
+					joueurRouge.melangerPaquet();
+					joueurVert.melangerPaquet();
+					joueurRouge.remplirReserveDeMana();
+					joueurVert.remplirReserveDeMana();
+				}
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
+				if ((joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0)
+						&& this.getMancheCourante().getNombreTours() != 0
+						&& !mancheCourante.getTourCourant().isFinDeManche()) {
+					this.deplacerMurDeFeuVersJoueurAvec0Mana();
+					this.lancerNouvelleManche();
+				} else {
+					this.lancerNouveauTour();
+				}
 			}
-			// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
-			// joueur avec 0 de mana
-			if (joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0) {
-				this.deplacerMurDeFeuVersJoueurAvec0Mana();
-				this.lancerNouvelleManche();
+
+			pcs.firePropertyChange("property", "x", "y");
+			if (pont.unSorcierEstTombe()) {
+				this.partieFinie = true;
+				this.getMancheCourante().getTourCourant().initTourBDD();
+				switch(this.getGagnant()) {
+				case 1:
+					this.setVainqueur(ECouleurJoueur.VERT);
+					break;
+				case 2:
+					this.setVainqueur(ECouleurJoueur.ROUGE);
+					break;
+				}
 			}
 			printPossibleGagnant();
-			pcs.firePropertyChange("property","x","y");
 		}
-
 	}
 
 	private void printPossibleGagnant() {
 		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
-			if (pont.unSorcierEstTombe()) {
-				System.out.println(pont.getVainqueur());
-				this.partieFinie = true;
+			System.out.println(pont.getVainqueurString());
+		}
+	}
+
+	public String getGagnantString() {
+		return this.pont.getVainqueurString();
+	}
+
+
+	/**
+	 * @return -1:Pas de gagnant, 0:Egalité, 1:JoueurVert gagnant, 2:JoueurRouge gagnant
+	 */
+	public int getGagnant() {
+		int res = -1;
+		if (pont.getPosJoueurRouge() <= pont.getIndexLave()
+				&& pont.getPosJoueurVert() >= Pont.TAILLE_PONT - pont.getIndexLave()) {
+			res = 0;
+		} else {
+			if (pont.getPosJoueurRouge() <= pont.getIndexLave()) {
+				res = 1;
+			}
+			if (pont.getPosJoueurVert() >= Pont.TAILLE_PONT - pont.getIndexLave()) {
+				res = 2;
 			}
 		}
+		return res;
 	}
 
 	/**
@@ -274,6 +377,17 @@ public class Partie {
 			return tourPrecedent.getCartesJoueesVert();
 		else
 			return tourPrecedent.getCartesJoueesRouge();
+	}
+
+	public Tour getTourPrecedent() {
+		if (this.getNombreManches() > 1 && this.getMancheCourante().getNombreTours() == 1) {
+			Manche manchePrecedente = this.listeManche.get(this.getNombreManches() - 2);
+			return manchePrecedente.getTourCourant();
+		}
+		if (this.getMancheCourante().getNombreTours() > 1) {
+			return this.getMancheCourante().getTourPrecedent();
+		}
+		return null;
 
 	}
 
@@ -306,6 +420,323 @@ public class Partie {
 
 	public int getNombreManches() {
 		return this.listeManche.size();
+	}
+
+	public boolean isJoueurPousse() {
+		return joueurPousse;
+	}
+
+	public boolean isCartesJouees() {
+		return this.cartesJouees;
+	}
+
+	/**
+	 * Méthode de clonage pour que l'IA puisse simuler une partie. On clone aussi
+	 * les manches et les tours pour éviter de toucher à ceux de la vraie partie
+	 */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Partie partieClonee = (Partie) super.clone();
+		List<Manche> tmpManche = new ArrayList<>();
+		for (Manche m : this.listeManche) {
+			List<Tour> tmpTour = new ArrayList<>();
+			Manche mancheClonee = (Manche) m.clone();
+			for (Tour t : mancheClonee.getListeTours()) {
+				Tour tourClonee = (Tour) t.clone();
+				tmpTour.add(tourClonee);
+			}
+			mancheClonee.setListeTours(tmpTour);
+			tmpManche.add(mancheClonee);
+		}
+		partieClonee.listeManche = tmpManche;
+		partieClonee.pont = (Pont) this.pont.clone();
+		this.joueurRouge = (Joueur) joueurRouge.clone();
+
+		Joueur joueurRougeTmp, joueurVertTmp;
+		List<Carte> paquetTmpRouge, paquetTmpVert, mainTmpRouge, mainTmpVert;
+
+		joueurRougeTmp = (Joueur) joueurRouge.clone();
+		joueurVertTmp = (Joueur) joueurVert.clone();
+
+		paquetTmpRouge = new ArrayList<Carte>();
+		mainTmpRouge = new ArrayList<Carte>();
+		paquetTmpVert = new ArrayList<Carte>();
+		mainTmpVert = new ArrayList<Carte>();
+
+		for (Carte c : joueurRouge.getPaquet()) {
+			paquetTmpRouge.add((Carte) c.clone());
+		}
+
+		for (Carte c : this.joueurRouge.getMainDuJoueur()) {
+			mainTmpRouge.add((Carte) c.clone());
+		}
+
+		for (Carte c : joueurRouge.getPaquet()) {
+			paquetTmpVert.add((Carte) c.clone());
+		}
+
+		for (Carte c : this.joueurRouge.getMainDuJoueur()) {
+			mainTmpVert.add((Carte) c.clone());
+		}
+
+		joueurRougeTmp.setMainDuJoueur(mainTmpRouge);
+		joueurRougeTmp.setPaquet(paquetTmpRouge);
+
+		joueurVertTmp.setMainDuJoueur(mainTmpVert);
+		joueurVertTmp.setPaquet(paquetTmpVert);
+
+		partieClonee.joueurRouge = joueurRougeTmp;
+		partieClonee.joueurVert = joueurVertTmp;
+		return partieClonee;
+	}
+
+	public List<Partie> getCoupsPossibles(Joueur joueur) {
+		List<Partie> res = new ArrayList<>();
+
+		try {
+			Partie partieOriginale = (Partie) this.clone();
+			Partie partieTmp;
+			int manaMax = joueur.getManaActuel() + 1;
+			if (manaMax < 20) {
+				manaMax = joueur.getManaActuel() + 1;
+			} else {
+				manaMax = (int) ((joueur.getManaActuel() + 1) / 1.5);
+			}
+			for (int i = 1; i < manaMax; i++) {
+				partieTmp = (Partie) partieOriginale.clone();
+				int mise = i;
+
+				Joueur j;
+				if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+					j = partieTmp.getJoueurRouge();
+				} else {
+					j = partieTmp.getJoueurVert();
+				}
+
+				partieTmp = (Partie) partieOriginale.clone();
+				partieTmp.getMancheCourante().getTourCourant().setMiseJoueur(j, mise);
+
+				if (j.getMainDuJoueur().size() == 0) {
+					res.add(partieTmp);
+				}
+				for (int k = 0; k < j.getMainDuJoueur().size()
+						&& !partieTmp.getMancheCourante().getMutismeCourant(); k++) {
+					Partie partieTmp2 = (Partie) partieTmp.clone();
+					if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+						if (!(partieTmp2.joueurRouge.getMainDuJoueur().get(k).getNumeroCarte() == 5 && partieTmp2
+								.getPont().getDistanceEntreMurDeFeuEtJoueur(partieTmp2.getJoueurRouge()) < 3)) {
+							partieTmp.jouerCarte(partieTmp2.joueurRouge.getMainDuJoueur().get(k),
+									partieTmp2.joueurRouge);
+						}
+					} else {
+						if (!(partieTmp2.joueurVert.getMainDuJoueur().get(k).getNumeroCarte() == 5 && partieTmp2
+								.getPont().getDistanceEntreMurDeFeuEtJoueur(partieTmp2.getJoueurVert()) < 3))
+							partieTmp.jouerCarte(partieTmp2.joueurVert.getMainDuJoueur().get(k), partieTmp2.joueurVert);
+					}
+
+					Joueur joueurAdverse;
+					if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+						joueurAdverse = partieTmp2.getJoueurVert();
+					} else {
+						joueurAdverse = partieTmp2.getJoueurRouge();
+					}
+
+					for (Partie partie : this.jouerCoupsPossiblesJoueur(joueurAdverse, partieTmp2)) {
+						res.add(partie);
+					}
+				}
+
+			}
+
+//			for (int i = 1; i < joueur.getManaActuel() + 1; i++) {
+//				partieTmp = (Partie) partieOriginale.clone();
+//
+//				Joueur j;
+//				if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+//					j = partieTmp.getJoueurRouge();
+//				} else {
+//					j = partieTmp.getJoueurVert();
+//				}
+//				
+//				partieTmp.getMancheCourante().getTourCourant().setMiseJoueur(j, i);
+//				
+//				Joueur joueurAdverse;
+//				if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+//					joueurAdverse = partieTmp.getJoueurVert();
+//				} else {
+//					joueurAdverse = partieTmp.getJoueurRouge();
+//				}
+//				
+//				for (Partie partie : this.jouerCoupsPossiblesJoueur(joueurAdverse, partieTmp)) {
+//					res.add(partie);
+//					partieTmp = (Partie) partieOriginale.clone();
+//				}
+//			}
+
+		} catch (CloneNotSupportedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		return res;
+	}
+
+	private List<Partie> jouerCoupsPossiblesJoueur(Joueur joueur, Partie p) {
+		List<Partie> res = new ArrayList<>();
+		Partie partieTmp;
+		try {
+			joueur = (Joueur) joueur.clone();
+			// on essaye toutes les combinaisons de la main avec 1 carte
+			for (int i = 0; i < joueur.getMainDuJoueur().size() + joueur.getPaquet().size(); i++) {
+
+				// on part du principe qu'il va mise en moyenne la moitié de son mana actuel
+				int mise = (int) Math.ceil(joueur.getManaActuel() / 2);
+
+				// et on essaye de jouer la carte courante et on l'ajoute à la liste
+				partieTmp = (Partie) p.clone();
+
+				List<Carte> paquetEtMain = new ArrayList<>();
+
+				if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+					paquetEtMain.addAll(partieTmp.joueurRouge.getMainDuJoueur());
+					paquetEtMain.addAll(partieTmp.joueurRouge.getPaquet());
+					Collections.shuffle(paquetEtMain); // l'IA ne connait pas la main du joueur donc on considère toutes
+														// ses cartes et on les mélange pour tirer aléatoirement
+					if (partieTmp.joueurRouge.getMainDuJoueur().size() > i)
+						partieTmp.jouerCarte(paquetEtMain.get(i), partieTmp.joueurRouge);
+				} else {
+					paquetEtMain.addAll(partieTmp.joueurVert.getMainDuJoueur());
+					paquetEtMain.addAll(partieTmp.joueurVert.getPaquet());
+					Collections.shuffle(paquetEtMain);// l'IA ne connait pas la main du joueur donc on considère toutes
+														// ses cartes et on les mélange pour tirer aléatoirement
+					if (partieTmp.joueurVert.getMainDuJoueur().size() > i)
+						partieTmp.jouerCarte(paquetEtMain.get(i), partieTmp.joueurVert);
+				}
+				res.add(partieTmp);
+			}
+
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+
+	public void simulerTour() {
+		Manche mancheCourante = this.getMancheCourante();
+		Tour tourCourant = mancheCourante.getTourCourant();
+		int miseJoueurRouge = tourCourant.getMiseJoueurRouge();
+		int miseJoueurVert = tourCourant.getMiseJoueurVert();
+		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
+			this.cartesJouees = false;
+			int dpMur = mancheCourante.getTourCourant().simulerTour(joueurRouge, joueurVert);
+			this.cartesJouees = true;
+			pont.deplacerMurDeFeu(dpMur);
+			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
+				this.lancerNouvelleManche();
+				this.joueurPousse = true;
+			} else {
+				this.joueurPousse = false;
+				if (this.getMancheCourante().getNombreTours() == 0) {
+					joueurRouge.melangerPaquet();
+					joueurVert.melangerPaquet();
+					joueurRouge.piocherCartes(3);
+					joueurVert.piocherCartes(3);
+					joueurRouge.remplirReserveDeMana();
+					joueurVert.remplirReserveDeMana();
+				}
+				// Si un des deux joueurs n'a plus de mana on déplace le mur de feu vers le
+				// joueur avec 0 de mana
+				if ((joueurRouge.getManaActuel() == 0 || joueurVert.getManaActuel() == 0)
+						&& this.getMancheCourante().getNombreTours() != 0) {
+					this.deplacerMurDeFeuVersJoueurAvec0Mana();
+					this.lancerNouvelleManche();
+				} else {
+					this.lancerNouveauTour();
+				}
+			}
+
+			if (pont.unSorcierEstTombe()) {
+				this.partieFinie = true;
+			}
+		}
+	}
+
+	public Partie nouvellePartie() {
+		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
+		IAFacile jV = new IAFacile(joueurVert.getCouleur(), new Profil(new DAOJoueur().trouver(1L)));
+		Partie p = new Partie(jR, jV);
+		p.strategyVert = jV;
+		return p;
+	}
+
+	public EtatPartie getEtatPartie() {
+		return new EtatPartie(this, joueurRouge);
+	}
+
+	private void initPartieBDD(ECouleurJoueur couleurJ1) {
+		if (this.getJoueurRouge().getProfil() != null && this.getJoueurVert().getProfil() != null) {
+			this.partieSQL = new PartieSQL();
+			switch (couleurJ1) {
+			case ROUGE:
+				this.partieSQL.setIdJoueur1(joueurRouge.getProfil().getId());
+				this.partieSQL.setIdJoueur2(joueurVert.getProfil().getId());
+				break;
+			case VERT:
+				this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
+				this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
+			}
+			this.partieSQL.setIdVainqueur(1L); // Profil inaccessible par défaut
+			new DAOPartie().creer(this.partieSQL);
+		}
+	}
+
+	private void setVainqueur(ECouleurJoueur couleur) {
+		DAOPartie daop = new DAOPartie();
+		switch (couleur) {
+		case ROUGE:
+			int nbVictoiresRouge = this.joueurRouge.getProfil().getNbPartiesGagnees();
+			nbVictoiresRouge++;
+			this.joueurRouge.getProfil().setNbPartiesGagnees(nbVictoiresRouge);
+			if (this.joueurRouge.getProfil() != null && this.partieSQL != null) {
+
+			new DAOJoueur().maj(this.joueurRouge.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			daop.maj(partieSQL);
+			}
+			break;
+		case VERT:
+			int nbVictoiresVert = this.joueurVert.getProfil().getNbPartiesGagnees();
+			nbVictoiresVert++;
+			this.joueurVert.getProfil().setNbPartiesGagnees(nbVictoiresVert);
+			if (this.joueurVert.getProfil() != null && this.partieSQL != null) {
+
+			new DAOJoueur().maj(this.joueurVert.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			daop.maj(partieSQL);
+			}
+			break;
+		}
+	}
+
+	public PartieSQL getPartieSQL() {
+		return this.partieSQL;
+	}
+
+	public ECouleurJoueur getCouleurJ1() {
+		return this.couleurJ1;
+	}
+
+	private void initialiserCouleurJoueursBDD() {
+		if (this.partieSQL != null) {
+			CouleurSQL couleur = new CouleurSQL();
+			couleur.setIdPartie(partieSQL.getId());
+			couleur.setCouleurJ1(getCouleurJ1());
+			couleur.setCouleurJ2(
+					getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
+			new DAOCouleur().creer(couleur);
+		}
+
 	}
 
 }
