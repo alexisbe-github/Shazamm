@@ -144,7 +144,7 @@ public class Partie implements Cloneable {
 	 * @param joueur
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		this.setStrategyVert((IAFacile) joueurVert);
+		this.setStrategyVert(new IAFacile(joueurVert));
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 			strategyVert.lancerLarcin(p, tour, joueur);
 		} else
@@ -632,7 +632,7 @@ public class Partie implements Cloneable {
 	}
 
 	public EtatPartie getEtatPartie() {
-		return new EtatPartie(this, joueurRouge, (IAFacile) joueurVert);
+		return new EtatPartie(this, joueurRouge, new IAFacile(joueurVert));
 	}
 
 	private void initPartieBDD(ECouleurJoueur couleurJ1) {

@@ -13,6 +13,10 @@ import main.java.vue.ILancementStrategy;
 
 public class IAFacile extends IAEtatJeu implements IA, ILancementStrategy {
 
+	public IAFacile(Joueur j) {
+		super(j.getCouleur(), j.getProfil());
+	}
+	
 	public IAFacile(ECouleurJoueur couleur, Profil profil) {
 		super(couleur, profil);
 	}

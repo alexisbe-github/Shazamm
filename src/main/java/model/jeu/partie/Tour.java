@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import main.java.model.bdd.dao.DAOTour;
 import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -402,6 +403,8 @@ public class Tour implements Cloneable {
 		tourSQL.setPuissanceJoueur2(getAttaqueJoueur(couleurJ2));
 		tourSQL.setNumeroTour(mancheCourante.getNumeroTourCourant());
 		tourSQL.setDate(new Timestamp(System.currentTimeMillis()));
+		
+		new DAOTour().creer(tourSQL);
 	}
 	
 	public TourSQL getTourSQL() {
