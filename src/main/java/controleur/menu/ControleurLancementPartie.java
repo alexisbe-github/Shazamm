@@ -4,8 +4,10 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
-import javax.swing.JTextField;
+import javax.swing.JSpinner;
 
 import main.java.model.bdd.Profil;
 import main.java.model.jeu.Chrono;
@@ -15,15 +17,15 @@ import main.java.model.jeu.partie.Partie;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.profil.VueLancementPartie;
 
-public class ControleurLancementPartie implements ActionListener{
+public class ControleurLancementPartie implements ActionListener, MouseMotionListener {
 
 	VueLancementPartie vlp;
-	JTextField saisieTemps;
+	JSpinner saisieTemps;
 	Chrono timer;
 	ECouleurJoueur cj1;
 	ECouleurJoueur cj2;
 	
-	public ControleurLancementPartie(VueLancementPartie vlp, JTextField saisie, Chrono timer, ECouleurJoueur cj1, ECouleurJoueur cj2) {
+	public ControleurLancementPartie(VueLancementPartie vlp, JSpinner saisie, Chrono timer, ECouleurJoueur cj1, ECouleurJoueur cj2) {
 		this.vlp=vlp;
 		this.timer=timer;
 		this.saisieTemps = saisie;
@@ -35,9 +37,10 @@ public class ControleurLancementPartie implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		Profil pj1 = vlp.getVueProfilJ1().getPanelSelection().getProfilSelectionne();
 		Profil pj2 = vlp.getVueProfilJ2().getPanelSelection().getProfilSelectionne();
+		
 		int time = 0;
 		try {
-			time = Integer.parseInt(saisieTemps.getText());
+			time = (Integer) saisieTemps.getValue();
 			timer.setDuree(time);
 		}catch(NumberFormatException ex) {
 			
@@ -69,6 +72,19 @@ public class ControleurLancementPartie implements ActionListener{
 		
 		p.addObserver(fenetreJ1);
 		p.addObserver(fenetreJ2);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		Profil pj1 = vlp.getVueProfilJ1().getPanelSelection().getProfilSelectionne();
+		Profil pj2 = vlp.getVueProfilJ2().getPanelSelection().getProfilSelectionne();
+		if (pj1.equals(pj2)) {
+			vlp.getBoutonLancer().setEnabled(false);
+		} else vlp.getBoutonLancer().setEnabled(true);
 	}
 	
 }

@@ -3,8 +3,10 @@ package main.java.vue.profil;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import main.java.controleur.menu.ControleurLancementPartie;
 import main.java.model.jeu.Chrono;
@@ -14,7 +16,8 @@ public class VueLancementPartie extends JFrame {
 	
 	private ECouleurJoueur couleurJ1;
 	private ECouleurJoueur couleurJ2;
-	private JTextField saisieTemps;
+	private JSpinner saisieTemps;
+	private JButton boutonLancement;
 	private VueProfil vueProfilJ1;
 	private VueProfil vueProfilJ2;
 	private Chrono timer;
@@ -29,17 +32,23 @@ public class VueLancementPartie extends JFrame {
 		
 		vueProfilJ1 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		vueProfilJ2 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
-		JButton boutonLancement = new JButton("Lancer");
+		boutonLancement = new JButton("Lancer");
+		boutonLancement.setEnabled(false);
 		
-		saisieTemps = new JTextField("10",5);
+		JLabel duree = new JLabel("Durée du tour : ");
+		saisieTemps = new JSpinner(new SpinnerNumberModel(10, 10, 120, 1));
+		JLabel temps = new JLabel("secondes");
 		
 		ControleurLancementPartie control = new ControleurLancementPartie(this, saisieTemps, timer, couleurJ1, couleurJ2);
 		
 		boutonLancement.addActionListener(control);
+		this.addMouseMotionListener(control);
 		
 		JPanel validerPanel = new JPanel();
 		validerPanel.add(boutonLancement);
+		validerPanel.add(duree);
 		validerPanel.add(saisieTemps);
+		validerPanel.add(temps);
 		
 		this.add(vueProfilJ1);
 		this.add(vueProfilJ2);
@@ -54,6 +63,10 @@ public class VueLancementPartie extends JFrame {
 	
 	public VueProfil getVueProfilJ2() {
 		return vueProfilJ2;
+	}
+	
+	public JButton getBoutonLancer() {
+		return boutonLancement;
 	}
 	
 }

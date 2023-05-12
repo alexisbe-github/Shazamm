@@ -9,8 +9,10 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOCouleur;
 import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.bdd.dao.DAOPartie;
+import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -51,6 +53,7 @@ public class Partie implements Cloneable {
 		this.cartesJouees = false;
 		this.pcs = new PropertyChangeSupport(this);
 		lancerPartie();
+		initialiserCouleurJoueursBDD();
 	}
 
 	public void addObserver(PropertyChangeListener l) {
@@ -651,7 +654,7 @@ public class Partie implements Cloneable {
 	public Partie nouvellePartie() {
 		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
 		IAFacile jV = new IAFacile(joueurVert.getCouleur(),
-				new Profil("IAdversaire", "IAdversaire", new ImageIcon("IAdversaire")));
+				new Profil(new DAOJoueur().trouver(1L)));
 		Partie p = new Partie(jR, jV);
 		p.strategyVert = jV;
 		System.out.println(p.strategyVert);
@@ -704,6 +707,14 @@ public class Partie implements Cloneable {
 	
 	public ECouleurJoueur getCouleurJ1() {
 		return this.couleurJ1;
+	}
+	
+	private void initialiserCouleurJoueursBDD() {
+		CouleurSQL couleur = new CouleurSQL();
+		couleur.setIdPartie(getPartieSQL().getId());
+		couleur.setCouleurJ1(getCouleurJ1());
+		couleur.setCouleurJ2(getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
+		new DAOCouleur().creer(couleur);
 	}
 
 }

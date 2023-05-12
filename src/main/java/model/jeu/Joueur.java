@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.carte.factory.CarteFactory;
 import main.java.model.jeu.partie.Partie;
 
-public class Joueur implements Cloneable{
+public class Joueur implements Cloneable {
 
 	private final ECouleurJoueur COULEUR;
 	private Profil profil;
@@ -18,7 +19,7 @@ public class Joueur implements Cloneable{
 	private final int NOMBRE_CARTE = 14;
 	private int manaActuel;
 	private List<Carte> paquet, mainDuJoueur;
-	
+
 	public Joueur(ECouleurJoueur couleur, Profil profil) {
 		this.COULEUR = couleur;
 		this.profil = profil;
@@ -27,7 +28,7 @@ public class Joueur implements Cloneable{
 		this.AVATAR = profil.getAvatar().getDescription();
 		manaActuel = 0;
 		paquet = new ArrayList<>();
-		mainDuJoueur = new ArrayList<>();		
+		mainDuJoueur = new ArrayList<>();
 	}
 
 	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
@@ -39,7 +40,7 @@ public class Joueur implements Cloneable{
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
 	}
-	
+
 	public Joueur(ECouleurJoueur couleur, String nom, String prenom) {
 		this.COULEUR = couleur;
 		this.NOM = nom;
@@ -67,7 +68,7 @@ public class Joueur implements Cloneable{
 	public int getManaActuel() {
 		return manaActuel;
 	}
-	
+
 	public String getPathAvatar() {
 		return this.AVATAR;
 	}
@@ -171,7 +172,7 @@ public class Joueur implements Cloneable{
 
 		return "src/main/resources/perso/vert.png";
 	}
-	
+
 	public Profil getProfil() {
 		return this.profil;
 	}
@@ -179,7 +180,7 @@ public class Joueur implements Cloneable{
 	public List<Carte> getPaquet() {
 		return paquet;
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Joueur joueurClone = (Joueur) super.clone();
@@ -193,16 +194,16 @@ public class Joueur implements Cloneable{
 	public void setMainDuJoueur(List<Carte> mainDuJoueur) {
 		this.mainDuJoueur = mainDuJoueur;
 	}
-	
-	public List<Integer> getCartesPossedees(){
+
+	public List<Integer> getCartesPossedees() {
 		List<Integer> cartesPossedees = new ArrayList<>();
 		List<Carte> cartes = new ArrayList<>();
 		cartes.addAll(this.mainDuJoueur);
 		cartes.addAll(this.paquet);
-		for(Carte c:cartes) {
+		for (Carte c : cartes) {
 			cartesPossedees.add(c.getNumeroCarte());
 		}
 		return cartesPossedees;
 	}
-	
+
 }

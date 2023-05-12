@@ -66,6 +66,18 @@ public class Profil extends JoueurSQL {
 	}
 	
 	/**
+	 * Vérifie si deux profils sont identiques
+	 * 
+	 * @return <code>true</code> s'ils sont identiques, <code>false</code> sinon
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Profil)) return false;
+		Profil p = (Profil) o;
+		return this.getId() == p.getId();
+	}
+	
+	/**
 	 * @return La liste des profils contenus dans la base de données
 	 */
 	public static List<Profil> getListeProfils() {
