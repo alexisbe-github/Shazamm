@@ -29,7 +29,7 @@ public class IAIntermediaire extends IAEtatJeu implements IA, ILancementStrategy
 			}
 			Nash determinationCoup = new Nash(partieClone, this);
 			Partie meilleurCoup = determinationCoup.meilleurCoup();
-			//System.out.println(this.evaluationTour(meilleurCoup));
+			// System.out.println(this.evaluationTour(meilleurCoup));
 			List<Carte> cartesJouees;
 			int mise;
 			if (meilleurCoup.getTour(p.getNombreManches(), p.getMancheCourante().getNumeroTourCourant()) != null) {
@@ -58,38 +58,22 @@ public class IAIntermediaire extends IAEtatJeu implements IA, ILancementStrategy
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-
-//		
-//		// on génère une mise aléatoirement entre 1 et le mana de l'ordinateur
-//		int mise = Utils.genererEntier(1, getManaActuel() + 1);
-//
-//		// on joue entre 0 et le nombre de cartes dans la main
-//		int nbCartesAJouer = Utils.genererEntierAvecPoids(0, getMainDuJoueur().size());
-//
-//		for (int i = 0; i < nbCartesAJouer; i++) {
-//			int index = Utils.genererEntier(0, getMainDuJoueur().size());
-//			Carte carte = getMainDuJoueur().get(index);
-//			p.jouerCarte(carte, this);
-//		}
-//		p.getMancheCourante().getTourCourant().setMiseJoueur(this, mise);
 	}
 
 	@Override
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
-		// TODO Auto-generated method stub
+		new SimulationStrategyLancementSort().lancerClone(p, tour, joueur);
 
 	}
 
 	@Override
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
-		// TODO Auto-generated method stub
-
+		new SimulationStrategyLancementSort().lancerRecyclage(p, tour, joueur);
 	}
 
 	@Override
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		// TODO Auto-generated method stub
-
+		new SimulationStrategyLancementSort().lancerLarcin(p, tour, joueur);
 	}
 
 }

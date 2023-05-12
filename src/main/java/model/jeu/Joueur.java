@@ -175,4 +175,10 @@ public class Joueur implements Cloneable{
 		return cartesPossedees;
 	}
 	
+	public boolean possedeLaCarteDansSaMain(int numCarte) {
+		for(Carte c:this.mainDuJoueur) {
+			if(c.getNumeroCarte() == numCarte) return true;
+		}
+		return false;
+	}
 }

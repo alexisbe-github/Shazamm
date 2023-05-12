@@ -377,8 +377,6 @@ public class Tour implements Cloneable {
 				res += 10;
 			if (p.getPont().getPosJoueurRouge() == p.getPont().getPosMurDeFeu() + deplacementMur)
 				res -= 10;
-			System.out.println(p.getPont());
-			System.out.println(p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu() + deplacementMur);
 		} else {
 			if (this.deplacementMur < 0)
 				res = 1;
@@ -389,7 +387,6 @@ public class Tour implements Cloneable {
 			if (p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu() + deplacementMur)
 				res -= 10;
 		}
-
 		return res;
 	}
 }

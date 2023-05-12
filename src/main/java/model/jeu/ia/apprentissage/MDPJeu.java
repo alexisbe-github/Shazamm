@@ -7,9 +7,9 @@ import org.deeplearning4j.rl4j.space.DiscreteSpace;
 import org.deeplearning4j.rl4j.space.ObservationSpace;
 
 import main.java.model.jeu.Joueur;
+import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.partie.Partie;
-import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
 
 public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
@@ -18,7 +18,7 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 	private final Joueur joueur;
 	private final IAFacile adversaire;
 
-	public MDPJeu(Partie partie, Joueur joueur,IAFacile ia) {
+	public MDPJeu(Partie partie, Joueur joueur, IAFacile ia) {
 		this.partie = partie;
 		this.joueur = joueur;
 		this.adversaire = ia;
@@ -51,14 +51,26 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 
 	@Override
 	public StepReply<EtatPartie> step(Integer action) {
-		int mise = Utils.genererEntier(1, (joueur.getManaActuel()+1)/2);
-		System.out.println(action);
+		EtatPartie etatPartie = partie.getEtatPartie();
+		int mise = Utils.genererEntier(1, (joueur.getManaActuel() + 1) );
+		etatPartie.getData().putScalar(0, mise);
 		partie.getMancheCourante().getTourCourant().setMiseJoueur(joueur, mise);
+		if (joueur.getMainDuJoueur().size() > 0) {
+			int indexCarteAJouer = Utils.genererEntier(0, joueur.getMainDuJoueur().size());
+			Carte carteAJouer = joueur.getMainDuJoueur().get(indexCarteAJouer);
+			int numCarte = carteAJouer.getNumeroCarte();
+			partie.jouerCarte(carteAJouer, joueur);
+			etatPartie.getData().putScalar(numCarte , 50);
+		}
 		adversaire.jouerTour(partie);
 		partie.jouerTour(); // La partie avance au prochain tour avec le joueur ayant joué ses cartes
-		EtatPartie etatPartie = partie.getEtatPartie();
-		double reward = etatPartie.getPartie().getTourPrecedent().evaluerTour(joueur, partie); // La récompense correspond au gain du joueur dans l'état actuel
-		boolean done = partie.getPont().unSorcierEstTombe(); // La partie est terminée si une des conditions de fin est atteinte
+
+		double reward = partie.getTourPrecedent().evaluerTour(joueur, partie); // La récompense
+																								// correspond au gain du
+																								// joueur dans l'état
+																								// actuel
+		boolean done = partie.getPont().unSorcierEstTombe(); // La partie est terminée si une des conditions de fin est
+																// atteinte
 		return new StepReply<>(etatPartie, reward, done, null); // On retourne l'état suivant, la récompense, l'état
 																// final et les informations additionnelles (null ici)
 	}
@@ -70,7 +82,7 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 
 	@Override
 	public MDP<EtatPartie, Integer, DiscreteSpace> newInstance() {
-		return new MDPJeu(partie,joueur,adversaire);
+		return new MDPJeu(partie, joueur, adversaire);
 	}
 
 }

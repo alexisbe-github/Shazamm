@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAEtatJeu;
-import main.java.model.jeu.ia.IAExperte;
+import main.java.model.jeu.ia.IAEntrainee;
 import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
@@ -60,7 +60,7 @@ public class ControleurMenu implements ActionListener {
 			ECouleurJoueur couleur = couleurs.get(0);
 			ECouleurJoueur couleurIA = couleurs.get(1);
 			Joueur joueur = new Joueur(couleur, "Pop", "Simoké", "blabla");
-			Object[] options = { "Facile", "Intermédiaire", "Experte" };
+			Object[] options = { "Facile", "Intermédiaire", "Entraînée" };
 			int input = JOptionPane.showOptionDialog(vm, "Choisissez la difficulté de l'ordinateur", "Choix difficulté",
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 			Partie partie;
@@ -89,7 +89,7 @@ public class ControleurMenu implements ActionListener {
 				partie.addObserver(fenetreJoueur);
 				break;
 			case 2:
-				IAExperte iaE = new IAExperte(couleurIA, "Sorcier", "ledeux", "blabla");
+				IAEntrainee iaE = new IAEntrainee(couleurIA, "Sorcier", "ledeux", "blabla");
 				partie = new Partie(joueur, iaE);
 				fenetreJoueur = new VueJeu(joueur, partie);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {

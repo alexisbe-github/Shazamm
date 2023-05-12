@@ -29,7 +29,7 @@ public class Apprentissage {
 		MDPJeu mdp = new MDPJeu(partie, joueur1, joueur2);
 
 		// Configurer l'agent
-		QLearningConfiguration config = QLearningConfiguration.builder().seed(123L).maxEpochStep(1000).maxStep(15000)
+		QLearningConfiguration config = QLearningConfiguration.builder().seed(12L).maxEpochStep(10000).maxStep(150)
 				.expRepMaxSize(150000).batchSize(128).targetDqnUpdateFreq(500).updateStart(10).rewardFactor(0.01)
 				.gamma(0.99).errorClamp(1.0).minEpsilon(0.1f).epsilonNbStep(1000).doubleDQN(true).build();
 
@@ -39,11 +39,13 @@ public class Apprentissage {
 		// Entraîner l'agent
 		System.out.println("ok");
 		dql.train();
+
+		System.out.println("ok");
 		// get the final policy
 		dql.getPolicy().save("dql.model"); // save the model at the end
 		// Entrée d'exemple
-		double[] stateArray = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-		INDArray state = Nd4j.create(stateArray).reshape(1,34);
+		double[] stateArray = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+		INDArray state = Nd4j.create(stateArray).reshape(1,15);
 
 		// Calculer la sortie pour l'entrée donnée
 		NeuralNetOutput output = dql.getNeuralNet().output(state);
@@ -56,16 +58,15 @@ public class Apprentissage {
 		}
 		mdp.close();
 
-		System.out.println("ok");
 
 
 	}
 
 	public static DQN buildDQNFactory() {
 		final DQNDenseNetworkConfiguration build = DQNDenseNetworkConfiguration.builder().l2(0.001)
-				.updater(new Adam(0.01)).numHiddenNodes(300).numLayers(2).build();
+				.updater(new Adam(0.01)).numHiddenNodes(300).numLayers(3).build();
 		DQNFactoryStdDense factory = new DQNFactoryStdDense(build);
-		int[] inputShape = {34};
+		int[] inputShape = {15};
 		return factory.buildDQN(inputShape, 15);
 	}
 

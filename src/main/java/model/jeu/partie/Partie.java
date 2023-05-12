@@ -11,6 +11,7 @@ import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.ia.IAFacile;
+import main.java.model.jeu.ia.SimulationStrategyLancementSort;
 import main.java.model.jeu.ia.apprentissage.EtatPartie;
 import main.java.vue.ILancementStrategy;
 import main.java.vue.VueConsole;
@@ -39,7 +40,9 @@ public class Partie implements Cloneable {
 		this.joueurPousse = false;
 		this.cartesJouees = false;
 		this.pcs = new PropertyChangeSupport(this);
-		if(joueurVert instanceof IAFacile)this.strategyVert = (IAFacile)joueurVert; //pour l'apprentissage de l'IA
+		if (joueurVert instanceof IAFacile)
+			this.strategyVert = (IAFacile) joueurVert; // pour l'apprentissage de l'IA
+		// this.strategyRouge =new SimulationStrategyLancementSort();
 		lancerPartie();
 	}
 
@@ -105,9 +108,10 @@ public class Partie implements Cloneable {
 	 */
 	public void lancerClone(Partie p, Tour tour, Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
-			strategyVert.lancerClone(p, tour, joueur);
-		else
-			strategyRouge.lancerClone(p, tour, joueur);
+			if (strategyVert != null)
+				strategyVert.lancerClone(p, tour, joueur);
+			else if (strategyRouge != null)
+				strategyRouge.lancerClone(p, tour, joueur);
 	}
 
 	/**
@@ -120,9 +124,10 @@ public class Partie implements Cloneable {
 	 */
 	public void lancerRecyclage(Partie p, Tour tour, Joueur joueur) {
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
-			strategyVert.lancerRecyclage(p, tour, joueur);
-		else
-			strategyRouge.lancerRecyclage(p, tour, joueur);
+			if (strategyVert != null)
+				strategyVert.lancerRecyclage(p, tour, joueur);
+			else if (strategyRouge != null)
+				strategyRouge.lancerRecyclage(p, tour, joueur);
 	}
 
 	/**
@@ -134,10 +139,11 @@ public class Partie implements Cloneable {
 	 * @param joueur
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
-			strategyVert.lancerLarcin(p, tour, joueur);
-		}else
-			strategyRouge.lancerLarcin(p, tour, joueur);
+		if (joueur.getCouleur().equals(ECouleurJoueur.VERT))
+			if (strategyVert != null)
+				strategyVert.lancerLarcin(p, tour, joueur);
+			else if (strategyRouge != null)
+				strategyRouge.lancerLarcin(p, tour, joueur);
 	}
 
 	/**
@@ -447,13 +453,13 @@ public class Partie implements Cloneable {
 		try {
 			Partie partieOriginale = (Partie) this.clone();
 			Partie partieTmp;
-			int manaMax = joueur.getManaActuel()+1;
-			if(manaMax < 20) {
-				manaMax = joueur.getManaActuel()+1;
-			}else {
+			int manaMax = joueur.getManaActuel() + 1;
+			if (manaMax < 20) {
+				manaMax = joueur.getManaActuel() + 1;
+			} else {
 				manaMax = (int) ((joueur.getManaActuel() + 1) / 1.5);
 			}
-			for (int i = 1; i < manaMax ; i++) {
+			for (int i = 1; i < manaMax; i++) {
 				partieTmp = (Partie) partieOriginale.clone();
 				int mise = i;
 
@@ -467,6 +473,9 @@ public class Partie implements Cloneable {
 				partieTmp = (Partie) partieOriginale.clone();
 				partieTmp.getMancheCourante().getTourCourant().setMiseJoueur(j, mise);
 
+				if (j.getMainDuJoueur().size() == 0) {
+					res.add(partieTmp);
+				}
 				for (int k = 0; k < j.getMainDuJoueur().size()
 						&& !partieTmp.getMancheCourante().getMutismeCourant(); k++) {
 					Partie partieTmp2 = (Partie) partieTmp.clone();
@@ -613,13 +622,13 @@ public class Partie implements Cloneable {
 	public Partie nouvellePartie() {
 		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
 		IAFacile jV = new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire");
-		Partie p = new Partie(jR,jV);
+		Partie p = new Partie(jR, jV);
 		p.strategyVert = jV;
 		return p;
 	}
 
 	public EtatPartie getEtatPartie() {
-		return new EtatPartie(this, joueurRouge, (IAFacile) joueurVert);
+		return new EtatPartie(this, joueurRouge);
 	}
 
 }
