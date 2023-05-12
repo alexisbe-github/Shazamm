@@ -184,9 +184,8 @@ public class Utils {
 	}
 	
 	/*
-	 * Fonction permettant de récupérer les tours correspondants à une manche
-	 * @param m : manche
-	 * @return liste de tours
+	 * Fonction permettant de récupérer toutes les parties
+	 * @return liste de parties
 	 */
 	public static List<PartieSQL> getParties(){
 		return new ArrayList<PartieSQL>();
