@@ -3,11 +3,11 @@ package main.java.vue.jeu;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,13 +15,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
+import main.java.model.bdd.dao.DAOCouleur;
 import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.bdd.dao.DAOManche;
+import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.bdd.dao.beans.JoueurSQL;
 import main.java.model.bdd.dao.beans.MancheSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.bdd.dao.beans.TourSQL;
+import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Pont;
 import main.java.utils.Utils;
 
@@ -29,57 +33,69 @@ public class VueHistorique extends JFrame{
 	
 	private PartieSQL partie;
 	
-	private JLabel derniersCoups; //Label de l'image "Derniers coups" présente au dessus du tableau.
-	private JPanel tableauPrincipal; //Tableau de une colonne dans lequel on placera Un label (manche x tour x) par tour et un panel contenant les infos
-	private JoueurSQL j1SQL;
-	private JoueurSQL j2SQL;
+	private JPanel tableauPrincipal = new JPanel(); //Tableau de une colonne dans lequel on placera Un label (manche x tour x) par tour et un panel contenant les infos
+	JScrollPane scrPane = new JScrollPane(tableauPrincipal);
+	private JoueurSQL jRougeSQL;
+	private JoueurSQL jVertSQL;
+	int hauteurElement;
+	int numeroManche;
 	
 
 	public VueHistorique(PartieSQL p) {
 		this.setVisible(true);
-		//this.setSize(new Dimension(500,500));
-		this.setBackground(Color.BLACK);
-		this.derniersCoups = new JLabel();
-		this.derniersCoups.setIcon(new ImageIcon("src/main/resources/fr_dernierscoups_r.gif"));
-		this.tableauPrincipal = new JPanel();
-		this.partie = p;
-		this.init();
 		this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		setSize(screenSize.width / 3, screenSize.height * 9 / 10);
+		this.setBackground(Color.BLACK);
+		this.partie = p;
+		this.init();
 	}
 	
 	private void init() {
-		tableauPrincipal.setAlignmentX(CENTER_ALIGNMENT);
-		tableauPrincipal.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		tableauPrincipal.setBackground(Color.BLACK);
-		tableauPrincipal.add(derniersCoups);
-		derniersCoups.setBackground(Color.BLUE);
 		
 		DAOJoueur daoj = new DAOJoueur();
 		
-		j1SQL = daoj.trouver(partie.getIdJoueur1());
-		j2SQL = daoj.trouver(partie.getIdJoueur2());
 		
-		try { 
-			this.addTours();
-		}catch(NullPointerException e) {
-			
+		DAOCouleur daoc = new DAOCouleur();
+		CouleurSQL col = daoc.trouver(partie.getId());
+		
+		if(col.getCouleurJ1().equals(ECouleurJoueur.ROUGE)) {
+			jRougeSQL = daoj.trouver(partie.getIdJoueur1());
+			jVertSQL = daoj.trouver(partie.getIdJoueur2());
+		}else {
+			jRougeSQL = daoj.trouver(partie.getIdJoueur2());
+			jVertSQL = daoj.trouver(partie.getIdJoueur1());
 		}
 		
-		this.add(tableauPrincipal);
+		
+		
+		
+		tableauPrincipal.add(this.addTours());
+		this.add(scrPane);
 	}
 	
 	
-	private void addTours() {
+	private JPanel addTours() {
+		JPanel res = new JPanel(new GridBagLayout());
+		hauteurElement = 0;
+		GridBagConstraints c = new GridBagConstraints();
+		
+		numeroManche=0;
+		
 		for(MancheSQL m : Utils.getManches(partie)) {
+			numeroManche++;
+			hauteurElement++;
+			Utils.setConstraints(0,0,0,hauteurElement,c);
 			for(TourSQL t : Utils.getTours(m)) {
-				this.addTour(t);
+				res.add(addTour(t),c);
 			}
 		}
+		
+		return res;
 	}
 	
-	private void addTour(TourSQL t) {
+	private JPanel addTour(TourSQL t) {
 		JPanel panelTour = new JPanel(new GridLayout(0, 1));
 		panelTour.setBackground(Color.BLACK);
 		panelTour.setBorder(BorderFactory.createLineBorder(Color.WHITE));
@@ -88,17 +104,26 @@ public class VueHistorique extends JFrame{
 		MancheSQL manche = daoManche.trouver(t.getIdManche());
 		
 		//Remplacer par les infos de la table correspondante
-		JLabel headerTour = new JLabel(String.format("Manche %d - Tour %d", manche.getId(), t.getNumeroTour()));
+		JLabel headerTour = new JLabel(String.format("Manche %d - Tour %d", numeroManche, t.getNumeroTour()));
 		headerTour.setForeground(Color.WHITE);
 		headerTour.setFont(new Font("Arial", Font.PLAIN, 16));
 		headerTour.setHorizontalAlignment(JLabel.CENTER);
 		panelTour.add(headerTour);
 		
 		
-		panelTour.add(this.getBilanEtPont(t,true)); //parametre : tour-1 -> true (avant le tour)
-		panelTour.add(this.getBilanEtPont(t,false)); //parametre : tour -> false (apres le tour)
+		panelTour.add(this.getBilanEtPont(t));
 		
-		this.tableauPrincipal.add(panelTour);
+		return panelTour;
+	}
+	
+	private int getPositionJoueur(TourSQL t, JoueurSQL j) {
+		int res = 0;
+		if(partie.getIdJoueur1()==j.getId()) {
+			res = t.getPositionJoueur1();
+		}else {
+			res = t.getPositionJoueur2();
+		}
+		return res;
 	}
 	
 	private JPanel getEtatPont(TourSQL t) {
@@ -112,14 +137,11 @@ public class VueHistorique extends JFrame{
 		
 		for(int i=0;i<Pont.TAILLE_PONT;i++) {
 			
-			if(i==t.getPositionJoueur1()) {
-				//Condition à remplacer par : SI i == posJoueurRouge du tour
+			if(i==getPositionJoueur(t,jRougeSQL)) {
 				caseIcon = Utils.createImageIconColor(Color.RED, l, h);
-			}else if(i==t.getPositionJoueur2()){
-				//Condition à remplacer par : SI i == posJoueurVert du tour
+			}else if(i==getPositionJoueur(t,jVertSQL)){
 				caseIcon = Utils.createImageIconColor(Color.GREEN, l, h);
 			}else if(i==t.getPositionMurFlammes()) {
-				//Condition à remplacer par : SI i == posMur du tour
 				caseIcon = Utils.createImageIconColor(Color.ORANGE, l, h);
 			}else {
 				//si ce n'est aucune entité particulière
@@ -131,7 +153,7 @@ public class VueHistorique extends JFrame{
 			panelPont.add(labelCase);
 		}
 		for(int i=0;i<Pont.TAILLE_PONT;i++) {
-			if(i==0 || i==Pont.TAILLE_PONT-1) {
+			if(i<=numeroManche-1 || i>=Pont.TAILLE_PONT-numeroManche) {
 				//Condition à remplacer par : SI i == indexLave-1 || SI i == TAILLE_PONT-indexLave+1
 				caseIcon = Utils.createImageIconColor(Color.GRAY, l, h);
 			}else {
@@ -148,19 +170,18 @@ public class VueHistorique extends JFrame{
 	}
 	
 	
-	private JPanel getBilanEtPont(TourSQL t, boolean avant) {
+	private JPanel getBilanEtPont(TourSQL t) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		JPanel bilanDesMises = new JPanel();
 		JLabel titre = new JLabel();
-		if(avant) {
-			titre.setText("<html>Avant tour<br/></html>");
-		}else {
-			titre.setText("<html>Après tour<br/></html>");
-		}
+		
+		titre.setText("<html>Après tour : <br/></html>");
 		titre.setForeground(Color.WHITE);
+		
 		bilanDesMises.add(titre);
 		bilanDesMises.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		bilanDesMises.setBackground(Color.BLACK);
+		
 		JLabel bilanRouge = new JLabel();
 		bilanRouge.setForeground(Color.RED);
 		bilanRouge.setFont(new Font("Arial", Font.PLAIN, screenSize.width/150));
@@ -168,12 +189,12 @@ public class VueHistorique extends JFrame{
 		bilanVert.setForeground(Color.GREEN);
 		bilanVert.setFont(new Font("Arial", Font.PLAIN, screenSize.width/150));
 		
-		DAOJoueur daoj = new DAOJoueur(); // RAJOUTER DE QUOI CONTROLER LA COULEUR DES JOUEURS
-		JoueurSQL jRouge = daoj.trouver(partie.getIdJoueur1());
-		JoueurSQL jVert = daoj.trouver(partie.getIdJoueur2());
+		DAOJoueur daoj = new DAOJoueur();
 		
-		bilanRouge.setText(getBilanJoueur(jRouge, t,avant));
-		bilanVert.setText(getBilanJoueur(jVert, t,avant));
+		
+		
+		bilanRouge.setText(getBilanJoueur(jRougeSQL, t);
+		bilanVert.setText(getBilanJoueur(jVertSQL, t);
 		
 		bilanDesMises.add(bilanRouge);
 		bilanDesMises.add(bilanVert);
@@ -182,25 +203,23 @@ public class VueHistorique extends JFrame{
 		return bilanDesMises;
 	}
 	
-	private String getBilanJoueur(JoueurSQL j, TourSQL t,boolean avant) {
+	private String getBilanJoueur(JoueurSQL j, TourSQL t) {
 		String texteBilan;
 		if(j.getId()==partie.getIdJoueur1()) {
-			texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur1()).toString()); //remplacer par joueurRouge
+			texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur1()).toString());
 		}else {
-			texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur2()).toString()); //remplacer par joueurRouge
+			texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur2()).toString());
 		}
 
 		
-		if(avant) {
-			texteBilan+="Sorts :<br/>";
-			/* REMPLACER PAR getcartesjouees(t) ou un truc comme ça
-			for(Carte c : )) {
-				if(c.getJoueur().equals(j)) {
-					texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),c.getNom());
-				}
+		texteBilan+="Sorts :<br/>";
+		/* REMPLACER PAR getcartesjouees(t) ou un truc comme ça
+		for(Carte c : )) {
+			if(c.getJoueur().equals(j)) {
+				texteBilan+=String.format("%d - %s<br/>", c.getNumeroCarte(),c.getNom());
 			}
-			*/
 		}
+		*/
 		texteBilan+="</html>";
 		return texteBilan;
 	}
