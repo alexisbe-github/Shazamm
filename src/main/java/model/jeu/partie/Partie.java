@@ -9,6 +9,9 @@ import java.util.List;
 import javax.swing.ImageIcon;
 
 import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.DAOPartie;
+import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -24,6 +27,7 @@ public class Partie implements Cloneable {
 	private Pont pont;
 	private List<Manche> listeManche;
 	private boolean partieFinie, joueurPousse, cartesJouees;
+	private PartieSQL partieSQL;
 
 	public ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
@@ -36,6 +40,7 @@ public class Partie implements Cloneable {
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
+		initPartieBDD(j1.getCouleur(), j1, j2);
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
@@ -136,10 +141,10 @@ public class Partie implements Cloneable {
 	 * @param joueur
 	 */
 	public void lancerLarcin(Partie p, Tour tour, Joueur joueur) {
-		this.setStrategyVert((IAFacile)joueurVert);
+		this.setStrategyVert((IAFacile) joueurVert);
 		if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 			strategyVert.lancerLarcin(p, tour, joueur);
-		}else
+		} else
 			strategyRouge.lancerLarcin(p, tour, joueur);
 	}
 
@@ -615,8 +620,9 @@ public class Partie implements Cloneable {
 
 	public Partie nouvellePartie() {
 		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
-		IAFacile jV = new IAFacile(joueurVert.getCouleur(), new Profil("IAdversaire", "IAdversaire", new ImageIcon("IAdversaire")));
-		Partie p = new Partie(jR,jV);
+		IAFacile jV = new IAFacile(joueurVert.getCouleur(),
+				new Profil("IAdversaire", "IAdversaire", new ImageIcon("IAdversaire")));
+		Partie p = new Partie(jR, jV);
 		p.strategyVert = jV;
 		System.out.println(p.strategyVert);
 		return p;
@@ -624,6 +630,39 @@ public class Partie implements Cloneable {
 
 	public EtatPartie getEtatPartie() {
 		return new EtatPartie(this, joueurRouge, (IAFacile) joueurVert);
+	}
+
+	private void initPartieBDD(ECouleurJoueur couleurJ1, Joueur j1, Joueur j2) {
+		this.partieSQL = new PartieSQL();
+		switch (couleurJ1) {
+		case ROUGE:
+			this.partieSQL.setIdJoueur1(joueurRouge.getProfil().getId());
+			this.partieSQL.setIdJoueur2(joueurVert.getProfil().getId());
+			break;
+		case VERT:
+			this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
+			this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
+		}
+		new DAOPartie().creer(this.partieSQL);
+	}
+
+	private void setVainqueur(ECouleurJoueur couleur) {
+		switch (couleur) {
+		case ROUGE:
+			int nbVictoiresRouge = this.joueurRouge.getProfil().getNbPartiesGagnees();
+			nbVictoiresRouge++;
+			this.joueurRouge.getProfil().setNbPartiesGagnees(nbVictoiresRouge);
+			new DAOJoueur().maj(this.joueurRouge.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			break;
+		case VERT:
+			int nbVictoiresVert = this.joueurVert.getProfil().getNbPartiesGagnees();
+			nbVictoiresVert++;
+			this.joueurVert.getProfil().setNbPartiesGagnees(nbVictoiresVert);
+			new DAOJoueur().maj(this.joueurVert.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			break;
+		}
 	}
 
 }
