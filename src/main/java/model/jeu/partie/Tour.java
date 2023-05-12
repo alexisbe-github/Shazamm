@@ -411,7 +411,7 @@ public class Tour implements Cloneable {
 		return res;
 	}
 	
-	private void initTourBDD() {
+	public void initTourBDD() {
 		if(this.mancheCourante.getMancheSQL()!=null) {
 			ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
 			ECouleurJoueur couleurJ2 = couleurJ1 == ECouleurJoueur.ROUGE ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;

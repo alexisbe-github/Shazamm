@@ -270,6 +270,7 @@ public class Partie implements Cloneable {
 			pcs.firePropertyChange("property", "x", "y");
 			if (pont.unSorcierEstTombe()) {
 				this.partieFinie = true;
+				this.getMancheCourante().getTourCourant().initTourBDD();
 				switch(this.getGagnant()) {
 				case 1 :
 					this.setVainqueur(ECouleurJoueur.VERT);
