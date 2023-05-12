@@ -32,3 +32,4 @@ src/main/resources/utils/ENVIRONMENT.properties
 .classpath
 *.prefs
 .classpath
+.classpath

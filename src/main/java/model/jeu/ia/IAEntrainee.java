@@ -87,7 +87,6 @@ public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
 		}
 		resultats[0] = 1 / (1 + Math.exp(-resultats[0]));
 		int mise = (int) (resultats[0] * 50);
-		System.out.println(Arrays.toString(resultats));
 		double max = -1;
 		int indiceMax = -1;
 		for (int i = 1; i < 15; i++) {
