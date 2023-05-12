@@ -32,19 +32,23 @@ public class VueLancementPartie extends JFrame {
 		
 		vueProfilJ1 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		vueProfilJ2 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
-		boutonLancement = new JButton("Lancer");
-		boutonLancement.setEnabled(false);
 		
 		JLabel duree = new JLabel("Durée du tour : ");
 		saisieTemps = new JSpinner(new SpinnerNumberModel(10, 10, 120, 1));
 		JLabel temps = new JLabel("secondes");
+
+		JButton boutonLancement = new JButton("Lancer");
+		boutonLancement.setEnabled(false);
+		JButton boutonRetour = new JButton("Retour");
 		
 		ControleurLancementPartie control = new ControleurLancementPartie(this, saisieTemps, timer, couleurJ1, couleurJ2);
 		
 		boutonLancement.addActionListener(control);
 		this.addMouseMotionListener(control);
+		boutonRetour.addActionListener(control);
 		
 		JPanel validerPanel = new JPanel();
+		validerPanel.add(boutonRetour);
 		validerPanel.add(boutonLancement);
 		validerPanel.add(duree);
 		validerPanel.add(saisieTemps);

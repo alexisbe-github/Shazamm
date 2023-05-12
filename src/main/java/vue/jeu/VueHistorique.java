@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,20 +17,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.DAOManche;
 import main.java.model.bdd.dao.beans.JoueurSQL;
+import main.java.model.bdd.dao.beans.MancheSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.bdd.dao.beans.TourSQL;
-import main.java.model.jeu.ECouleurJoueur;
-import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
-import main.java.model.jeu.carte.Carte;
-import main.java.model.jeu.partie.Partie;
-import main.java.model.jeu.partie.Tour;
 import main.java.utils.Utils;
 
 public class VueHistorique extends JFrame{
 	
-	private Partie partie;
+	private PartieSQL partie;
 	
 	private JLabel derniersCoups; //Label de l'image "Derniers coups" présente au dessus du tableau.
 	private JPanel tableauPrincipal; //Tableau de une colonne dans lequel on placera Un label (manche x tour x) par tour et un panel contenant les infos
@@ -36,7 +35,7 @@ public class VueHistorique extends JFrame{
 	private JoueurSQL j2SQL;
 	
 
-	public VueHistorique(Partie p) {
+	public VueHistorique(PartieSQL p) {
 		this.setVisible(true);
 		//this.setSize(new Dimension(500,500));
 		this.setBackground(Color.BLACK);
@@ -57,12 +56,10 @@ public class VueHistorique extends JFrame{
 		tableauPrincipal.add(derniersCoups);
 		derniersCoups.setBackground(Color.BLUE);
 		
-		PartieSQL p = partie.getPartieSQL();
-		
 		DAOJoueur daoj = new DAOJoueur();
 		
-		j1SQL = daoj.trouver(p.getIdJoueur1());
-		j2SQL = daoj.trouver(p.getIdJoueur2());
+		j1SQL = daoj.trouver(partie.getIdJoueur1());
+		j2SQL = daoj.trouver(partie.getIdJoueur2());
 		
 		try { 
 			this.addTours();
@@ -75,11 +72,11 @@ public class VueHistorique extends JFrame{
 	
 	
 	private void addTours() {
-		Tour t = partie.getTourPrecedent();
-		//boucle sur partie.getListeManches()
-			//boucle sur partie.getListeTours()
-		addTour(t.getTourSQL());
-		
+		for(MancheSQL m : Utils.getManches(partie)) {
+			for(TourSQL t : Utils.getTours(m)) {
+				this.addTour(t);
+			}
+		}
 	}
 	
 	private void addTour(TourSQL t) {
@@ -87,8 +84,11 @@ public class VueHistorique extends JFrame{
 		panelTour.setBackground(Color.BLACK);
 		panelTour.setBorder(BorderFactory.createLineBorder(Color.WHITE));
 		
+		DAOManche daoManche = new DAOManche();
+		MancheSQL manche = daoManche.trouver(t.getIdManche());
+		
 		//Remplacer par les infos de la table correspondante
-		JLabel headerTour = new JLabel(String.format("Manche %s - Tour %s", partie.getNombreManches(), partie.getMancheCourante().getNombreTours()-1));
+		JLabel headerTour = new JLabel(String.format("Manche %d - Tour %d", manche.getId(), t.getNumeroTour()));
 		headerTour.setForeground(Color.WHITE);
 		headerTour.setFont(new Font("Arial", Font.PLAIN, 16));
 		headerTour.setHorizontalAlignment(JLabel.CENTER);
@@ -167,8 +167,13 @@ public class VueHistorique extends JFrame{
 		JLabel bilanVert = new JLabel();
 		bilanVert.setForeground(Color.GREEN);
 		bilanVert.setFont(new Font("Arial", Font.PLAIN, screenSize.width/150));
-		bilanRouge.setText(getBilanJoueur(ECouleurJoueur.ROUGE, t,avant));
-		bilanVert.setText(getBilanJoueur(ECouleurJoueur.VERT, t,avant));
+		
+		DAOJoueur daoj = new DAOJoueur(); // RAJOUTER DE QUOI CONTROLER LA COULEUR DES JOUEURS
+		JoueurSQL jRouge = daoj.trouver(partie.getIdJoueur1());
+		JoueurSQL jVert = daoj.trouver(partie.getIdJoueur2());
+		
+		bilanRouge.setText(getBilanJoueur(jRouge, t,avant));
+		bilanVert.setText(getBilanJoueur(jVert, t,avant));
 		
 		bilanDesMises.add(bilanRouge);
 		bilanDesMises.add(bilanVert);
@@ -177,13 +182,14 @@ public class VueHistorique extends JFrame{
 		return bilanDesMises;
 	}
 	
-	private String getBilanJoueur(ECouleurJoueur couleur, TourSQL t,boolean avant) {
-		Joueur j;
-		if(couleur.equals(ECouleurJoueur.ROUGE)) 
-			j = partie.getJoueurRouge(); 
-		else j = partie.getJoueurVert();
-		
-		String texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur1()).toString()); //remplacer par joueurRouge
+	private String getBilanJoueur(JoueurSQL j, TourSQL t,boolean avant) {
+		String texteBilan;
+		if(j.getId()==partie.getIdJoueur1()) {
+			texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur1()).toString()); //remplacer par joueurRouge
+		}else {
+			texteBilan = String.format("<html>Mise de %s : %s.<br/>", j.getNom(), ((Integer) t.getMiseJoueur2()).toString()); //remplacer par joueurRouge
+		}
+
 		
 		if(avant) {
 			texteBilan+="Sorts :<br/>";
