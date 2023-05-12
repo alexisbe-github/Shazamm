@@ -182,4 +182,13 @@ public class Utils {
 	public static List<TourSQL> getTours(MancheSQL msql){
 		return new ArrayList<TourSQL>();
 	}
+	
+	/*
+	 * Fonction permettant de récupérer les tours correspondants à une manche
+	 * @param m : manche
+	 * @return liste de tours
+	 */
+	public static List<PartieSQL> getParties(){
+		return new ArrayList<PartieSQL>();
+	}
 }
