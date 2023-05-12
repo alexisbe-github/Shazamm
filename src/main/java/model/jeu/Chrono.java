@@ -22,7 +22,7 @@ public class Chrono {
     boolean relancer = false;
     
     public Chrono() {
-    	this.duree=30;
+    	this.duree=60;
     	this.pcs = new PropertyChangeSupport(this);
     	this.timer = new Timer(1000,new ControleurChrono(this));
     }

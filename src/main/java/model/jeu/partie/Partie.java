@@ -266,6 +266,13 @@ public class Partie implements Cloneable {
 			pcs.firePropertyChange("property", "x", "y");
 			if (pont.unSorcierEstTombe()) {
 				this.partieFinie = true;
+				switch(this.getGagnant()) {
+				case 1 :
+					this.setVainqueur(ECouleurJoueur.VERT);
+					break;
+				case 2 :
+					this.setVainqueur(ECouleurJoueur.VERT);
+				}
 			}
 			printPossibleGagnant();
 		}
@@ -273,14 +280,32 @@ public class Partie implements Cloneable {
 
 	private void printPossibleGagnant() {
 		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
-			System.out.println(pont.getVainqueur());
+			System.out.println(pont.getVainqueurString());
 		}
 	}
 
-	public String getGagnant() {
-		return this.pont.getVainqueur();
+	public String getGagnantString() {
+		return this.pont.getVainqueurString();
 	}
 
+	/*
+	 * @return -1:Pas de gagnant, 0:Egalité, 1:JoueurVert gagnant, 2:JoueurRouge gagnant
+	 */
+	public int getGagnant() {
+		int res = -1;
+		if (pont.getPosJoueurRouge() <= pont.getIndexLave() && pont.getPosJoueurVert() >= Pont.TAILLE_PONT - pont.getIndexLave()) {
+			res = 0;
+		} else {
+			if (pont.getPosJoueurRouge() <= pont.getIndexLave()) {
+				res = 1;
+			}
+			if (pont.getPosJoueurVert() >= Pont.TAILLE_PONT - pont.getIndexLave()) {
+				res = 2;
+			}
+		}
+		return res;
+	}
+	
 	/**
 	 * Deplace le mur de feu vers le joueur perdant avec 0 de mana. S'arrête
 	 * lorsqu'il croise le perdant où lorsque le gagnant a moins de mana que la

@@ -60,7 +60,7 @@ public class ControleurMenu implements ActionListener {
 			VueJeu fenetreJoueur;
 			switch (input) {
 			case 0:
-				IAFacile ia = new IAFacile(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
+				IAFacile ia = new IAFacile(couleurIA, new Profil("Ordi", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, ia);
 				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {

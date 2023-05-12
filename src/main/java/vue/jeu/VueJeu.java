@@ -398,7 +398,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			}
 		}
 		if (partie.getPont().unSorcierEstTombe()) {
-			text = partie.getGagnant();
+			text = partie.getGagnantString();
 			this.timer.stopChrono();
 		} else {
 			text += "</html>";

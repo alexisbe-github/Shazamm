@@ -39,6 +39,16 @@ public class Joueur implements Cloneable{
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
 	}
+	
+	public Joueur(ECouleurJoueur couleur, String nom, String prenom) {
+		this.COULEUR = couleur;
+		this.NOM = nom;
+		this.PRENOM = prenom;
+		this.AVATAR = "src/main/resources/images/icone-profil-joueur.png";
+		manaActuel = 0;
+		paquet = new ArrayList<>();
+		mainDuJoueur = new ArrayList<>();
+	}
 
 	@Override
 	public String toString() {
