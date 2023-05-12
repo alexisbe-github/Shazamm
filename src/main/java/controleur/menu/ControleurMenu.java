@@ -52,7 +52,7 @@ public class ControleurMenu implements ActionListener {
 			List<ECouleurJoueur> couleurs = tirerCouleurs();
 			ECouleurJoueur couleur = couleurs.get(0);
 			ECouleurJoueur couleurIA = couleurs.get(1);
-			Joueur joueur = new Joueur(couleur, "Pop", "Simoké", "blabla");
+			Joueur joueur = new Joueur(couleur, "Joueur", "Invité", "src/main/resources/images/icone-profil-joueur");
 			Object[] options = { "Facile", "Intermédiaire", "Experte" };
 			int input = JOptionPane.showOptionDialog(vm, "Choisissez la difficulté de l'ordinateur", "Choix difficulté",
 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);

@@ -390,21 +390,23 @@ public class Tour implements Cloneable {
 	}
 	
 	private void initTourBDD() {
-		ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
-		ECouleurJoueur couleurJ2 = couleurJ1.equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;
-		tourSQL = new TourSQL();
-		tourSQL.setIdManche(mancheCourante.getMancheSQL().getId());
-		tourSQL.setPositionMurFlammes(mancheCourante.getPartieCourante().getPont().getPosMurDeFeu());
-		tourSQL.setPositionJoueur1(mancheCourante.getPartieCourante().getPosJoueur(couleurJ1));
-		tourSQL.setPositionJoueur2(mancheCourante.getPartieCourante().getPosJoueur(couleurJ2));
-		tourSQL.setMiseJoueur1(couleurJ1.equals(ECouleurJoueur.ROUGE) ? miseJoueurRouge : miseJoueurVert);
-		tourSQL.setMiseJoueur2(couleurJ2.equals(ECouleurJoueur.ROUGE) ? miseJoueurRouge : miseJoueurVert);
-		tourSQL.setPuissanceJoueur1(getAttaqueJoueur(couleurJ1));
-		tourSQL.setPuissanceJoueur2(getAttaqueJoueur(couleurJ2));
-		tourSQL.setNumeroTour(mancheCourante.getNumeroTourCourant());
-		tourSQL.setDate(new Timestamp(System.currentTimeMillis()));
-		
-		new DAOTour().creer(tourSQL);
+		if(this.mancheCourante.getMancheSQL()!=null) {
+			ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
+			ECouleurJoueur couleurJ2 = couleurJ1.equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;
+			tourSQL = new TourSQL();
+			tourSQL.setIdManche(mancheCourante.getMancheSQL().getId());
+			tourSQL.setPositionMurFlammes(mancheCourante.getPartieCourante().getPont().getPosMurDeFeu());
+			tourSQL.setPositionJoueur1(mancheCourante.getPartieCourante().getPosJoueur(couleurJ1));
+			tourSQL.setPositionJoueur2(mancheCourante.getPartieCourante().getPosJoueur(couleurJ2));
+			tourSQL.setMiseJoueur1(couleurJ1.equals(ECouleurJoueur.ROUGE) ? miseJoueurRouge : miseJoueurVert);
+			tourSQL.setMiseJoueur2(couleurJ2.equals(ECouleurJoueur.ROUGE) ? miseJoueurRouge : miseJoueurVert);
+			tourSQL.setPuissanceJoueur1(getAttaqueJoueur(couleurJ1));
+			tourSQL.setPuissanceJoueur2(getAttaqueJoueur(couleurJ2));
+			tourSQL.setNumeroTour(mancheCourante.getNumeroTourCourant());
+			tourSQL.setDate(new Timestamp(System.currentTimeMillis()));
+			
+			new DAOTour().creer(tourSQL);
+		}
 	}
 	
 	public TourSQL getTourSQL() {

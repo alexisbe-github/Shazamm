@@ -78,9 +78,11 @@ public class Manche implements Cloneable {
 	}
 	
 	private void initMancheBDD() {
-		mancheSQL = new MancheSQL();
-		mancheSQL.setIdPartie(partieCourante.getPartieSQL().getId());
-		new DAOManche().creer(mancheSQL);
+		if(this.partieCourante.getPartieSQL()!=null) {
+			mancheSQL = new MancheSQL();
+			mancheSQL.setIdPartie(partieCourante.getPartieSQL().getId());
+			new DAOManche().creer(mancheSQL);
+		}
 	}
 	
 	public MancheSQL getMancheSQL() {

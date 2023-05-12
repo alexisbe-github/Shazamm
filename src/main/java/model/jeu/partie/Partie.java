@@ -637,18 +637,20 @@ public class Partie implements Cloneable {
 	}
 
 	private void initPartieBDD(ECouleurJoueur couleurJ1) {
-		this.partieSQL = new PartieSQL();
-		switch (couleurJ1) {
-		case ROUGE:
-			this.partieSQL.setIdJoueur1(joueurRouge.getProfil().getId());
-			this.partieSQL.setIdJoueur2(joueurVert.getProfil().getId());
-			break;
-		case VERT:
-			this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
-			this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
+		if(this.getJoueurRouge().getProfil()!=null && this.getJoueurVert().getProfil()!=null) {
+			this.partieSQL = new PartieSQL();
+			switch (couleurJ1) {
+			case ROUGE:
+				this.partieSQL.setIdJoueur1(joueurRouge.getProfil().getId());
+				this.partieSQL.setIdJoueur2(joueurVert.getProfil().getId());
+				break;
+			case VERT:
+				this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
+				this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
+			}
+			this.partieSQL.setIdVainqueur(joueurRouge.getProfil().getId());
+			new DAOPartie().creer(this.partieSQL);
 		}
-		this.partieSQL.setIdVainqueur(joueurRouge.getProfil().getId());
-		new DAOPartie().creer(this.partieSQL);
 	}
 
 	private void setVainqueur(ECouleurJoueur couleur) {
