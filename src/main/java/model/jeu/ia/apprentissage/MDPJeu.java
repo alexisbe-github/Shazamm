@@ -52,7 +52,7 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 	@Override
 	public StepReply<EtatPartie> step(Integer action) {
 		EtatPartie etatPartie = partie.getEtatPartie();
-		int mise = Utils.genererEntier(1, (joueur.getManaActuel() + 1) );
+		int mise = Utils.genererEntier(1, (joueur.getManaActuel() + 1)/4);
 		etatPartie.getData().putScalar(0, mise);
 		partie.getMancheCourante().getTourCourant().setMiseJoueur(joueur, mise);
 		if (joueur.getMainDuJoueur().size() > 0) {
@@ -60,10 +60,10 @@ public class MDPJeu implements MDP<EtatPartie, Integer, DiscreteSpace> {
 			Carte carteAJouer = joueur.getMainDuJoueur().get(indexCarteAJouer);
 			int numCarte = carteAJouer.getNumeroCarte();
 			partie.jouerCarte(carteAJouer, joueur);
-			etatPartie.getData().putScalar(numCarte , 50);
+			etatPartie.getData().putScalar(numCarte , 1);
 		}
 		adversaire.jouerTour(partie);
-		partie.jouerTour(); // La partie avance au prochain tour avec le joueur ayant joué ses cartes
+		partie.simulerTour(); // La partie avance au prochain tour avec le joueur ayant joué ses cartes
 
 		double reward = partie.getTourPrecedent().evaluerTour(joueur, partie); // La récompense
 																								// correspond au gain du

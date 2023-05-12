@@ -88,6 +88,7 @@ public class Partie implements Cloneable {
 	 */
 	public List<Carte> getListeCartesJoueesParJoueur(Joueur joueur) {
 		Tour tourCourant = this.getMancheCourante().getTourCourant();
+		if(tourCourant == null) return new ArrayList<>();
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
 			return tourCourant.getCartesJoueesRouge();
 		return tourCourant.getCartesJoueesVert();

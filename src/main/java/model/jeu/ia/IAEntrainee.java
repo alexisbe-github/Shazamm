@@ -21,6 +21,7 @@ import main.java.model.jeu.ia.apprentissage.EtatPartie;
 import main.java.model.jeu.ia.apprentissage.MDPJeu;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
+import main.java.utils.Utils;
 import main.java.vue.ILancementStrategy;
 
 public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
@@ -86,7 +87,7 @@ public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
 			}
 		}
 		resultats[0] = 1 / (1 + Math.exp(-resultats[0]));
-		int mise = (int) (resultats[0] * 50);
+		int mise = Utils.genererEntier(1, ((this.getManaActuel()+1)*3)/4);
 		double max = -1;
 		int indiceMax = -1;
 		for (int i = 1; i < 15; i++) {

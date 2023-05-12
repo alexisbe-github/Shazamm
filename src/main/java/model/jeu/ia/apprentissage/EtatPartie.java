@@ -22,9 +22,9 @@ public class EtatPartie implements Encodable {
 		int numInputs = 14 + 1; //mise avec nb cartes
 		double[] array = new double[numInputs];
 		for(Integer i:joueur.getCartesPossedees()) {
-			array[i-1] = 1;
+			array[i] = 1;
 		}
-		array[14] = joueur.getManaActuel();
+		array[0] = joueur.getManaActuel();
 		return array;
 	}
 
