@@ -28,19 +28,22 @@ public class Partie implements Cloneable {
 	private List<Manche> listeManche;
 	private boolean partieFinie, joueurPousse, cartesJouees;
 	private PartieSQL partieSQL;
+	private ECouleurJoueur couleurJ1;
 
 	public ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
 	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			couleurJ1 = ECouleurJoueur.ROUGE;
 			joueurRouge = j1;
 			joueurVert = j2;
 		} else {
+			couleurJ1 = ECouleurJoueur.VERT;
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
-		initPartieBDD(j1.getCouleur(), j1, j2);
+		initPartieBDD(j1.getCouleur());
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
@@ -178,7 +181,7 @@ public class Partie implements Cloneable {
 		joueurVert.piocherCartes(5);
 		joueurRouge.remplirReserveDeMana();
 		joueurVert.remplirReserveDeMana();
-		this.listeManche.add(new Manche());
+		this.listeManche.add(new Manche(this));
 	}
 
 	public void lancerNouvelleManche() {
@@ -190,7 +193,7 @@ public class Partie implements Cloneable {
 		joueurVert.remplirReserveDeMana();
 		pont.effondrerMorceauxDuPont();
 		pont.placerJoueurs();
-		this.listeManche.add(new Manche());
+		this.listeManche.add(new Manche(this));
 	}
 
 	public void lancerFinDeManche() {
@@ -632,7 +635,7 @@ public class Partie implements Cloneable {
 		return new EtatPartie(this, joueurRouge, (IAFacile) joueurVert);
 	}
 
-	private void initPartieBDD(ECouleurJoueur couleurJ1, Joueur j1, Joueur j2) {
+	private void initPartieBDD(ECouleurJoueur couleurJ1) {
 		this.partieSQL = new PartieSQL();
 		switch (couleurJ1) {
 		case ROUGE:
@@ -663,6 +666,14 @@ public class Partie implements Cloneable {
 			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
 			break;
 		}
+	}
+	
+	public PartieSQL getPartieSQL() {
+		return this.partieSQL;
+	}
+	
+	public ECouleurJoueur getCouleurJ1() {
+		return this.couleurJ1;
 	}
 
 }

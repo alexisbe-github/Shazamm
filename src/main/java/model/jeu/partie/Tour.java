@@ -1,17 +1,21 @@
 package main.java.model.jeu.partie;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
+import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
 
 public class Tour implements Cloneable {
 
+	private Manche mancheCourante;
+	private TourSQL tourSQL;
+	
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int manaRestantRouge, manaRestantVert;
@@ -23,7 +27,8 @@ public class Tour implements Cloneable {
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
 	private List<Carte> cartesJouees;
 
-	public Tour(boolean mutisme) {
+	public Tour(Manche manche, boolean mutisme) {
+		mancheCourante = manche;
 		this.cartesJoueesRouge = new ArrayList<>();
 		this.cartesJoueesVert = new ArrayList<>();
 		this.cartesJouees = new ArrayList<>();
@@ -33,6 +38,7 @@ public class Tour implements Cloneable {
 		this.finDeManche = false;
 		this.harpagonRouge = false;
 		this.harpagonVert = false;
+		initTourBDD();
 	}
 
 	public void activerMutisme(boolean enable) {
@@ -380,5 +386,25 @@ public class Tour implements Cloneable {
 			if(p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu()+deplacementMur) res -= 10;
 		}
 		return res;
+	}
+	
+	private void initTourBDD() {
+		ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
+		ECouleurJoueur couleurJ2 = couleurJ1.equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;
+		tourSQL = new TourSQL();
+		tourSQL.setIdManche(mancheCourante.getMancheSQL().getId());
+		tourSQL.setPositionMurFlammes(mancheCourante.getPartieCourante().getPont().getPosMurDeFeu());
+		tourSQL.setPositionJoueur1(mancheCourante.getPartieCourante().getPosJoueur(couleurJ1));
+		tourSQL.setPositionJoueur2(mancheCourante.getPartieCourante().getPosJoueur(couleurJ2));
+		tourSQL.setMiseJoueur1(couleurJ1.equals(ECouleurJoueur.ROUGE) ? miseJoueurRouge : miseJoueurVert);
+		tourSQL.setMiseJoueur2(couleurJ2.equals(ECouleurJoueur.ROUGE) ? miseJoueurRouge : miseJoueurVert);
+		tourSQL.setPuissanceJoueur1(getAttaqueJoueur(couleurJ1));
+		tourSQL.setPuissanceJoueur2(getAttaqueJoueur(couleurJ2));
+		tourSQL.setNumeroTour(mancheCourante.getNumeroTourCourant());
+		tourSQL.setDate(new Timestamp(System.currentTimeMillis()));
+	}
+	
+	public TourSQL getTourSQL() {
+		return this.tourSQL;
 	}
 }
