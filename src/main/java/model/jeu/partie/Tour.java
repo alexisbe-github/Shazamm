@@ -143,6 +143,8 @@ public class Tour implements Cloneable {
 
 		return this.deplacementMur;
 	}
+	
+
 
 	private void calculDeplacementMur() {
 		if (this.attaqueJoueurRouge == this.attaqueJoueurVert)
@@ -441,5 +443,55 @@ public class Tour implements Cloneable {
 	
 	public TourSQL getTourSQL() {
 		return this.tourSQL;
+	}
+	
+	/**
+	 * Joue le tour en fonction des mises
+	 * 
+	 * @param miseRouge int
+	 * @param miseVert  int
+	 * @return int le déplacement du mur à la fin du tour
+	 */
+	public int simulerTour(Joueur joueurRouge, Joueur joueurVert) {
+		// Initialisation des variables pour le tour
+		this.harpagonRouge = false;
+		this.harpagonVert = false;
+		this.attaqueJoueurRouge = miseJoueurRouge;
+		this.attaqueJoueurVert = miseJoueurVert;
+		this.calculDeplacementMur();
+
+		// Si mutisme n'est pas activé pour la manche alors on peut jouer les cartes
+		if (!this.mutisme)
+			this.jouerTourDesCartes();
+
+		// On defausse toutes les cartes jouées
+		for (Carte cRouge : this.cartesJoueesRouge) {
+			cRouge.defausser();
+		}
+		for (Carte cVert : this.cartesJoueesVert) {
+			cVert.defausser();
+		}
+
+//		System.out.println("Puissance attaque rouge:" + this.attaqueJoueurRouge + "     " + "Puissance attaque verte:"
+//				+ this.attaqueJoueurVert + "       Déplacement du mur:" + this.deplacementMur);
+
+		if (!this.harpagonRouge) {
+			joueurRouge.depenserMana(this.miseJoueurRouge);
+		}
+
+		if (!this.harpagonVert) {
+			joueurVert.depenserMana(this.miseJoueurVert);
+		}
+
+		joueurRouge.verifierMana();
+		joueurVert.verifierMana();
+
+		if (this.finDeManche)
+			this.deplacementMur = 0;
+
+		this.manaRestantRouge = joueurRouge.getManaActuel();
+		this.manaRestantVert = joueurVert.getManaActuel();
+		
+		return this.deplacementMur;
 	}
 }

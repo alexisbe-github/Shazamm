@@ -7,20 +7,16 @@ import java.util.Collections;
 import java.util.List;
 
 import main.java.model.bdd.Profil;
-import main.java.model.bdd.dao.DAOCarte;
 import main.java.model.bdd.dao.DAOCouleur;
 import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.bdd.dao.DAOPartie;
-import main.java.model.bdd.dao.beans.CarteSQL;
 import main.java.model.bdd.dao.beans.CouleurSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
-import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
 import main.java.model.jeu.carte.Carte;
 import main.java.model.jeu.ia.IAFacile;
-import main.java.model.jeu.ia.SimulationStrategyLancementSort;
 import main.java.model.jeu.ia.apprentissage.EtatPartie;
 import main.java.vue.ILancementStrategy;
 import main.java.vue.VueConsole;
@@ -632,7 +628,7 @@ public class Partie implements Cloneable {
 		int miseJoueurVert = tourCourant.getMiseJoueurVert();
 		if (miseJoueurRouge != 0 && miseJoueurVert != 0) {
 			this.cartesJouees = false;
-			int dpMur = mancheCourante.jouerTour(joueurRouge, joueurVert);
+			int dpMur = mancheCourante.getTourCourant().simulerTour(joueurRouge, joueurVert);
 			this.cartesJouees = true;
 			pont.deplacerMurDeFeu(dpMur);
 			if (pont.murDeFeuPousseUnSorcier() && this.getMancheCourante().getNombreTours() != 0) {
