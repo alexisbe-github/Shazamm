@@ -718,11 +718,14 @@ public class Partie implements Cloneable {
 	}
 
 	private void initialiserCouleurJoueursBDD() {
-		CouleurSQL couleur = new CouleurSQL();
-		couleur.setIdPartie(getPartieSQL().getId());
-		couleur.setCouleurJ1(getCouleurJ1());
-		couleur.setCouleurJ2(getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
-		new DAOCouleur().creer(couleur);
+		if(this.partieSQL!=null) {
+			CouleurSQL couleur = new CouleurSQL();
+			couleur.setIdPartie(partieSQL.getId());
+			couleur.setCouleurJ1(getCouleurJ1());
+			couleur.setCouleurJ2(getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
+			new DAOCouleur().creer(couleur);
+		}
+		
 	}
 
 }

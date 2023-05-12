@@ -60,16 +60,18 @@ public class VueHistorique extends JFrame{
 		DAOCouleur daoc = new DAOCouleur();
 		CouleurSQL col = daoc.trouver(partie.getId());
 		
-		if(col.getCouleurJ1().equals(ECouleurJoueur.ROUGE)) {
-			jRougeSQL = daoj.trouver(partie.getIdJoueur1());
-			jVertSQL = daoj.trouver(partie.getIdJoueur2());
-		}else {
+		try {
+			if(col.getCouleurJ1().equals(ECouleurJoueur.ROUGE)) {
+				jRougeSQL = daoj.trouver(partie.getIdJoueur1());
+				jVertSQL = daoj.trouver(partie.getIdJoueur2());
+			}else {
+				jRougeSQL = daoj.trouver(partie.getIdJoueur2());
+				jVertSQL = daoj.trouver(partie.getIdJoueur1());
+			}
+		}catch(NullPointerException e) {
 			jRougeSQL = daoj.trouver(partie.getIdJoueur2());
 			jVertSQL = daoj.trouver(partie.getIdJoueur1());
 		}
-		
-		
-		
 		
 		tableauPrincipal.add(this.addTours());
 		this.add(scrPane);
