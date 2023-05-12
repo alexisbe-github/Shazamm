@@ -1,17 +1,25 @@
 package main.java.model.jeu.partie;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
+import main.java.model.bdd.dao.DAOCarte;
+import main.java.model.bdd.dao.DAOTour;
+import main.java.model.bdd.dao.beans.CarteSQL;
+import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
 
 public class Tour implements Cloneable {
 
+	private Manche mancheCourante;
+	private TourSQL tourSQL;
+	private List<CarteSQL> listeCartesJouees = new ArrayList<>();
+	
 	private int miseJoueurRouge, miseJoueurVert;
 	private int attaqueJoueurRouge, attaqueJoueurVert;
 	private int manaRestantRouge, manaRestantVert;
@@ -23,7 +31,8 @@ public class Tour implements Cloneable {
 	private List<Carte> cartesJoueesVert, cartesJoueesRouge;
 	private List<Carte> cartesJouees;
 
-	public Tour(boolean mutisme) {
+	public Tour(Manche manche, boolean mutisme) {
+		mancheCourante = manche;
 		this.cartesJoueesRouge = new ArrayList<>();
 		this.cartesJoueesVert = new ArrayList<>();
 		this.cartesJouees = new ArrayList<>();
@@ -63,6 +72,23 @@ public class Tour implements Cloneable {
 		}
 		this.cartesJouees.add(carteAJouer);
 		this.trierCartesJouees();
+		ajouterCarteTour(carteAJouer, joueur);
+	}
+	
+	private void ajouterCarteTour(Carte c, Joueur j) {
+		CarteSQL carte = new CarteSQL();
+		carte.setIdJoueur(j.getProfil().getId());
+		carte.setNumeroCarte(c.getNumeroCarte());
+		listeCartesJouees.add(carte);
+	}
+	
+	private void initCarteBDD() {
+		DAOCarte dao = new DAOCarte();
+		for (CarteSQL c : this.listeCartesJouees) {
+			c.setIdTour(getTourSQL().getId());
+			dao.creer(c);
+		}
+		this.listeCartesJouees.clear();
 	}
 
 	/**
@@ -111,6 +137,9 @@ public class Tour implements Cloneable {
 
 		this.manaRestantRouge = joueurRouge.getManaActuel();
 		this.manaRestantVert = joueurVert.getManaActuel();
+		
+		initTourBDD();
+		initCarteBDD();
 
 		return this.deplacementMur;
 	}
@@ -388,5 +417,29 @@ public class Tour implements Cloneable {
 				res -= 10;
 		}
 		return res;
+	}
+	
+	private void initTourBDD() {
+		if(this.mancheCourante.getMancheSQL()!=null) {
+			ECouleurJoueur couleurJ1 = mancheCourante.getPartieCourante().getCouleurJ1();
+			ECouleurJoueur couleurJ2 = couleurJ1 == ECouleurJoueur.ROUGE ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE;
+			tourSQL = new TourSQL();
+			tourSQL.setIdManche(mancheCourante.getMancheSQL().getId());
+			tourSQL.setPositionMurFlammes(mancheCourante.getPartieCourante().getPont().getPosMurDeFeu());
+			tourSQL.setPositionJoueur1(mancheCourante.getPartieCourante().getPosJoueur(couleurJ1));
+			tourSQL.setPositionJoueur2(mancheCourante.getPartieCourante().getPosJoueur(couleurJ2));
+			tourSQL.setMiseJoueur1(couleurJ1 == ECouleurJoueur.ROUGE ? miseJoueurRouge : miseJoueurVert);
+			tourSQL.setMiseJoueur2(couleurJ2 == ECouleurJoueur.ROUGE ? miseJoueurRouge : miseJoueurVert);
+			tourSQL.setPuissanceJoueur1(getAttaqueJoueur(couleurJ1));
+			tourSQL.setPuissanceJoueur2(getAttaqueJoueur(couleurJ2));
+			tourSQL.setNumeroTour(mancheCourante.getNumeroTourCourant());
+			tourSQL.setDate(new Timestamp(System.currentTimeMillis()));
+			
+			new DAOTour().creer(tourSQL);
+		}
+	}
+	
+	public TourSQL getTourSQL() {
+		return this.tourSQL;
 	}
 }

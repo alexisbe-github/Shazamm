@@ -115,7 +115,7 @@ public class DAOPartie extends DAO<PartieSQL> {
 			}
 
 		} catch (SQLException e) {
-
+			System.out.println(e.getMessage());
 		}
 		return partie;
 	}

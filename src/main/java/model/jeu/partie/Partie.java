@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOCarte;
+import main.java.model.bdd.dao.DAOCouleur;
+import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.bdd.dao.DAOPartie;
+import main.java.model.bdd.dao.beans.CarteSQL;
+import main.java.model.bdd.dao.beans.CouleurSQL;
+import main.java.model.bdd.dao.beans.PartieSQL;
+import main.java.model.bdd.dao.beans.TourSQL;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.Pont;
@@ -22,18 +31,23 @@ public class Partie implements Cloneable {
 	private Pont pont;
 	private List<Manche> listeManche;
 	private boolean partieFinie, joueurPousse, cartesJouees;
+	private PartieSQL partieSQL;
+	private ECouleurJoueur couleurJ1;
 
 	private ILancementStrategy strategyVert, strategyRouge;
 	private PropertyChangeSupport pcs;
 
 	public Partie(Joueur j1, Joueur j2) {
 		if (j1.getCouleur().equals(ECouleurJoueur.ROUGE)) {
+			couleurJ1 = ECouleurJoueur.ROUGE;
 			joueurRouge = j1;
 			joueurVert = j2;
 		} else {
+			couleurJ1 = ECouleurJoueur.VERT;
 			joueurRouge = j2;
 			joueurVert = j1;
 		}
+
 		pont = new Pont();
 		listeManche = new ArrayList<>();
 		partieFinie = false;
@@ -44,6 +58,7 @@ public class Partie implements Cloneable {
 			this.strategyVert = (IAFacile) joueurVert; // pour l'apprentissage de l'IA
 		// this.strategyRouge =new SimulationStrategyLancementSort();
 		lancerPartie();
+		initialiserCouleurJoueursBDD();
 	}
 
 	public void addObserver(PropertyChangeListener l) {
@@ -88,7 +103,8 @@ public class Partie implements Cloneable {
 	 */
 	public List<Carte> getListeCartesJoueesParJoueur(Joueur joueur) {
 		Tour tourCourant = this.getMancheCourante().getTourCourant();
-		if(tourCourant == null) return new ArrayList<>();
+		if (tourCourant == null)
+			return new ArrayList<>();
 		if (joueur.getCouleur().equals(ECouleurJoueur.ROUGE))
 			return tourCourant.getCartesJoueesRouge();
 		return tourCourant.getCartesJoueesVert();
@@ -177,7 +193,8 @@ public class Partie implements Cloneable {
 		joueurVert.piocherCartes(5);
 		joueurRouge.remplirReserveDeMana();
 		joueurVert.remplirReserveDeMana();
-		this.listeManche.add(new Manche());
+		initPartieBDD(couleurJ1);
+		this.listeManche.add(new Manche(this));
 	}
 
 	public void lancerNouvelleManche() {
@@ -189,7 +206,7 @@ public class Partie implements Cloneable {
 		joueurVert.remplirReserveDeMana();
 		pont.effondrerMorceauxDuPont();
 		pont.placerJoueurs();
-		this.listeManche.add(new Manche());
+		this.listeManche.add(new Manche(this));
 	}
 
 	public void lancerFinDeManche() {
@@ -261,6 +278,14 @@ public class Partie implements Cloneable {
 			pcs.firePropertyChange("property", "x", "y");
 			if (pont.unSorcierEstTombe()) {
 				this.partieFinie = true;
+				switch (this.getGagnant()) {
+				case 1:
+					this.setVainqueur(ECouleurJoueur.VERT);
+					break;
+				case 2:
+					this.setVainqueur(ECouleurJoueur.ROUGE);
+					break;
+				}
 			}
 			printPossibleGagnant();
 		}
@@ -268,12 +293,32 @@ public class Partie implements Cloneable {
 
 	private void printPossibleGagnant() {
 		if (this.strategyRouge instanceof VueConsole && this.strategyVert instanceof VueConsole) {
-			System.out.println(pont.getVainqueur());
+			System.out.println(pont.getVainqueurString());
 		}
 	}
 
-	public String getGagnant() {
-		return this.pont.getVainqueur();
+	public String getGagnantString() {
+		return this.pont.getVainqueurString();
+	}
+
+	/*
+	 * @return -1:Pas de gagnant, 0:Egalité, 1:JoueurVert gagnant, 2:JoueurRouge
+	 * gagnant
+	 */
+	public int getGagnant() {
+		int res = -1;
+		if (pont.getPosJoueurRouge() <= pont.getIndexLave()
+				&& pont.getPosJoueurVert() >= Pont.TAILLE_PONT - pont.getIndexLave()) {
+			res = 0;
+		} else {
+			if (pont.getPosJoueurRouge() <= pont.getIndexLave()) {
+				res = 1;
+			}
+			if (pont.getPosJoueurVert() >= Pont.TAILLE_PONT - pont.getIndexLave()) {
+				res = 2;
+			}
+		}
+		return res;
 	}
 
 	/**
@@ -622,7 +667,7 @@ public class Partie implements Cloneable {
 
 	public Partie nouvellePartie() {
 		Joueur jR = new Joueur(joueurRouge.getCouleur(), "IApprentissage", "IApprentissage", "IApprentissage");
-		IAFacile jV = new IAFacile(joueurVert.getCouleur(), "IAdversaire", "IAdversaire", "IAdversaire");
+		IAFacile jV = new IAFacile(joueurVert.getCouleur(), new Profil(new DAOJoueur().trouver(1L)));
 		Partie p = new Partie(jR, jV);
 		p.strategyVert = jV;
 		return p;
@@ -630,6 +675,58 @@ public class Partie implements Cloneable {
 
 	public EtatPartie getEtatPartie() {
 		return new EtatPartie(this, joueurRouge);
+	}
+
+	private void initPartieBDD(ECouleurJoueur couleurJ1) {
+		if (this.getJoueurRouge().getProfil() != null && this.getJoueurVert().getProfil() != null) {
+			this.partieSQL = new PartieSQL();
+			switch (couleurJ1) {
+			case ROUGE:
+				this.partieSQL.setIdJoueur1(joueurRouge.getProfil().getId());
+				this.partieSQL.setIdJoueur2(joueurVert.getProfil().getId());
+				break;
+			case VERT:
+				this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
+				this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
+			}
+			this.partieSQL.setIdVainqueur(1L); // Profil inaccessible par défaut
+			new DAOPartie().creer(this.partieSQL);
+		}
+	}
+
+	private void setVainqueur(ECouleurJoueur couleur) {
+		switch (couleur) {
+		case ROUGE:
+			int nbVictoiresRouge = this.joueurRouge.getProfil().getNbPartiesGagnees();
+			nbVictoiresRouge++;
+			this.joueurRouge.getProfil().setNbPartiesGagnees(nbVictoiresRouge);
+			new DAOJoueur().maj(this.joueurRouge.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			break;
+		case VERT:
+			int nbVictoiresVert = this.joueurVert.getProfil().getNbPartiesGagnees();
+			nbVictoiresVert++;
+			this.joueurVert.getProfil().setNbPartiesGagnees(nbVictoiresVert);
+			new DAOJoueur().maj(this.joueurVert.getProfil());
+			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			break;
+		}
+	}
+
+	public PartieSQL getPartieSQL() {
+		return this.partieSQL;
+	}
+
+	public ECouleurJoueur getCouleurJ1() {
+		return this.couleurJ1;
+	}
+
+	private void initialiserCouleurJoueursBDD() {
+		CouleurSQL couleur = new CouleurSQL();
+		couleur.setIdPartie(getPartieSQL().getId());
+		couleur.setCouleurJ1(getCouleurJ1());
+		couleur.setCouleurJ2(getCouleurJ1().equals(ECouleurJoueur.ROUGE) ? ECouleurJoueur.VERT : ECouleurJoueur.ROUGE);
+		new DAOCouleur().creer(couleur);
 	}
 
 }

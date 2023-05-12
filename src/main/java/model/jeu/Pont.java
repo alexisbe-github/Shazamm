@@ -40,8 +40,8 @@ public class Pont implements Cloneable {
 			res = true;
 		return res;
 	}
-
-	public String getVainqueur() {
+	
+	public String getVainqueurString() {
 		String res = "";
 		if (positionJoueurRouge <= indexLave && positionJoueurVert >= TAILLE_PONT - this.indexLave) {
 			res = "Egalité!";
@@ -54,6 +54,10 @@ public class Pont implements Cloneable {
 			}
 		}
 		return res;
+	}
+	
+	public int getIndexLave() {
+		return this.indexLave;
 	}
 
 	@Override

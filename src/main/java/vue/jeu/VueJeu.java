@@ -110,14 +110,20 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		
 		//Création du label info sorcier et ajout au panel infos joueur
 		JLabel logoJoueur = new JLabel();
-		logoJoueur.setIcon(Utils.redimensionnerImage(new ImageIcon("src/main/resources/avatars/popsimoke.png"), this.getHeight()/13));
+		ImageIcon iconLogoJoueur = new ImageIcon(joueur.getPathAvatar());
+		if(iconLogoJoueur.getIconWidth()<=0) {
+			iconLogoJoueur = new ImageIcon("src/main/resources/images/icone-profil-joueur.png");
+		}
+		logoJoueur.setIcon(Utils.redimensionnerImage(iconLogoJoueur,this.getHeight()/13));
 		logoJoueur.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
+		
 		JLabel labelSorcier = new JLabel(
 				"<html><b>Sorcier " + (this.joueur.getCouleur().equals(ECouleurJoueur.ROUGE) ? "rouge" : "vert") + "<br>"
 						+ joueur.getNom() + "</b></html>");
 		labelSorcier.setFont(new Font("Verdana", Font.PLAIN, this.getWidth()/70));
 		labelSorcier.setForeground(Color.BLACK);
 		JPanel panelInfosJoueur = new JPanel();
+		
 		panelInfosJoueur.add(logoJoueur);
 		panelInfosJoueur.add(labelSorcier);
 		
@@ -392,7 +398,7 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 			}
 		}
 		if (partie.getPont().unSorcierEstTombe()) {
-			text = partie.getGagnant();
+			text = partie.getGagnantString();
 			this.timer.stopChrono();
 		} else {
 			text += "</html>";

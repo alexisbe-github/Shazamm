@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import main.java.controleur.menu.ControleurMenu;
-import main.java.utils.Utils;
 
 /**
  * Le panneau correspondant au menu du joueur.
@@ -41,6 +40,7 @@ public class VueMenu extends JFrame {
 	/**
 	 * Le bouton qui permet de sélectionner les options du jeu
 	 */
+	private final JButton boutonOptions = new JButton("Options");
 	
 	private JPanel panel = new JPanel(new GridBagLayout());
 
@@ -58,33 +58,53 @@ public class VueMenu extends JFrame {
 		c.fill = GridBagConstraints.HORIZONTAL; // Remplissage horizontal
 		
 		// Panneau qui remplit l'espace restant à gauche de l'icône
-		Utils.setConstraints(1, 0, 0, 0, c);
+	    c.weightx = 1; // Poids en X
+	    c.gridx = 0; // Position en X
+	    c.gridy = 0; // Position en Y
 	    c.anchor = GridBagConstraints.LINE_START; // Ancre à gauche
 	    c.insets = new Insets(0, 0, 20, 20);
 	    panel.add(new JPanel(), c);
 		
 		iconeProfil.setIcon(new ImageIcon("src/resources/images/icone-profil-joueur.png"));
-		Utils.setConstraints(0, 0, 1, 0, c);
+		c.weightx = 0.2;
+		c.gridx = 1;
+		c.gridy = 0;
 		panel.add(iconeProfil, c); // Ajout du composant avec les contraintes
 		
 		c.gridwidth = 2; // Fait s'étendre tous les composants suivants sur 2 cellules
 		c.insets = new Insets(5, 10, 5, 10); // Marge autour des boutons en pixels
 		
-		Utils.setConstraints(1, 0, 0, 1, c);
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 1;
 		panel.add(boutonJouer, c);
 		
-		Utils.setConstraints(1, 0, 0, 2, c);
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 2;
 		panel.add(boutonJouerIA, c);
 		
-		Utils.setConstraints(1, 0, 0, 3, c);
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 3;
 		panel.add(boutonClassement, c);
 		
-		Utils.setConstraints(1, 0, 0, 4, c);
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 4;
 		panel.add(boutonHistorique, c);
+		
+		c.weightx = 1;
+		c.gridx = 0;
+		c.gridy = 5;
+		panel.add(boutonOptions, c);
 		
 		ControleurMenu cm = new ControleurMenu(this);
 		boutonJouer.addActionListener(cm);
 		boutonJouerIA.addActionListener(cm);
+		boutonClassement.addActionListener(cm);
+		boutonHistorique.addActionListener(cm);
+		boutonOptions.addActionListener(cm);
 		
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Marge de 10px de chaque côté du panneau
 		

@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import main.java.model.bdd.Profil;
 import main.java.utils.Utils;
 import main.java.vue.profil.VueCreationProfil;
+import main.java.vue.profil.VueLancementPartie;
 import main.java.vue.profil.VueProfil;
 import main.java.vue.profil.VueSelectionAvatars;
 
@@ -89,9 +90,12 @@ public class ControleurProfil implements ActionListener, KeyListener, PropertyCh
 							Thread.sleep(50);
 							bouton.setEnabled(false);
 							insererBDD();
-							VueProfil vueProfil = (VueProfil) vp.getParent();
+							VueLancementPartie f = (VueLancementPartie) vp.getRootPane().getParent();
+							VueProfil vueProfilJ1 = f.getVueProfilJ1();
+							VueProfil vueProfilJ2 = f.getVueProfilJ2();
 							Thread.sleep(50);
-							vueProfil.getPanelSelection().majListeSelectionProfils();
+							vueProfilJ1.getPanelSelection().majListeSelectionProfils();
+							vueProfilJ2.getPanelSelection().majListeSelectionProfils();
 						} catch (InterruptedException ex) {
 							
 						}

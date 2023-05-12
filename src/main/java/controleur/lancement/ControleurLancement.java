@@ -31,8 +31,8 @@ public class ControleurLancement implements ActionListener {
 			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-			Joueur joueur1 = new Joueur(couleurJ1, "Pop", "Simoké", "blabla");
-			Joueur joueur2 = new Joueur(couleurJ2, "Sorcier", "ledeux", "blabla");
+			Joueur joueur1 = new Joueur(couleurJ1, "Joueur", "Un");
+			Joueur joueur2 = new Joueur(couleurJ2, "Joueur", "Deux");
 			Partie p = new Partie(joueur1, joueur2);
 			VueConsole vc = new VueConsole(p);
 			p.setStrategy(vc,vc);

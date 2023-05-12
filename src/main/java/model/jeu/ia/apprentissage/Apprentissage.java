@@ -2,6 +2,8 @@ package main.java.model.jeu.ia.apprentissage;
 
 import java.io.IOException;
 
+import javax.swing.ImageIcon;
+
 import org.deeplearning4j.rl4j.learning.configuration.QLearningConfiguration;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
 import org.deeplearning4j.rl4j.network.NeuralNetOutput;
@@ -12,6 +14,8 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAFacile;
@@ -22,7 +26,7 @@ public class Apprentissage {
 	public static void main(String[] args) throws IOException {
 		// Définir l'environnement de votre jeu
 		Joueur joueur1 = new Joueur(ECouleurJoueur.ROUGE, "IApprentissage", "IApprentissage", "IApprentissage");
-		IAFacile joueur2 = new IAFacile(ECouleurJoueur.VERT, "IAdversaire", "IAdversaire", "IAdversaire");
+		IAFacile joueur2 = new IAFacile(ECouleurJoueur.VERT, new Profil(new DAOJoueur().trouver(1L)));
 		Partie partie = new Partie(joueur1, joueur2);
 
 		// Créer le MDP
