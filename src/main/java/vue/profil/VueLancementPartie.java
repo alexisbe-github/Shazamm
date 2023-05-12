@@ -38,7 +38,7 @@ public class VueLancementPartie extends JFrame {
 		vueProfilJ1 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		vueProfilJ2 = new VueProfil(new VueCreationProfil(), new VueSelectionProfil());
 		JButton boutonLancement = new JButton("Lancer");
-		saisieTemps = new JTextField("1",5);
+		saisieTemps = new JTextField("10",5);
 		
 		boutonLancement.addActionListener(new ActionListener() {
 			@Override
@@ -49,10 +49,11 @@ public class VueLancementPartie extends JFrame {
 				int time = 0;
 				try {
 					time = Integer.parseInt(saisieTemps.getText());
+					timer.setDuree(time);
 				}catch(NumberFormatException ex) {
 					
 				}
-				if(pj1.getId()!=pj2.getId() && pj1!=null && pj2!=null && time>0 && time<600) {
+				if(pj1.getId()!=pj2.getId() && pj1!=null && pj2!=null && time>=10 && time<600) {
 					
 					lancerPartie(pj1,pj2);
 				}

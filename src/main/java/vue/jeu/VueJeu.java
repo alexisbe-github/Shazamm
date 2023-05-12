@@ -111,6 +111,9 @@ public class VueJeu extends JFrame implements ILancementStrategy, PropertyChange
 		//Création du label info sorcier et ajout au panel infos joueur
 		JLabel logoJoueur = new JLabel();
 		ImageIcon iconLogoJoueur = new ImageIcon(joueur.getPathAvatar());
+		if(iconLogoJoueur.getIconWidth()<=0) {
+			iconLogoJoueur = new ImageIcon("src/main/resources/images/icone-profil-joueur.png");
+		}
 		logoJoueur.setIcon(Utils.redimensionnerImage(iconLogoJoueur,this.getHeight()/13));
 		logoJoueur.setBorder(BorderFactory.createLineBorder(Color.BLACK,3));
 		

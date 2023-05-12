@@ -27,8 +27,8 @@ public class Chrono {
     	this.timer = new Timer(1000,new ControleurChrono(this));
     }
     
-    public void setDuree() {
-    	
+    public void setDuree(int d) {
+    	this.duree=d;
     }
     
     public int getTempsRestant() {
