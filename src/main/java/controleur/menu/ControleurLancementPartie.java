@@ -45,7 +45,7 @@ public class ControleurLancementPartie implements ActionListener, MouseMotionLis
 			Profil pj2 = vlp.getVueProfilJ2().getPanelSelection().getProfilSelectionne();
 			int time = 0;
 			try {
-				time = Integer.parseInt(saisieTemps.getText());
+				time = (Integer) saisieTemps.getValue();
 				timer.setDuree(time);
 			}catch(NumberFormatException ex) {
 				

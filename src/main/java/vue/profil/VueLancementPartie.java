@@ -37,7 +37,7 @@ public class VueLancementPartie extends JFrame {
 		saisieTemps = new JSpinner(new SpinnerNumberModel(10, 10, 120, 1));
 		JLabel temps = new JLabel("secondes");
 
-		JButton boutonLancement = new JButton("Lancer");
+		boutonLancement = new JButton("Lancer");
 		boutonLancement.setEnabled(false);
 		JButton boutonRetour = new JButton("Retour");
 		
