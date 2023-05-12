@@ -38,7 +38,7 @@ public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
 		MDPJeu mdp = new MDPJeu(partie, joueur1, joueur2);
 
 		// Configurer l'agent
-		QLearningConfiguration config = QLearningConfiguration.builder().seed(12L).maxEpochStep(10000).maxStep(1500)
+		QLearningConfiguration config = QLearningConfiguration.builder().seed(12L).maxEpochStep(10000).maxStep(200)
 				.expRepMaxSize(150000).batchSize(128).targetDqnUpdateFreq(500).updateStart(10).rewardFactor(0.01)
 				.gamma(0.99).errorClamp(1.0).minEpsilon(0.1f).epsilonNbStep(1000).doubleDQN(true).build();
 

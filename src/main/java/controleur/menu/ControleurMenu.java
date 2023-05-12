@@ -11,13 +11,13 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+import main.java.model.jeu.Chrono;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAEntrainee;
 import main.java.model.jeu.ia.IAFacile;
 import main.java.model.jeu.ia.IAIntermediaire;
 import main.java.model.jeu.partie.Partie;
-import main.java.vue.jeu.Chrono;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
 
@@ -70,7 +70,7 @@ public class ControleurMenu implements ActionListener {
 			case 0:
 				IAFacile ia = new IAFacile(couleurIA, "Sorcier", "ledeux", "blabla");
 				partie = new Partie(joueur, ia);
-			 fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, ia);
 				} else {
@@ -81,7 +81,7 @@ public class ControleurMenu implements ActionListener {
 			case 1:
 				IAIntermediaire iaI = new IAIntermediaire(couleurIA, "Sorcier", "ledeux", "blabla");
 				partie = new Partie(joueur, iaI);
-				fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, iaI);
 				} else {
@@ -92,7 +92,7 @@ public class ControleurMenu implements ActionListener {
 			case 2:
 				IAEntrainee iaE = new IAEntrainee(couleurIA, "Sorcier", "ledeux", "blabla");
 				partie = new Partie(joueur, iaE);
-				fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, iaE);
 				} else {
