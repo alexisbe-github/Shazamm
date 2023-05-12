@@ -30,7 +30,7 @@ public class VueClassement extends JFrame {
 
 	private JScrollPane scrollPane = new JScrollPane();
 	private JTable tableau = new JTable();
-	private int nbJoueursClassement = 5;
+	private int nbJoueursClassement = 10;
 
 	public VueClassement() {
 		setTitle("Classement");
