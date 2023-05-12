@@ -63,7 +63,7 @@ public class ControleurJeu implements ActionListener {
 
 			break;
 		case "Historique de la partie":
-			VueHistorique vh = new VueHistorique(this.partie);
+			VueHistorique vh = new VueHistorique(this.partie.getPartieSQL());
 			break;
 		default:
 			return;
