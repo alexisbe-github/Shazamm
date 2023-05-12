@@ -8,10 +8,16 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
+
+import main.java.model.bdd.dao.beans.MancheSQL;
+import main.java.model.bdd.dao.beans.PartieSQL;
+import main.java.model.bdd.dao.beans.TourSQL;
 
 /**
  * Classe contenant diverses fonctions utilitaires
@@ -157,5 +163,23 @@ public class Utils {
 			}
 		}
 		return res;
+	}
+	
+	/*
+	 * Fonction permettant de récupérer les manches correspondants à une partie
+	 * @param p : partie
+	 * @return liste de manches
+	 */
+	public static List<MancheSQL> getManches(PartieSQL p){
+		return new ArrayList<MancheSQL>();
+	}
+	
+	/*
+	 * Fonction permettant de récupérer les tours correspondants à une manche
+	 * @param m : manche
+	 * @return liste de tours
+	 */
+	public static List<TourSQL> getTours(MancheSQL msql){
+		return new ArrayList<TourSQL>();
 	}
 }
