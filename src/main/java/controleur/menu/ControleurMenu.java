@@ -60,7 +60,7 @@ public class ControleurMenu implements ActionListener {
 			VueJeu fenetreJoueur;
 			switch (input) {
 			case 0:
-				IAFacile ia = new IAFacile(couleurIA, new Profil("Ordi", "ledeux", new ImageIcon("blabla")));
+				IAFacile ia = new IAFacile(couleurIA, new Profil(new DAOJoueur().trouver(1L)));
 				partie = new Partie(joueur, ia);
 				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -72,7 +72,7 @@ public class ControleurMenu implements ActionListener {
 				break;
 			case 1:
 				IAIntermediaire iaI = new IAIntermediaire(couleurIA,
-						new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
+						new Profil(new DAOJoueur().trouver(1L)));
 				partie = new Partie(joueur, iaI);
 				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -84,7 +84,7 @@ public class ControleurMenu implements ActionListener {
 				break;
 			case 2:
 				IAExperte iaE = new IAExperte(couleurIA,
-						new Profil("Sorcier", "ledeux", new ImageIcon("src/main/resources/avatars/alien-bug.png")));
+						new Profil(new DAOJoueur().trouver(1L)));
 				partie = new Partie(joueur, iaE);
 				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
