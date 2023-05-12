@@ -102,6 +102,7 @@ public class VueClassement extends JFrame {
 		List<Profil> res = new ArrayList<>();
 		DAOJoueur dao = new DAOJoueur();
 		for (long id : listeId) {
+			if (id == 1) continue;
 			Profil p = new Profil(dao.trouver(id));
 			res.add(p);
 		}

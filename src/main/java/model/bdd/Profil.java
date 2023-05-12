@@ -73,6 +73,7 @@ public class Profil extends JoueurSQL {
 		List<Long> listeIdentifiants = Profil.getListeIdentifiantsJoueurs();
 		DAOJoueur dao = new DAOJoueur();
 		for (long id : listeIdentifiants) {
+			if (id == 1) continue;
 			Profil profil = new Profil(dao.trouver(id));
 			liste.add(profil);
 		}

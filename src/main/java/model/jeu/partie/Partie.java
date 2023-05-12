@@ -271,7 +271,8 @@ public class Partie implements Cloneable {
 					this.setVainqueur(ECouleurJoueur.VERT);
 					break;
 				case 2 :
-					this.setVainqueur(ECouleurJoueur.VERT);
+					this.setVainqueur(ECouleurJoueur.ROUGE);
+					break;
 				}
 			}
 			printPossibleGagnant();
@@ -673,7 +674,7 @@ public class Partie implements Cloneable {
 				this.partieSQL.setIdJoueur1(joueurVert.getProfil().getId());
 				this.partieSQL.setIdJoueur2(joueurRouge.getProfil().getId());
 			}
-			this.partieSQL.setIdVainqueur(joueurRouge.getProfil().getId());
+			this.partieSQL.setIdVainqueur(1L); // Profil inaccessible par défaut
 			new DAOPartie().creer(this.partieSQL);
 		}
 	}
