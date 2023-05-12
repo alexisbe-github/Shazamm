@@ -1,7 +1,6 @@
 package main.java.model.jeu.ia;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.deeplearning4j.rl4j.learning.configuration.QLearningConfiguration;
 import org.deeplearning4j.rl4j.learning.sync.qlearning.discrete.QLearningDiscreteDense;
@@ -9,11 +8,12 @@ import org.deeplearning4j.rl4j.network.NeuralNetOutput;
 import org.deeplearning4j.rl4j.network.configuration.DQNDenseNetworkConfiguration;
 import org.deeplearning4j.rl4j.network.dqn.DQN;
 import org.deeplearning4j.rl4j.network.dqn.DQNFactoryStdDense;
-import org.deeplearning4j.rl4j.policy.DQNPolicy;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.learning.config.Adam;
 
+import main.java.model.bdd.Profil;
+import main.java.model.bdd.dao.DAOJoueur;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
@@ -28,11 +28,11 @@ public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
 
 	private QLearningDiscreteDense<EtatPartie> dql;
 
-	public IAEntrainee(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
-		super(couleur, nom, prenom, avatar);
+	public IAEntrainee(ECouleurJoueur couleur, Profil profil) {
+		super(couleur, profil);
 		// Définir l'environnement de votre jeu
-		Joueur joueur1 = new Joueur(ECouleurJoueur.ROUGE, "IApprentissage", "IApprentissage", "IApprentissage");
-		IAFacile joueur2 = new IAFacile(ECouleurJoueur.VERT, "IAdversaire", "IAdversaire", "IAdversaire");
+		Joueur joueur1 = new Joueur(ECouleurJoueur.ROUGE, "IATest","IATest");
+		IAFacile joueur2 = new IAFacile(ECouleurJoueur.VERT, new Profil(new DAOJoueur().trouver(1L)));
 		Partie partie = new Partie(joueur1, joueur2);
 
 		// Créer le MDP
@@ -60,7 +60,6 @@ public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
 		} // save the model at the end
 
 		mdp.close();
-
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class IAEntrainee extends IAEtatJeu implements IA, ILancementStrategy {
 			}
 		}
 		resultats[0] = 1 / (1 + Math.exp(-resultats[0]));
-		int mise = Utils.genererEntier(1, ((this.getManaActuel()+1)*3)/4);
+		int mise = Utils.genererEntier(1, ((this.getManaActuel() + 1) * 3) / 4);
 		double max = -1;
 		int indiceMax = -1;
 		for (int i = 1; i < 15; i++) {

@@ -21,6 +21,17 @@ public class Joueur implements Cloneable {
 	private int manaActuel;
 	private List<Carte> paquet, mainDuJoueur;
 
+	
+	public Joueur(ECouleurJoueur couleur, Profil profil) {
+		this.COULEUR = couleur;
+		this.profil = profil;
+		this.NOM = profil.getNom();
+		this.PRENOM = profil.getPrenom();
+		this.AVATAR = profil.getAvatar().getDescription();
+		manaActuel = 0;
+		paquet = new ArrayList<>();
+		mainDuJoueur = new ArrayList<>();
+	}
 
 	public Joueur(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
 		this.COULEUR = couleur;
@@ -41,6 +52,8 @@ public class Joueur implements Cloneable {
 		paquet = new ArrayList<>();
 		mainDuJoueur = new ArrayList<>();
 	}
+	
+	
 
 	@Override
 	public String toString() {

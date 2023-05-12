@@ -2,10 +2,10 @@ package main.java.model.jeu.ia;
 
 import java.util.List;
 
+import main.java.model.bdd.Profil;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.carte.Carte;
-import main.java.model.jeu.carte.Carte5;
 import main.java.model.jeu.ia.arbre.Nash;
 import main.java.model.jeu.partie.Partie;
 import main.java.model.jeu.partie.Tour;
@@ -13,8 +13,12 @@ import main.java.vue.ILancementStrategy;
 
 public class IAIntermediaire extends IAEtatJeu implements IA, ILancementStrategy {
 
-	public IAIntermediaire(ECouleurJoueur couleur, String nom, String prenom, String avatar) {
-		super(couleur, nom, prenom, avatar);
+	public IAIntermediaire(Joueur j) {
+		super(j.getCouleur(), j.getProfil());
+	}
+
+	public IAIntermediaire(ECouleurJoueur couleur, Profil profil) {
+		super(couleur, profil);
 	}
 
 	@Override

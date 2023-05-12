@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 
 import main.java.model.bdd.Profil;
 import main.java.model.bdd.dao.DAOJoueur;
-
 import main.java.model.jeu.Chrono;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
@@ -22,9 +21,7 @@ import main.java.model.jeu.partie.Partie;
 import main.java.vue.classement.VueClassement;
 import main.java.vue.jeu.VueJeu;
 import main.java.vue.menu.VueMenu;
-
 import main.java.vue.profil.VueLancementPartie;
-
 
 public class ControleurMenu implements ActionListener {
 
@@ -42,11 +39,11 @@ public class ControleurMenu implements ActionListener {
 		case "Jouer":
 			vm.dispose();
 			List<ECouleurJoueur> couleursTirees = tirerCouleurs();
-			
+
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
-			
-			VueLancementPartie vlp = new VueLancementPartie(couleurJ1,couleurJ2, timer);
+
+			VueLancementPartie vlp = new VueLancementPartie(couleurJ1, couleurJ2, timer);
 
 			break;
 		case "Jouer contre l'ordinateur":
@@ -75,8 +72,8 @@ public class ControleurMenu implements ActionListener {
 				}
 				partie.addObserver(fenetreJoueur);
 				break;
-				IAIntermediaire iaI = new IAIntermediaire(couleurIA,
-						new Profil(new DAOJoueur().trouver(1L)));
+			case 1:
+				IAIntermediaire iaI = new IAIntermediaire(couleurIA, new Profil(new DAOJoueur().trouver(1L)));
 				partie = new Partie(joueur, iaI);
 				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
@@ -88,8 +85,7 @@ public class ControleurMenu implements ActionListener {
 				break;
 			case 2:
 
-				IAExperte iaE = new IAExperte(couleurIA,
-						new Profil(new DAOJoueur().trouver(1L)));
+				IAEntrainee iaE = new IAEntrainee(couleurIA, new Profil(new DAOJoueur().trouver(1L)));
 				partie = new Partie(joueur, iaE);
 				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
