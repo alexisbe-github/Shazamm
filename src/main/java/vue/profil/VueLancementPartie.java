@@ -93,4 +93,12 @@ public class VueLancementPartie extends JFrame {
 		this.pack();
 	}
 	
+	public VueProfil getVueProfilJ1() {
+		return vueProfilJ1;
+	}
+	
+	public VueProfil getVueProfilJ2() {
+		return vueProfilJ2;
+	}
+	
 }
