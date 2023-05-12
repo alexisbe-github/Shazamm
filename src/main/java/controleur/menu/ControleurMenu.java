@@ -1,7 +1,5 @@
 package main.java.controleur.menu;
 
-import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -14,6 +12,7 @@ import javax.swing.JOptionPane;
 
 import main.java.model.bdd.Profil;
 import main.java.model.bdd.dao.DAOJoueur;
+import main.java.model.jeu.Chrono;
 import main.java.model.jeu.ECouleurJoueur;
 import main.java.model.jeu.Joueur;
 import main.java.model.jeu.ia.IAExperte;
@@ -28,8 +27,6 @@ import main.java.vue.profil.VueLancementPartie;
 public class ControleurMenu implements ActionListener {
 
 	private VueMenu vm;
-	private Profil profilSelectionne = new Profil(new DAOJoueur().trouver(14L)); // TODO (profil par défaut pour pas
-																					// bugger)
 
 	public ControleurMenu(VueMenu vm) {
 		this.vm = vm;
@@ -38,6 +35,7 @@ public class ControleurMenu implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton bouton = (JButton) e.getSource();
+		Chrono timer = new Chrono();
 		switch (bouton.getText()) {
 		case "Jouer":
 			vm.dispose();
@@ -46,7 +44,7 @@ public class ControleurMenu implements ActionListener {
 			ECouleurJoueur couleurJ1 = couleursTirees.get(0);
 			ECouleurJoueur couleurJ2 = couleursTirees.get(1);
 			
-			VueLancementPartie vlp = new VueLancementPartie(couleurJ1,couleurJ2);
+			VueLancementPartie vlp = new VueLancementPartie(couleurJ1,couleurJ2, timer);
 			
 			break;
 		case "Jouer contre l'ordinateur":
@@ -64,7 +62,7 @@ public class ControleurMenu implements ActionListener {
 			case 0:
 				IAFacile ia = new IAFacile(couleurIA, new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, ia);
-				fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, ia);
 				} else {
@@ -76,7 +74,7 @@ public class ControleurMenu implements ActionListener {
 				IAIntermediaire iaI = new IAIntermediaire(couleurIA,
 						new Profil("Sorcier", "ledeux", new ImageIcon("blabla")));
 				partie = new Partie(joueur, iaI);
-				fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, iaI);
 				} else {
@@ -88,7 +86,7 @@ public class ControleurMenu implements ActionListener {
 				IAExperte iaE = new IAExperte(couleurIA,
 						new Profil("Sorcier", "ledeux", new ImageIcon("src/main/resources/avatars/alien-bug.png")));
 				partie = new Partie(joueur, iaE);
-				fenetreJoueur = new VueJeu(joueur, partie);
+				fenetreJoueur = new VueJeu(joueur, partie, timer);
 				if (joueur.getCouleur().equals(ECouleurJoueur.VERT)) {
 					partie.setStrategy(fenetreJoueur, iaE);
 				} else {

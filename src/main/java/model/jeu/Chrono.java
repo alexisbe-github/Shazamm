@@ -17,14 +17,18 @@ public class Chrono {
 	private Timer timer;
 	private VueJeu vj1,vj2;
     private int tempsRestant;
-    private final int DUREE;
+    private int duree;
     PropertyChangeSupport pcs;
     boolean relancer = false;
     
-    public Chrono(int duree) {
-    	this.DUREE=duree;
+    public Chrono() {
+    	this.duree=30;
     	this.pcs = new PropertyChangeSupport(this);
     	this.timer = new Timer(1000,new ControleurChrono(this));
+    }
+    
+    public void setDuree() {
+    	
     }
     
     public int getTempsRestant() {
@@ -32,12 +36,12 @@ public class Chrono {
     }
     
     public int getDuree() {
-    	return DUREE;
+    	return duree;
     }
     
     public void joueurJoue() {
     	if(relancer) {
-    		this.tempsRestant = DUREE;
+    		this.tempsRestant = duree;
     		relancer = false;
     	}else {
     		relancer = true;
@@ -66,7 +70,7 @@ public class Chrono {
     }
     
     public void startChrono() {
-    	this.tempsRestant=DUREE;
+    	this.tempsRestant=duree;
     	this.timer.start();
     }
     
