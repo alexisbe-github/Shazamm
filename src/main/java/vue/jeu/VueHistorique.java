@@ -73,10 +73,6 @@ public class VueHistorique extends JFrame{
 			jVertSQL = daoj.trouver(partie.getIdJoueur1());
 		}
 		
-		
-		
-		
-		
 		tableauPrincipal.add(this.addTours());
 		this.add(scrPane);
 	}
