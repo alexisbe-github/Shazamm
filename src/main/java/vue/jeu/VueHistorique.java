@@ -82,7 +82,7 @@ public class VueHistorique extends JFrame{
 		JPanel res = new JPanel(new GridBagLayout());
 		hauteurElement = 0;
 		GridBagConstraints c = new GridBagConstraints();
-		
+		c.fill = GridBagConstraints.HORIZONTAL;
 		numeroManche=0;
 		
 		for(MancheSQL m : Utils.getManches(partie)) {

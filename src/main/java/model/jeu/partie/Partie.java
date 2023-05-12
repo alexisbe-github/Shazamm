@@ -293,7 +293,7 @@ public class Partie implements Cloneable {
 		return this.pont.getVainqueurString();
 	}
 
-	/*
+	/**
 	 * @return -1:Pas de gagnant, 0:Egalité, 1:JoueurVert gagnant, 2:JoueurRouge gagnant
 	 */
 	public int getGagnant() {
