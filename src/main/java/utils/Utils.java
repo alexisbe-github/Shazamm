@@ -8,6 +8,10 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +19,10 @@ import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.Timer;
 
+import main.java.model.bdd.dao.Connexion;
+import main.java.model.bdd.dao.DAOManche;
+import main.java.model.bdd.dao.DAOPartie;
+import main.java.model.bdd.dao.DAOTour;
 import main.java.model.bdd.dao.beans.MancheSQL;
 import main.java.model.bdd.dao.beans.PartieSQL;
 import main.java.model.bdd.dao.beans.TourSQL;
@@ -60,12 +68,12 @@ public class Utils {
 
 	public static ImageIcon createImageIconColor(Color color, int width, int height) {
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-	    Graphics2D graphics = image.createGraphics();
-	    graphics.setPaint(color);
-	    graphics.fillRect (0, 0, width, height);
-	    return new ImageIcon(image);
+		Graphics2D graphics = image.createGraphics();
+		graphics.setPaint(color);
+		graphics.fillRect(0, 0, width, height);
+		return new ImageIcon(image);
 	}
-	
+
 	/**
 	 * Réalise un fondu d'arrière-plan sur un composant Swing
 	 * 
@@ -120,7 +128,18 @@ public class Utils {
 		});
 		timer.start();
 	}
-	
+
+	/**
+	 * Met à jour plus rapidement un objet <code>GridBagConstraints</code>
+	 * 
+	 * @param weightx Le poids en <code>x</code>
+	 * @param weighty Le poids en <code>y</code>
+	 * @param gridx   La position en <code>x</code>
+	 * @param gridy   La position en <code>y</code>
+	 * @param c       L'objet contenant les contraintes de positionnement
+	 * 
+	 * @see GridBagConstraints
+	 */
 	public static void setConstraints(double weightx, double weighty, int gridx, int gridy, GridBagConstraints c) {
 		c.weightx = weightx;
 		c.weighty = weighty;
@@ -164,30 +183,92 @@ public class Utils {
 		}
 		return res;
 	}
-	
-	/*
+
+	/**
 	 * Fonction permettant de récupérer les manches correspondants à une partie
-	 * @param p : partie
+	 * 
+	 * @param p partie
+	 * 
 	 * @return liste de manches
 	 */
-	public static List<MancheSQL> getManches(PartieSQL p){
-		return new ArrayList<MancheSQL>();
-	}
-	
-	/*
+	public static List<MancheSQL> getManches(PartieSQL p) {
+			List<MancheSQL> liste = new ArrayList<>();
+			DAOManche dao = new DAOManche();
+			
+			String requete = "SELECT DISTINCT * FROM manche";
+			Connection con = Connexion.getInstance().getConnexion();
+			try (PreparedStatement pstmt = con.prepareStatement(requete);
+					ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					long idManche = rs.getLong(1);
+					long idPartie = rs.getLong(2);
+					if (idPartie == p.getId()) {
+						liste.add(dao.trouver(idManche));
+					}
+				}
+			} catch (SQLException e) {
+
+			}
+			return liste;
+		}
+
+	/**
 	 * Fonction permettant de récupérer les tours correspondants à une manche
-	 * @param m : manche
+	 * 
+	 * @param m manche
+	 * 
 	 * @return liste de tours
 	 */
-	public static List<TourSQL> getTours(MancheSQL msql){
-		return new ArrayList<TourSQL>();
+	public static List<TourSQL> getTours(MancheSQL m) {
+		List<TourSQL> liste = new ArrayList<>();
+		DAOTour dao = new DAOTour();
+		
+		String requete = "SELECT DISTINCT * FROM tour";
+		Connection con = Connexion.getInstance().getConnexion();
+		try (PreparedStatement pstmt = con.prepareStatement(requete);
+				ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				long idTour = rs.getLong(1);
+				long idManche = rs.getLong(2);
+				if (idManche == m.getId()) {
+					liste.add(dao.trouver(idTour));
+				}
+			}
+		} catch (SQLException e) {
+
+		}
+		return liste;
 	}
-	
-	/*
+
+	/**
 	 * Fonction permettant de récupérer toutes les parties
+	 * 
 	 * @return liste de parties
 	 */
-	public static List<PartieSQL> getParties(){
-		return new ArrayList<PartieSQL>();
+	public static List<PartieSQL> getParties() {
+		List<Long> listeId = new ArrayList<>();
+		List<PartieSQL> liste = new ArrayList<>();
+		DAOPartie dao = new DAOPartie();
+		
+		String requete = "SELECT DISTINCT id FROM partie";
+		Connection con = Connexion.getInstance().getConnexion();
+		try (PreparedStatement pstmt = con.prepareStatement(requete);
+				ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				long id = rs.getLong(1);
+				listeId.add(id);
+			}
+		} catch (SQLException e) {
+
+		}
+		
+		if (listeId.size() == 0) return null;
+		
+		for (Long id : listeId) {
+			liste.add(dao.trouver(id));
+		}
+		
+		return liste;
 	}
+	
 }
