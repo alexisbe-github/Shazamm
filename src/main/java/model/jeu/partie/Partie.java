@@ -278,6 +278,8 @@ public class Partie implements Cloneable {
 				case 2 :
 					this.setVainqueur(ECouleurJoueur.ROUGE);
 					break;
+				default :
+					break;
 				}
 			}
 			printPossibleGagnant();
@@ -685,6 +687,7 @@ public class Partie implements Cloneable {
 	}
 
 	private void setVainqueur(ECouleurJoueur couleur) {
+		DAOPartie daop = new DAOPartie();
 		switch (couleur) {
 		case ROUGE:
 			int nbVictoiresRouge = this.joueurRouge.getProfil().getNbPartiesGagnees();
@@ -692,6 +695,7 @@ public class Partie implements Cloneable {
 			this.joueurRouge.getProfil().setNbPartiesGagnees(nbVictoiresRouge);
 			new DAOJoueur().maj(this.joueurRouge.getProfil());
 			this.partieSQL.setIdVainqueur(this.joueurRouge.getProfil().getId());
+			daop.maj(partieSQL);
 			break;
 		case VERT:
 			int nbVictoiresVert = this.joueurVert.getProfil().getNbPartiesGagnees();
@@ -699,6 +703,7 @@ public class Partie implements Cloneable {
 			this.joueurVert.getProfil().setNbPartiesGagnees(nbVictoiresVert);
 			new DAOJoueur().maj(this.joueurVert.getProfil());
 			this.partieSQL.setIdVainqueur(this.joueurVert.getProfil().getId());
+			daop.maj(partieSQL);
 			break;
 		}
 	}

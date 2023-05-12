@@ -408,7 +408,7 @@ public class Tour implements Cloneable {
 			if(p.getPont().getPosJoueurRouge() == p.getPont().getPosMurDeFeu()+deplacementMur) res += 10;
 			if(p.getPont().getPosJoueurVert() == p.getPont().getPosMurDeFeu()+deplacementMur) res -= 10;
 		}
-		return res;
+		return res;	
 	}
 	
 	public void initTourBDD() {
